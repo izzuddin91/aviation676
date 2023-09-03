@@ -52,6 +52,7 @@ export default function Home() {
       // test acc -> ("asd@email.com", "test123")
       .signInWithEmailAndPassword(data.email, data.password)
       .then(async (value) => {
+        console.log(value)
         if (value.user) {
           // setAuth(data.email, data.password);
           // router.push("/dashboard");
