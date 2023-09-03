@@ -4,7 +4,7 @@
 import Image from "next/image";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import firebase from "../clientApp";
+import firebase from "../../clientApp";
 import "firebase/compat/firestore";
 import { useState } from "react";
 import { getDocs } from "firebase/firestore";
@@ -22,7 +22,7 @@ export const getHouseList = async (): Promise<any> => {
 }
 
 export const getHouseDetails = async (houseId: String): Promise<any> => {
-    const housesCollection = await firebase.firestore().collection("houses").doc(houseId).get()
+    const housesCollection = await firebase.firestore().collection("houses").doc(houseId.toString()).get()
     var returnData = housesCollection.data()
     return returnData
 }
