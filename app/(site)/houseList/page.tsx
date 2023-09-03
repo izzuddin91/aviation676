@@ -26,10 +26,10 @@ export default function Home() {
     <div className="p-8 space-y-5">
       <h1 className="text-xl mb-2">Your properties</h1>
       <div className="grid grid-cols-3 gap-3 ">
-        {/* {houses.map((row: any) =>{
+        {houses.map((row: any) =>{
           var link = "/houseLogs/" + row["houseId"];
           return (
-            <article className="overflow-hidden rounded-lg shadow-lg">
+            <article key={row["houseId"]} className="overflow-hidden rounded-lg shadow-lg">
               <a href={link}>
                 <img
                   alt="Placeholder"
@@ -72,7 +72,7 @@ export default function Home() {
               </footer>
             </article>
           );
-        })} */}
+        })}
       </div>
     </div>
   );
