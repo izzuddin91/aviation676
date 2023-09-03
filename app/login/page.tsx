@@ -7,9 +7,9 @@ import { useState } from "react";
 import * as yup from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { PrimaryTextInputWithLabel } from "./../component/input/PrimaryTextInputWithLabel";
+import { PrimaryTextInputWithLabel } from "./../component/input/PrimaryTextInputWithLabel";
 import { HiUser, HiKey, HiInformationCircle } from "react-icons/hi";
-// import { PrimaryButton } from "./../component/button/PrimaryButton";
+import { PrimaryButton } from "./../component/button/PrimaryButton";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { initializeApp, getApps } from "firebase/app";
@@ -82,7 +82,7 @@ export default function Home() {
               className="flex flex-col gap-4"
               onSubmit={handleSubmit(onSubmit)}
             >
-              {/* <PrimaryTextInputWithLabel
+              <PrimaryTextInputWithLabel
                 label="Email"
                 name="email"
                 icon={HiUser}
@@ -116,7 +116,7 @@ export default function Home() {
                 disabled={isSubmitting}
               >
                 Login
-              </PrimaryButton> */}
+              </PrimaryButton>
             </form>
           </div>
         </div>
