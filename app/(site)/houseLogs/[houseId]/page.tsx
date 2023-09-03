@@ -89,7 +89,6 @@ export default function HouseLogs() {
   }
 
   function deleteItem(event: any) {
-    console.log(event);
     // delete this and show alert
     confirmAlert("delete", "confirm to delete this record?", () => {
       deleteHouseLog(event)
@@ -256,7 +255,7 @@ export default function HouseLogs() {
             <tbody className="divide-y divide-gray-100">
               {houseLogs.map((row: any, i: number) => {
                 return (
-                  <tr className="bg-white">
+                  <tr key={i} className="bg-white">
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <a
                         href="#"
