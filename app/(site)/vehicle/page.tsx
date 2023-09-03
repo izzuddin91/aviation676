@@ -61,7 +61,7 @@ export default function Vehicle() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-            {addFlexItem.map((row, i) => {
+            {/* {addFlexItem.map((row, i) => {
                 return (
                     <tr className="bg-white">
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
@@ -88,14 +88,11 @@ export default function Vehicle() {
                       {row["lifeSpan"]}
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      {/* <button onClick={() => deleteItem(row['id'])}>
-                        {row['id']}
-                      </button> */}
-                      
-                      
+
                     </td>
                   </tr>
-                )})}
+                )}
+                )} */}
             </tbody>
           </table>
         </div>
