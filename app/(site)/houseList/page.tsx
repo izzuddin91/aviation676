@@ -10,17 +10,17 @@ import { getHouseList } from "../service/firebase.service";
 export default function Home() {
 
   useEffect(() => {
-    // getData()
+    getData()
   }, []);
 
   var [houses, updateHouses] : any = useState([{}])
 
-  // async function getData(){
-  //   getHouseList().then((val: any) => {
-  //     houses = val
-  //     updateHouses(val)
-  //   })
-  // }
+  async function getData(){
+    getHouseList().then((val: any) => {
+      houses = val
+      updateHouses(val)
+    })
+  }
 
   return (
     <div>
