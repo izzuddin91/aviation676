@@ -61,7 +61,8 @@ export default function Vehicle() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-            {/* {addFlexItem.map((row, i) => {
+            {
+            /* {addFlexItem.map((row, i) => {
                 return (
                     <tr className="bg-white">
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
