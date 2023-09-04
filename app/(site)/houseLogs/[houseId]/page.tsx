@@ -31,7 +31,10 @@ import {
 import { confirmAlert } from "../../service/alert.service";
 import React from "react";
 import DialogActions from "@mui/material/DialogActions";
-import PhotoIcon from '@mui/icons-material/Photo';
+import PhotoIcon from "@mui/icons-material/Photo";
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import firebase from "../../../clientApp";
+
 export interface SimpleDialogProps {
   open: boolean;
   selectedValue: string;
@@ -39,6 +42,7 @@ export interface SimpleDialogProps {
 }
 
 export default function HouseLogs() {
+  const storage = getStorage(firebase.app());
   const [open, setOpen] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
   function handleClickOpen(file: any) {
@@ -70,7 +74,6 @@ export default function HouseLogs() {
       (val: any) => {
         updateMonthVal(month);
         updateYear(year);
-
         setHouseLogs(val);
         updateTotalAmount(houseLogs);
       }
@@ -106,14 +109,25 @@ export default function HouseLogs() {
     updateAmount(amount);
   }
 
-  function deleteItem(event: any) {
-    console.log(event);
+  function deleteItem(event: any, filenameForDelete: any) {
     // delete this and show alert
+    console.log(filenameForDelete)
     confirmAlert("delete", "confirm to delete this record?", () => {
+      if (filenameForDelete ){
+        const fileRef = ref(storage, filenameForDelete)
+        deleteObject(fileRef).then(() => {
+
+          console.log('file deleted')
+        }).catch((error) => {
+  
+        });
+      }
+
+
       deleteHouseLog(event)
-        .then(() => {
-          window.location.reload();
-        })
+        // .then(() => {
+        //   window.location.reload();
+        // })
         .catch(function (error: any) {
           console.error("Error removing document: ", error);
         });
@@ -304,7 +318,9 @@ export default function HouseLogs() {
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <Button
                         endIcon={<PhotoIcon />}
-                        onClick={() => { handleClickOpen(row["filename"]) }}
+                        onClick={() => {
+                          handleClickOpen(row["filename"]);
+                        }}
                       ></Button>
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
@@ -318,7 +334,7 @@ export default function HouseLogs() {
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <Button
                         endIcon={<DeleteIcon />}
-                        onClick={() => deleteItem(row["id"])}
+                        onClick={() => deleteItem(row["id"], row["filenameForDelete"])}
                       ></Button>
                     </td>
                   </tr>

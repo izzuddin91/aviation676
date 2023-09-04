@@ -64,53 +64,68 @@ export default function HouseLogs() {
       total: data.total,
       date: new Date(date),
       filename: "",
-      houseId: params["houseId"]
+      houseId: params["houseId"],
+      filenameForDelete: ""
     };
     console.log(submitData);
     console.log(file);
 
-    file?.arrayBuffer().then((val) => {
-      const storage = getStorage(firebase.app());
-      const storageref = ref(storage, "/uploads/"+ data.notes.replace(' ', '_') + `_${year}-${month}-${day}.jpg`);
-      console.log(storageref);
-      const uploadTask = uploadBytesResumable(storageref, val);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-          // setProgressUpload(progress) // to show progress upload
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
+    if (file){
+      file?.arrayBuffer().then((val) => {
+        const storage = getStorage(firebase.app());
+        const filenameForDelete = "/uploads/"+ data.notes.replace(' ', '_') + params["houseId"] + `_${year}-${month}-${day}.jpg`
+        const storageref = ref(storage, filenameForDelete);
+        console.log(storageref);
+        const uploadTask = uploadBytesResumable(storageref, val);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  
+            // setProgressUpload(progress) // to show progress upload
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // message.error(error.message)
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              //url is download url of file
+              console.log(url);
+              // setDownloadURL(url)
+              // we get the url here, then start updating the logs
+              submitData["filename"] = url;
+              submitData["filenameForDelete"] = filenameForDelete
+              firebase
+                .firestore()
+                .collection("/houseLogs")
+                .doc()
+                .set(submitData).then(()=> {
+                  alert('success!')
+                })
+            });
           }
-        },
-        (error) => {
-          // message.error(error.message)
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            //url is download url of file
-            console.log(url);
-            // setDownloadURL(url)
-            // we get the url here, then start updating the logs
-            submitData["filename"] = url;
-            firebase
-              .firestore()
-              .collection("/houseLogs")
-              .doc()
-              .set(submitData).then(()=> {
-                alert('success!')
-              })
-          });
-        }
-      );
-    });
+        );
+      });
+    }else{
+      submitData["filename"] = '';
+      firebase
+        .firestore()
+        .collection("/houseLogs")
+        .doc()
+        .set(submitData).then(()=> {
+          alert('success!')
+        })
+    }
+
   };
 
   return (
