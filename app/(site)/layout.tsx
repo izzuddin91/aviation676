@@ -38,7 +38,7 @@ export default function RootLayout({
         return (
           <html lang="en">
           <head>
-            <title>Etiqa+ Backoffice</title>
+            <title>I.Z Properties</title>
             <link rel="manifest" href="/backoffice/manifest.json" />
             <meta name="theme-color" content="#000" />
           </head>

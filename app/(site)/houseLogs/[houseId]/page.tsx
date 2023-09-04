@@ -1,34 +1,54 @@
 "use client";
-import Image from "next/image";
+
 import { useRouter } from "next/navigation";
-import { useCollection } from "react-firebase-hooks/firestore";
-import firebase from "../../../clientApp";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
-import { ReactNode, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import {
   Box,
   Button,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
-  Grid,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { getDocs } from "firebase/firestore";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 import InputIcon from "@mui/icons-material/Input";
-import { PrimaryButton } from "@/app/component/button/PrimaryButton";
-
+import Dialog from "@mui/material/Dialog";
 import moment from "moment";
-import { deleteHouseLog, getHouseDetails, getHouseLogsOnDateRange
- } from "../../service/firebase.service";
+import {
+  deleteHouseLog,
+  getHouseDetails,
+  getHouseLogsOnDateRange,
+} from "../../service/firebase.service";
 import { confirmAlert } from "../../service/alert.service";
+import React from "react";
+import DialogActions from "@mui/material/DialogActions";
+
+export interface SimpleDialogProps {
+  open: boolean;
+  selectedValue: string;
+  onClose: (value: string) => void;
+}
 
 export default function HouseLogs() {
+  const [open, setOpen] = React.useState(false);
+  const [fileName, setFileName] = React.useState("");
+  function handleClickOpen(file: any) {
+    setFileName(file);
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const router = useRouter();
 
   function createNewLogs() {
@@ -99,9 +119,24 @@ export default function HouseLogs() {
         });
     });
   }
-
   return (
     <div className="p-5 h-screen bg-gray-100">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Image</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <img src={fileName} alt="" />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Dismiss</Button>
+        </DialogActions>
+      </Dialog>
       <Button variant="outlined" onClick={() => router.back()}>
         Back
       </Button>
@@ -223,7 +258,7 @@ export default function HouseLogs() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols gap-4 p-4">
+      <div>
         <div className="overflow-auto rounded-lg shadow hidden md:block">
           <div>
             <h1 style={{ float: "left" }}>House Logs </h1>
@@ -238,7 +273,7 @@ export default function HouseLogs() {
                   Details
                 </th>
                 <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-                  Status
+                  Image
                 </th>
                 <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
                   Date
@@ -267,9 +302,14 @@ export default function HouseLogs() {
                       {row["notes"]}
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
-                        <a href={row["filename"]}>Image</a>
-                      </span>
+                      <Button
+                        variant="outlined"
+                        onClick={() => {
+                          handleClickOpen(row["filename"]);
+                        }}
+                      >
+                        Open alert dialog
+                      </Button>
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       {row["date"]
@@ -280,9 +320,10 @@ export default function HouseLogs() {
                       {row["total"]}
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <button onClick={() => deleteItem(row["id"])}>
-                        {row["id"]}
-                      </button>
+                      <Button
+                        endIcon={<DeleteIcon />}
+                        onClick={() => deleteItem(row["id"])}
+                      ></Button>
                     </td>
                   </tr>
                 );

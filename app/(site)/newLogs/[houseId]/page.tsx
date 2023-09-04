@@ -1,18 +1,15 @@
 "use client";
-import Image from "next/image";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
+
 import firebase from "../../../clientApp";
 import "firebase/compat/firestore";
 import { useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import * as yup from "yup";
 import { PrimaryTextInputWithLabel } from "../../../component/input/PrimaryTextInputWithLabel";
 import { PrimaryButton } from "../../../component/button/PrimaryButton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Alert } from "flowbite-react";
-import { Button, Grid, RadioGroup, Stack, TextField } from "@mui/material";
+import { Button, Stack,  } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -22,7 +19,6 @@ import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getStorage } from "firebase/storage";
-import { FirebaseError } from "firebase/app";
 
 type FormData = {
   notes: string;
@@ -74,10 +70,8 @@ export default function HouseLogs() {
     console.log(file);
 
     file?.arrayBuffer().then((val) => {
-      // console.log(val)
-      const filePath = `/uploads/asd`;
       const storage = getStorage(firebase.app());
-      const storageref = ref(storage, "/uploads/"+ file.name + `:${year}-${month}-${day}`);
+      const storageref = ref(storage, "/uploads/"+ data.notes.replace(' ', '_') + `_${year}-${month}-${day}.jpg`);
       console.log(storageref);
       const uploadTask = uploadBytesResumable(storageref, val);
       uploadTask.on(
@@ -87,7 +81,6 @@ export default function HouseLogs() {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
           // setProgressUpload(progress) // to show progress upload
-
           switch (snapshot.state) {
             case "paused":
               console.log("Upload is paused");
@@ -110,7 +103,7 @@ export default function HouseLogs() {
             firebase
               .firestore()
               .collection("/houseLogs")
-              .doc(params["houseId"].toString())
+              .doc()
               .set(submitData).then(()=> {
                 alert('success!')
               })
@@ -118,26 +111,6 @@ export default function HouseLogs() {
         }
       );
     });
-    // const uploadTask = storageRef.child( 'test' ).put(file.arrayBuffer);
-
-    // add datepicker,
-    // add house id in the form. example below:
-    // date
-    // February 23, 2023 at 8:00:00 AM UTC+8
-    // (timestamp)
-    // filename
-    // "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2F1677418059702_14a17847-3817-476c-98de-9f56fe197a9f.jpeg?alt=media&token=5b5a6212-35fe-44bc-9b8e-cbaa751b72da"
-    // houseId
-    // "5CSHAjZETnaTuiJ0R1eh"
-    // notes
-    // "baiki lampu tandas"
-    // total
-    // "40"
-    // firebase
-    //   .firestore()
-    //   .collection("/houseLogs")
-    //   .doc(params["houseId"])
-    //   .set(submitData);
   };
 
   return (
@@ -158,6 +131,7 @@ export default function HouseLogs() {
             </DemoContainer>
           </LocalizationProvider>
           <input
+            accept="image/jpeg"
             type="file"
             name="file"
             onChange={(e) => {
