@@ -31,7 +31,7 @@ import {
 import { confirmAlert } from "../../service/alert.service";
 import React from "react";
 import DialogActions from "@mui/material/DialogActions";
-
+import PhotoIcon from '@mui/icons-material/Photo';
 export interface SimpleDialogProps {
   open: boolean;
   selectedValue: string;
@@ -303,13 +303,9 @@ export default function HouseLogs() {
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <Button
-                        variant="outlined"
-                        onClick={() => {
-                          handleClickOpen(row["filename"]);
-                        }}
-                      >
-                        Open alert dialog
-                      </Button>
+                        endIcon={<PhotoIcon />}
+                        onClick={() => { handleClickOpen(row["filename"]) }}
+                      ></Button>
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       {row["date"]
