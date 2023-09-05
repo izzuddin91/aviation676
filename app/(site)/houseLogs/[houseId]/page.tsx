@@ -34,6 +34,9 @@ import DialogActions from "@mui/material/DialogActions";
 import PhotoIcon from "@mui/icons-material/Photo";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 import firebase from "../../../clientApp";
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+// import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -42,6 +45,15 @@ export interface SimpleDialogProps {
 }
 
 export default function HouseLogs() {
+
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"]
+  ];
+
+
   const storage = getStorage(firebase.app());
   const [open, setOpen] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
@@ -203,7 +215,7 @@ export default function HouseLogs() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 p-4">
+      <div className="grid grid-cols-5 gap-4 p-4">
         <div className="col-span">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Month</InputLabel>
@@ -256,6 +268,18 @@ export default function HouseLogs() {
             endIcon={<SearchIcon />}
           >
             Query
+          </Button>
+        </div>
+        <div className="col-span">
+        <Button
+            style={{ margin: "10px" }}
+            variant="outlined"
+            color="success"
+            className="mt-3"
+            onClick={getHouseLogs}
+            endIcon={<SaveAltIcon />}
+          >
+            <CSVLink data={csvData}>Download me</CSVLink>
           </Button>
         </div>
         <div className="col-span">
