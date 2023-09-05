@@ -98,15 +98,15 @@ export default function HouseLogs() {
       (val: any) => {
         updateMonthVal(monthVal);
         updateYear(year);
-        setHouseLogs(val);
-        updateTotalAmount(houseLogs);
+        updateTotalAmount(val);
+        setHouseLogs(val)
       }
     );
   }
 
   function updateTotalAmount(houseLogs: any) {
     amount = houseLogs.reduce((a: any, b: any) => +a + +b.total, 0);
-    updateAmount(amount);
+    updateAmount(amount ?? 0.00);
   }
 
   function deleteItem(event: any, filenameForDelete: any) {
@@ -116,14 +116,11 @@ export default function HouseLogs() {
       if (filenameForDelete ){
         const fileRef = ref(storage, filenameForDelete)
         deleteObject(fileRef).then(() => {
-
           console.log('file deleted')
         }).catch((error) => {
   
         });
       }
-
-
       deleteHouseLog(event)
         // .then(() => {
         //   window.location.reload();
@@ -267,7 +264,7 @@ export default function HouseLogs() {
           </label>
           <div className="relative mt-3 rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <span className="text-gray-500 sm:text-sm">RM {amount} </span>
+              <span className="text-gray-500 sm:text-sm">RM {amount.toFixed(2)} </span>
             </div>
           </div>
         </div>
