@@ -5,9 +5,8 @@ interface SessionAuth {
   refreshToken: string;
 }
 
-export const setAuth = (user: string, session: String) => {
-    console.log('in here')
-  secureLocalStorage.setItem("user", user);
+export const setAuth = (uid: string, session: String) => {
+  secureLocalStorage.setItem("uid", uid);
   secureLocalStorage.setItem("session", session);
 };
 
@@ -19,7 +18,7 @@ export const isAuthAuthorized = (): boolean => {
 };
 
 export const getUserAuth = (): string => {
-  return secureLocalStorage.getItem("user") as string;
+  return secureLocalStorage.getItem("uid") as string;
 };
 
 export const getAccessToken = (): string => {

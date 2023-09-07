@@ -7,9 +7,10 @@ import PhotoIcon from "@mui/icons-material/Photo";
 import React from "react";
 import { getCarPartsList } from "../../service/firebase.service";
 import moment from "moment";
+import { useRouter } from "next/navigation"
  
 export default function Vehicle() {
-
+  const router = useRouter()
   var [carParts, updateCarParts]: any = useState([{}]);
 
   useEffect(() => {
@@ -30,11 +31,12 @@ export default function Vehicle() {
   };
 
   function addLogs(){
-
+    router.push('/newVehicleLogs')
   }
 
   return (
     <div className="p-5 h-screen bg-gray-100">
+      <Button variant="outlined" onClick={() => router.back()}>Back</Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -58,7 +60,7 @@ export default function Vehicle() {
           </div>
           <div>
             <h1 className="bg-blue-100" style ={{ float: "right" }}> 
-            <Button onClick={handleClose}>ADD LOG</Button>
+            <Button onClick={addLogs}>ADD LOG</Button>
              </h1>
           </div>
           <table className="w-full">

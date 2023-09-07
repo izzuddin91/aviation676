@@ -8,10 +8,13 @@ import firebase from "../../clientApp";
 import "firebase/compat/firestore";
 import { useState } from "react";
 import { getDocs } from "firebase/firestore";
+import { getUserAuth } from "@/app/util/auth.util";
 
 
 export const getCarPartsList = async (): Promise<any> => {
-    const carPartsCollection = await firebase.firestore().collection("carParts").orderBy('date', 'desc')
+    const uid = getUserAuth()
+    console.log(uid)
+    const carPartsCollection = await firebase.firestore().collection("carParts").where("uid", "==", uid).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {

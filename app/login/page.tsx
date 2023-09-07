@@ -47,28 +47,26 @@ export default function Home() {
   const [message, setMessage] = useState("");
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-
-      firebase
+    firebase
       .auth()
       // test acc -> ("asd@email.com", "test123")
       .signInWithEmailAndPassword(data.email, data.password)
       .then(async (value) => {
-        console.log(value)
         if (value.user) {
-          setAuth(data.email, data.password);
+          setAuth(value.user.uid, data.password);
           router.push("/dashboard");
         }
-      }).catch((err)=> {
-        console.log('not found')
-        console.log(err)
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong!',
-          footer: '<a href="">Either your email or password is wrong.</a>'
-        })
       })
-
+      .catch((err) => {
+        console.log("not found");
+        console.log(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          footer: '<a href="">Either your email or password is wrong.</a>',
+        });
+      });
   };
 
   return (

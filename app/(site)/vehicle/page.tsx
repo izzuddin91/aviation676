@@ -5,8 +5,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "../../clientApp";
 import "firebase/compat/firestore";
 import { useState } from "react";
+import { Button } from "flowbite-react";
+import { useRouter } from "next/navigation"
 
 export default function Vehicle() {
+  const router = useRouter()
   // var [addFlexItem, setAddFlexItem] = useState([
   //   {
   //     id: "",
@@ -39,6 +42,7 @@ export default function Vehicle() {
   // }
   return (
     <div className="p-5 h-screen bg-gray-100">
+      <Button variant="outlined" onClick={() => router.back()}></Button>
       <div className="grid grid-cols-4 gap-4 p-4">
         <div className="col-span">
           <article className="overflow-hidden rounded-lg shadow-lg">
@@ -71,7 +75,7 @@ export default function Vehicle() {
             <header className="flex items-center justify-between leading-tight p-2 md:p-4">
               <h1 className="text-lg">
                 <a className="no-underline hover:underline text-black" href="#">
-                  VW Polo
+                  Honda City
                 </a>
               </h1>
               <p className="text-grey-darker text-sm"></p>
