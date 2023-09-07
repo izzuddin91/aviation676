@@ -36,7 +36,7 @@ import { getStorage, ref, deleteObject } from "firebase/storage";
 import firebase from "../../../clientApp";
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 // import { CSVLink, CSVDownload } from "react-csv";
-import { CSVLink } from "react-csv";
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -203,6 +203,16 @@ export default function HouseLogs() {
             </Box>
             <Box sx={{ p: 1 }}>
               <Button
+               
+                variant="outlined"
+                onClick={createNewLogs}
+                endIcon={<HistoryEduIcon />}
+              >
+                Agreement Docs
+              </Button>
+            </Box>
+            <Box sx={{ p: 1 }}>
+              <Button
                 color="error"
                 variant="outlined"
                 onClick={createNewLogs}
@@ -279,7 +289,7 @@ export default function HouseLogs() {
             onClick={getHouseLogs}
             endIcon={<SaveAltIcon />}
           >
-            <CSVLink data={csvData}>Download me</CSVLink>
+            {/* <CSVLink data={csvData}>Download CSV</CSVLink> */}
           </Button>
         </div>
         <div className="col-span">

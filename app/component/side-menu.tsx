@@ -38,6 +38,7 @@ export const SideMenu = () => {
             <Sidebar.Item href="/houseList">Property List</Sidebar.Item>
             <Sidebar.Item href="/houseLogs/newLogs">New House Logs</Sidebar.Item>
             <Sidebar.Item href="#">Maintenance Log</Sidebar.Item>
+            <Sidebar.Item href="/analysis">Analysis</Sidebar.Item>
           </Sidebar.Collapse>
           <Sidebar.Collapse icon={HiTruck} label="Vehicle">
             <Sidebar.Item href="/houseLogs/newLogs">Vehicle List</Sidebar.Item>

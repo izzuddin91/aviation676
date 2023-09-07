@@ -10,6 +10,17 @@ import { useState } from "react";
 import { getDocs } from "firebase/firestore";
 
 
+export const getCarPartsList = async (): Promise<any> => {
+    const carPartsCollection = await firebase.firestore().collection("carParts").orderBy('date', 'desc')
+    const carParts = await getDocs(carPartsCollection)
+    var list: any = [{}]
+    carParts.docs.map((doc, i) => {
+        list[i] = doc.data()
+    });
+    return list
+}
+
+
 export const getHouseList = async (): Promise<any> => {
     const housesCollection = await firebase.firestore().collection("houses")
     const houses = await getDocs(housesCollection)
