@@ -7,36 +7,36 @@ import "firebase/compat/firestore";
 import { useState } from "react";
 
 export default function Vehicle() {
-  var [addFlexItem, setAddFlexItem] = useState([
-    {
-      id: "",
-      partsName: "",
-      description: "",
-      price: "",
-      lifeSpan: "",
-      photoLink: "",
-    },
-  ]);
-  const [car, carLoading, carError] = useCollection(
-    firebase.firestore().collection("carParts"),
-    {}
-  );
+  // var [addFlexItem, setAddFlexItem] = useState([
+  //   {
+  //     id: "",
+  //     partsName: "",
+  //     description: "",
+  //     price: "",
+  //     lifeSpan: "",
+  //     photoLink: "",
+  //   },
+  // ]);
+  // const [car, carLoading, carError] = useCollection(
+  //   firebase.firestore().collection("carParts"),
+  //   {}
+  // );
 
-  console.log(car);
+  // console.log(car);
 
-  if (!carLoading && car) {
-    car.docs.map((docs, i) => {
-      console.log(docs.data());
-      addFlexItem[i] = {
-        id: i.toString(),
-        partsName: docs.data()["partsName"],
-        description: docs.data()["description"],
-        price: docs.data()["price"],
-        lifeSpan: docs.data()["lifeSpan"],
-        photoLink: docs.data()["photoLink"],
-      };
-    });
-  }
+  // if (!carLoading && car) {
+  //   car.docs.map((docs, i) => {
+  //     console.log(docs.data());
+  //     addFlexItem[i] = {
+  //       id: i.toString(),
+  //       partsName: docs.data()["partsName"],
+  //       description: docs.data()["description"],
+  //       price: docs.data()["price"],
+  //       lifeSpan: docs.data()["lifeSpan"],
+  //       photoLink: docs.data()["photoLink"],
+  //     };
+  //   });
+  // }
   return (
     <div className="p-5 h-screen bg-gray-100">
       <div className="grid grid-cols-4 gap-4 p-4">
