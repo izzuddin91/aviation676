@@ -7,14 +7,15 @@ import PhotoIcon from "@mui/icons-material/Photo";
 import React from "react";
 import { getCarPartsList } from "../../service/firebase.service";
 import moment from "moment";
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
  
 export default function Vehicle() {
   const router = useRouter()
   var [carParts, updateCarParts]: any = useState([{}]);
-
+  const params = useParams();
+  console.log(params)
   useEffect(() => {
-    getCarPartsList().then((val) => {
+    getCarPartsList(params['vehicleId'].toString()).then((val) => {
       updateCarParts(val)
     })
   }, [])
@@ -31,7 +32,7 @@ export default function Vehicle() {
   };
 
   function addLogs(){
-    router.push('/newVehicleLogs')
+    router.push('/newVehicleLogs/'+ params['vehicleId'].toString())
   }
 
   return (
@@ -133,8 +134,6 @@ export default function Vehicle() {
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       {row["lifespan"]}
                     </td>
-
-                   
                     {/* <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <button onClick={() => deleteItem(row['id'])}>
                         {row['id']}

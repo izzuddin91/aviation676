@@ -1,12 +1,12 @@
 "use client";
 
-import firebase from "../../clientApp";
+import firebase from "../../../clientApp";
 import "firebase/compat/firestore";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import * as yup from "yup";
-import { PrimaryTextInputWithLabel } from "../../component/input/PrimaryTextInputWithLabel";
-import { PrimaryButton } from "../../component/button/PrimaryButton";
+import { PrimaryTextInputWithLabel } from "../../../component/input/PrimaryTextInputWithLabel";
+import { PrimaryButton } from "../../../component/button/PrimaryButton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Stack } from "@mui/material";
@@ -38,7 +38,7 @@ const formSchema = yup
   })
   .required();
 
-export default function HouseLogs() {
+export default function VehicleLogs() {
   const [file, setFile] = useState<File>();
   const todayDate = new Date();
   const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
@@ -49,7 +49,7 @@ export default function HouseLogs() {
   );
   const router = useRouter();
   const params = useParams();
-  // console.log(params)
+  console.log(params)
 
   function setForm() {
     const data2 = new FormData();
@@ -75,7 +75,8 @@ export default function HouseLogs() {
       photoLink: "",
       price: data.price,
       lifeSpan: data.lifeSpan,
-      uid: uid
+      uid: uid,
+      vehicleId: params['newVehicleLogsId'].toString()
     };
     console.log(submitData);
     console.log(file);

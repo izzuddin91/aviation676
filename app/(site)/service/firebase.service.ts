@@ -9,12 +9,102 @@ import "firebase/compat/firestore";
 import { useState } from "react";
 import { getDocs } from "firebase/firestore";
 import { getUserAuth } from "@/app/util/auth.util";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 
+const todayDate = new Date();
+const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
+const month = todayDate.toLocaleString("en-US", { month: "long" });
+const year = todayDate.getFullYear();
 
-export const getCarPartsList = async (): Promise<any> => {
+export const getVehicles = async (): Promise<any> => {
     const uid = getUserAuth()
     console.log(uid)
-    const carPartsCollection = await firebase.firestore().collection("carParts").where("uid", "==", uid).orderBy('date', 'desc')
+    const carPartsCollection = await firebase.firestore().collection("cars").where("uid", "==", uid).orderBy('date', 'desc')
+    const carParts = await getDocs(carPartsCollection)
+    var list: any = [{}]
+    carParts.docs.map((doc, i) => {
+        console.log(doc.data())
+        list[i] = doc.data()
+    });
+    return list
+}
+
+export const createNewVehicle = async (data: any, file?: File): Promise<any> => {
+    var status = ''
+    if (file) {
+        file?.arrayBuffer().then((val) => {
+            const storage = getStorage(firebase.app());
+            const filenameForDelete =
+                "/uploads/" +
+                data.carName.replace(" ", "_") +
+                  data.uid +
+                `_${year}-${month}-${day}.jpg`;
+            const storageref = ref(storage, filenameForDelete);
+            console.log(storageref);
+            const uploadTask = uploadBytesResumable(storageref, val);
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+                    // setProgressUpload(progress) // to show progress upload
+                    switch (snapshot.state) {
+                        case "paused":
+                            console.log("Upload is paused");
+                            break;
+                        case "running":
+                            console.log("Upload is running");
+                            break;
+                    }
+                },
+                (error) => {
+                    // message.error(error.message)
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                        //url is download url of file
+                        console.log(url);
+                        // setDownloadURL(url)
+                        // we get the url here, then start updating the logs
+                        data['photoLink'] = url;
+                        //   submitData["filenameForDelete"] = filenameForDelete;
+                        firebase
+                        .firestore()
+                        .collection("/cars")
+                        .doc()
+                        .set(data)
+                        .then(() => {
+                            status = 'success'
+                            return 'success'
+                        });
+
+
+                    });
+                }
+            );
+
+        })
+    }else{
+        firebase
+        .firestore()
+        .collection("/cars")
+        .doc()
+        .set(data)
+        .then(() => {
+            status = 'success'
+            return 'success'
+        });
+    }
+
+
+    return status;
+}
+
+export const getCarPartsList = async (vehicleId: string): Promise<any> => {
+    const uid = getUserAuth()
+    console.log(uid)
+    const carPartsCollection = await firebase.firestore().collection("carParts").where("uid", "==", uid).where("vehicleId", "==", vehicleId).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {
@@ -75,15 +165,15 @@ export const getHouseLogsOnDateRange = async (
     return list
 }
 
-export const deleteHouseLog = async (houseId : string) : Promise<any> => {
+export const deleteHouseLog = async (houseId: string): Promise<any> => {
     var status;
     firebase
-    .firestore()
-    .collection("/houseLogs")
-    .doc(houseId)
-    .delete().then((val: any) =>{
-        console.log(val)
-        status = val
-    })
+        .firestore()
+        .collection("/houseLogs")
+        .doc(houseId)
+        .delete().then((val: any) => {
+            console.log(val)
+            status = val
+        })
     return status;
 }
