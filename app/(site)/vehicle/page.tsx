@@ -46,7 +46,7 @@ export default function Vehicle() {
       <div className="grid grid-cols-4 gap-4 p-4">
         {vehicles.map((row: any) => {
           return (
-            <div className="col-span">
+            <div key={row["id"]} className="col-span">
               <article className="overflow-hidden rounded-lg shadow-lg">
                 <a href={"/vehicle/" + row["id"]}>
                   <img
