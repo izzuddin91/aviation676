@@ -49,7 +49,6 @@ export default function Home() {
       <div className="grid grid-cols-3 gap-4 p-4;">
         <div className="col-span text-center">
           <article
-            style={{ backgroundColor: "white" }}
             className="overflow-hidden rounded-lg shadow-lg"
           >
             <header className="flex items-center justify-between leading-tight p-2 md:p-4">
@@ -87,7 +86,6 @@ export default function Home() {
         </div>
         <div className="col-span text-center">
           <article
-            style={{ backgroundColor: "white" }}
             className="overflow-hidden rounded-lg shadow-lg"
           >
             <header className="flex items-center justify-between leading-tight p-2 md:p-4">
@@ -125,7 +123,6 @@ export default function Home() {
         </div>
         <div className="col-span text-center">
           <article
-            style={{ backgroundColor: "white" }}
             className="overflow-hidden rounded-lg shadow-lg"
           >
             <header className="flex items-center justify-between leading-tight p-2 md:p-4">
@@ -198,7 +195,7 @@ export default function Home() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            <tr className="bg-white">
+            <tr>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                 <a
                   href="#"

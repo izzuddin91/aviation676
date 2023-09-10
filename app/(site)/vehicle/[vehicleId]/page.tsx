@@ -12,13 +12,25 @@ import { useParams, useRouter } from "next/navigation"
 export default function Vehicle() {
   const router = useRouter()
   var [carParts, updateCarParts]: any = useState([{}]);
+  var [total, updateTotal] = useState(0.0)
   const params = useParams();
   console.log(params)
   useEffect(() => {
     getCarPartsList(params['vehicleId'].toString()).then((val) => {
       updateCarParts(val)
+      calculateTotal(val)
     })
   }, [])
+
+  function calculateTotal(val: any){
+    var total = 0.0
+    for (var i =0; i < val.length; i++){
+      console.log(val[i]['price'])
+      total += val[i]['price']
+    }
+    console.log(total)
+    updateTotal(total)
+  }
   
   const [open, setOpen] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
@@ -58,6 +70,9 @@ export default function Vehicle() {
         <div className="overflow-auto rounded-lg shadow hidden md:block">
           <div>
             <h1  style ={{ float: "left" }}>Vehicle Logs </h1>
+          </div>
+          <div>
+            <h1  style ={{ float: "right" }}>Total: RM { total } </h1>
           </div>
           <div>
             <h1 className="bg-blue-100" style ={{ float: "right" }}> 
