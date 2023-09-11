@@ -1,12 +1,8 @@
 "use client";
-import Image from "next/image";
+
 import { useRouter } from "next/navigation";
-import { useCollection } from "react-firebase-hooks/firestore";
-import firebase from "../../clientApp";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
-import { ReactNode, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
 import {
   Box,
   Button,
@@ -20,13 +16,7 @@ import {
 import HouseIcon from "@mui/icons-material/House";
 import DirectionsCarFilledIcon from "@mui/icons-material/DirectionsCarFilled";
 import PersonIcon from '@mui/icons-material/Person';
-import { getDocs } from "firebase/firestore";
-import SearchIcon from "@mui/icons-material/Search";
-import BrokenImageIcon from "@mui/icons-material/BrokenImage";
-import InputIcon from "@mui/icons-material/Input";
-import { PrimaryButton } from "@/app/component/button/PrimaryButton";
-// import { confirmAlert } from "@/app/service/alert.service";
-import { SecondaryButton } from "@/app/component/button/SecondaryButton";
+import TopCards from "@/app/component/top-cards";
 
 export default function Home() {
   const router = useRouter();
@@ -43,122 +33,11 @@ export default function Home() {
     <div className="p-5 h-screen bg-gray-100">
       <div className="grid grid-cols-1 gap-4 p-4 pb-10;">
         <div className="col-span text-center">
-          <h2>Welcome, User. Manage your property and vehicle here:</h2>
+        <h3 className='text-2xl font-bold'>Welcome, User. Manage your property and vehicle here:</h3>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4 p-4;">
-        <div className="col-span text-center">
-          <article
-            className="overflow-hidden rounded-lg shadow-lg"
-          >
-            <header className="flex items-center justify-between leading-tight p-2 md:p-4">
-              <Button
-                color="inherit"
-                variant="outlined"
-                onClick={() => {
-                  redirectToHouse();
-                }}
-                endIcon={<PersonIcon />}
-              >
-                Individual
-              </Button>
-              <p className="text-grey-darker text-sm">
-                Last work done: 11/1/19
-              </p>
-            </header>
-
-            <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-              <a
-                className="flex items-center no-underline hover:underline text-black"
-                href="#"
-              >
-                {/* <p className="ml-2 text-sm">Location: {row.location}</p> */}
-              </a>
-              <a
-                className="no-underline text-grey-darker hover:text-red-dark"
-                href="#"
-              >
-                <span className="hidden">Like</span>
-                <i className="fa fa-heart"></i>
-              </a>
-            </footer>
-          </article>
-        </div>
-        <div className="col-span text-center">
-          <article
-            className="overflow-hidden rounded-lg shadow-lg"
-          >
-            <header className="flex items-center justify-between leading-tight p-2 md:p-4">
-              <Button
-                color="inherit"
-                variant="outlined"
-                onClick={() => {
-                  redirectToHouse();
-                }}
-                endIcon={<HouseIcon />}
-              >
-                House
-              </Button>
-              <p className="text-grey-darker text-sm">
-                Last work done: 11/1/19
-              </p>
-            </header>
-
-            <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-              <a
-                className="flex items-center no-underline hover:underline text-black"
-                href="#"
-              >
-                {/* <p className="ml-2 text-sm">Location: {row.location}</p> */}
-              </a>
-              <a
-                className="no-underline text-grey-darker hover:text-red-dark"
-                href="#"
-              >
-                <span className="hidden">Like</span>
-                <i className="fa fa-heart"></i>
-              </a>
-            </footer>
-          </article>
-        </div>
-        <div className="col-span text-center">
-          <article
-            className="overflow-hidden rounded-lg shadow-lg"
-          >
-            <header className="flex items-center justify-between leading-tight p-2 md:p-4">
-              <Button
-                color="inherit"
-                variant="outlined"
-                onClick={() => {
-                  redirectToVehicle();
-                }}
-                endIcon={<DirectionsCarFilledIcon />}
-              >
-                Vehicle
-              </Button>
-
-              <p className="text-grey-darker text-sm">
-                Last work done: 11/1/19
-              </p>
-            </header>
-
-            <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-              <a
-                className="flex items-center no-underline hover:underline text-black"
-                href="#"
-              >
-                {/* <p className="ml-2 text-sm">Location: {row.location}</p> */}
-              </a>
-              <a
-                className="no-underline text-grey-darker hover:text-red-dark"
-                href="#"
-              >
-                <span className="hidden">Like</span>
-                <i className="fa fa-heart"></i>
-              </a>
-            </footer>
-          </article>
-        </div>
+      <div className="grid gap-4 p-4;">
+     <TopCards/>
       </div>
       <div className="grid grid-cols-1 gap-4 p-4 pb-10;">
         <div>

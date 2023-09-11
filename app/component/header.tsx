@@ -29,8 +29,9 @@ export const Header = ({
   }
 
   return (
-    <Navbar
-      fluid
+    <Navbar 
+    style={{top: '0px', right: '0px', left: '0px'}}
+      fluid 
       theme={{
         base: "bg-gray-300 px-2 py-2.5 border-b shadow-sm border-gray-200",
       }}

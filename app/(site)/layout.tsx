@@ -6,6 +6,8 @@ import { isAuthAuthorized, getUserAuth } from "@/app/util/auth.util";
 import { useEffect, useState } from "react";
 // import { DateTime } from "luxon";
 import { useRouter } from "next/navigation"
+import TopCards from "../component/top-cards";
+import BarChart from "../component/bar-chart";
  
 export default function RootLayout({
     children,
@@ -44,18 +46,18 @@ export default function RootLayout({
           </head>
           <body>
           <section className="flex min-h-screen flex-col items-left bg-gray-50">
-              <div className="grid">
+              {/* <div className="grid">
                 <Header
                   name={name}
                   roleCode={'userLoginDetail.roleCode'}
                 />
-              </div>
+              </div> */}
       
               <div className="grid grid-cols-12 gap-1 text-left">
                 <div className="col-span-2 justify-self-stretch">
                   <SideMenu />
                 </div>
-                <div className="col-start-3 col-end-13 bg-white p-3 my-3 ml-2 mr-3 rounded border shadow-sm">
+                <div className="col-start-2 col-end-13 bg-white p-3 my-3 ml-2 mr-3 rounded border shadow-sm">
                   <hr className="h-px my-2 bg-gray-400 border-0 " />
                   <h1>{children}</h1>
                 </div>

@@ -165,6 +165,40 @@ export const getHouseLogsOnDateRange = async (
     return list
 }
 
+export const getCarLogsOnDateRange = async (
+    houseId: String,
+    selectedMonth: number,
+    selectedYear: number): Promise<any> => {
+
+    let start = new Date(selectedYear + "-" + selectedMonth + "-01");
+    var month = selectedMonth;
+    var year = selectedYear;
+
+    if (selectedMonth == 12) {
+        month = 1;
+
+        year = Number(selectedYear) + 1;
+    } else {
+        month = Number(selectedMonth) + 1;
+        year = selectedYear;
+    }
+    let end = new Date(year + "-" + month + "-01");
+
+    const houseLogsCollection = firebase.firestore().collection("carParts");
+    const houseLogs = houseLogsCollection
+        .where("vehicleId", "==", houseId)
+        .where("date", ">", start)
+        .where("date", "<", end);
+    const houseLogsVal = await getDocs(houseLogs);
+    var list: any = [{}]
+    houseLogsVal.docs.map((doc, i) => {
+        list[i] = doc.data()
+        list[i]['id'] = doc.id // manual update the id here
+    });
+    console.log(list)
+    return list
+}
+
 export const deleteHouseLog = async (houseId: string): Promise<any> => {
     var status;
     firebase
