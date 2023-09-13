@@ -34,9 +34,9 @@ import DialogActions from "@mui/material/DialogActions";
 import PhotoIcon from "@mui/icons-material/Photo";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 import firebase from "../../../clientApp";
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 // import { CSVLink, CSVDownload } from "react-csv";
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -45,14 +45,12 @@ export interface SimpleDialogProps {
 }
 
 export default function HouseLogs() {
-
   const csvData = [
     ["firstname", "lastname", "email"],
     ["Ahmed", "Tomi", "ah@smthing.co.com"],
     ["Raed", "Labes", "rl@smthing.co.com"],
-    ["Yezzi", "Min l3b", "ymin@cocococo.com"]
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
   ];
-
 
   const storage = getStorage(firebase.app());
   const [open, setOpen] = React.useState(false);
@@ -111,27 +109,27 @@ export default function HouseLogs() {
         updateMonthVal(monthVal);
         updateYear(year);
         updateTotalAmount(val);
-        setHouseLogs(val)
+        setHouseLogs(val);
       }
     );
   }
 
   function updateTotalAmount(houseLogs: any) {
     amount = houseLogs.reduce((a: any, b: any) => +a + +b.total, 0);
-    updateAmount(amount ?? 0.00);
+    updateAmount(amount ?? 0.0);
   }
 
   function deleteItem(event: any, filenameForDelete: any) {
     // delete this and show alert
-    console.log(filenameForDelete)
+    console.log(filenameForDelete);
     confirmAlert("delete", "confirm to delete this record?", () => {
-      if (filenameForDelete ){
-        const fileRef = ref(storage, filenameForDelete)
-        deleteObject(fileRef).then(() => {
-          console.log('file deleted')
-        }).catch((error) => {
-  
-        });
+      if (filenameForDelete) {
+        const fileRef = ref(storage, filenameForDelete);
+        deleteObject(fileRef)
+          .then(() => {
+            console.log("file deleted");
+          })
+          .catch((error) => {});
       }
       deleteHouseLog(event)
         // .then(() => {
@@ -163,21 +161,9 @@ export default function HouseLogs() {
       <Button variant="outlined" onClick={() => router.back()}>
         Back
       </Button>
-      <h2>House Details </h2>
-      <div className="grid grid-cols-2 gap-4 p-4">
-        <div className="col-span">
-          <div>
-            {" "}
-            <img
-              alt="Placeholder"
-              className="block h-auto w-full"
-              src={(houseDetail as any)["house_image"]}
-            />{" "}
-          </div>
-        </div>
-        <div className="col-span">
-          <div>
-            <Box sx={{ p: 1 }}>Name : {(houseDetail as any)["houseName"]}</Box>
+      <h2>House Details</h2>
+
+      {/* <Box sx={{ p: 1 }}>Name : {(houseDetail as any)["houseName"]}</Box>
             <Box sx={{ p: 1 }}>
               Installment : RM {(houseDetail as any)["installement"]}
             </Box>
@@ -187,45 +173,49 @@ export default function HouseLogs() {
             <Box sx={{ p: 1 }}>
               Sinking fund : RM : {(houseDetail as any)["sinkingFund"]}
             </Box>
-            <Box sx={{ p: 1 }}>Wifi : RM {(houseDetail as any)["wifi"]}</Box>
-            <Box sx={{ p: 1 }}>
-              {(houseDetail as any)["text1key"]} :{" "}
-              {(houseDetail as any)["text1Value"]}
-            </Box>
-            <Box sx={{ p: 1 }}>
-              <Button
-                variant="outlined"
-                onClick={createNewLogs}
-                endIcon={<InputIcon />}
-              >
-                New Logs
-              </Button>
-            </Box>
-            <Box sx={{ p: 1 }}>
-              <Button
-               
-                variant="outlined"
-                onClick={createNewLogs}
-                endIcon={<HistoryEduIcon />}
-              >
-                Agreement Docs
-              </Button>
-            </Box>
-            <Box sx={{ p: 1 }}>
-              <Button
-                color="error"
-                variant="outlined"
-                onClick={createNewLogs}
-                endIcon={<BrokenImageIcon />}
-              >
-                Damages Logs
-              </Button>
-            </Box>
+            <Box sx={{ p: 1 }}>Wifi : RM {(houseDetail as any)["wifi"]}</Box> */}
+
+
+
+
+      <div className="grid lg:grid-cols-6 gap-4 p-4">
+        <div className="lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex flex-col w-full pb-4">
+            <p className="text-gray-600">Name</p>
+            <p className="text-2xl font-bold"> {(houseDetail as any)["houseName"]}</p>
+          </div>
+        </div>
+        <div className="lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex flex-col w-full pb-4">
+            <p className="text-gray-600">Installment</p>
+            <p className="text-2xl font-bold">{(houseDetail as any)["installment"]}</p>
+          </div>
+        </div>
+        <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex flex-col w-full pb-4">
+            <p className="text-gray-600">Maintenance+Sinking</p>
+            <p className="text-2xl font-bold">{(houseDetail as any)["maintenance"]}</p>
+          </div>
+        </div>
+        <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex flex-col w-full pb-4">
+            <p className="text-gray-600">Wifi</p>
+            <p className="text-2xl font-bold">{(houseDetail as any)["wifi"]}</p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-4 p-4">
+      <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="col-span border bg-white p-4 rounded-lg">
+          <div>
+            {" "}
+            <img
+              alt="Placeholder"
+              className="block h-auto w-full"
+              src={(houseDetail as any)["house_image"]}
+            />{" "}
+          </div>
+        </div>
         <div className="col-span">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Month</InputLabel>
@@ -252,61 +242,56 @@ export default function HouseLogs() {
           </FormControl>
         </div>
         <div className="col-span">
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Year</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={year}
-              label="Year"
-              onChange={updateYearVal}
-            >
-              <MenuItem value={2019}>2019</MenuItem>
-              <MenuItem value={2020}>2020</MenuItem>
-              <MenuItem value={2021}>2021</MenuItem>
-              <MenuItem value={2022}>2022</MenuItem>
-              <MenuItem value={2023}>2023</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-        <div className="col-span">
-          <Button
-            style={{ margin: "10px" }}
-            variant="outlined"
-            className="mt-3"
-            onClick={getHouseLogs}
-            endIcon={<SearchIcon />}
-          >
-            Query
-          </Button>
-        </div>
-        <div className="col-span">
-        <Button
-            style={{ margin: "10px" }}
-            variant="outlined"
-            color="success"
-            className="mt-3"
-            onClick={getHouseLogs}
-            endIcon={<SaveAltIcon />}
-          >
-            {/* <CSVLink data={csvData}>Download CSV</CSVLink> */}
-          </Button>
-        </div>
-        <div className="col-span">
-          <label className="block text-sm font-medium leading-6 text-gray-900">
-            Total:
-          </label>
-          <div className="relative mt-3 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <span className="text-gray-500 sm:text-sm">RM {amount.toFixed(2)} </span>
+          <div className="grid grid-cols-2 gap-4 ">
+            <div className="col-span">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={year}
+                  label="Year"
+                  onChange={updateYearVal}
+                >
+                  <MenuItem value={2019}>2019</MenuItem>
+                  <MenuItem value={2020}>2020</MenuItem>
+                  <MenuItem value={2021}>2021</MenuItem>
+                  <MenuItem value={2022}>2022</MenuItem>
+                  <MenuItem value={2023}>2023</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <div className="col-span">
+              <Button
+                style={{ margin: "10px" }}
+                variant="outlined"
+                className="mt-3"
+                onClick={getHouseLogs}
+                endIcon={<SearchIcon />}
+              >
+                Query
+              </Button>
+              <div className="col-span">
+                <label className="block text-sm font-medium leading-6 text-gray-900">
+                  Total:
+                </label>
+                <div className="relative mt-3 rounded-md shadow-sm">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <span className="text-gray-500 sm:text-sm">
+                      RM {amount.toFixed(2)}{" "}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div className="grid grid-cols-5 gap-4 p-4"></div>
       <div>
         <div className="overflow-auto rounded-lg shadow hidden md:block">
           <div>
-            <h1 style={{ float: "left" }}>House Logs </h1>
+            <h1 style={{ float: "left" }}>Logs </h1>
           </div>
           <table className="w-full">
             <thead className="bg-gray-50 border-b-2 border-gray-200">
@@ -365,7 +350,9 @@ export default function HouseLogs() {
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <Button
                         endIcon={<DeleteIcon />}
-                        onClick={() => deleteItem(row["id"], row["filenameForDelete"])}
+                        onClick={() =>
+                          deleteItem(row["id"], row["filenameForDelete"])
+                        }
                       ></Button>
                     </td>
                   </tr>

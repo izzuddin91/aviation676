@@ -6,8 +6,13 @@ import firebase from "../../clientApp";
 import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
 import { getHouseList } from "../service/firebase.service";
+import { PrimaryButton } from "@/app/component/button/PrimaryButton";
+import { Button } from "@mui/material";
+import { useRouter } from "next/navigation"
 
 export default function Home() {
+
+  const router = useRouter()
 
   useEffect(() => {
     getData()
@@ -20,6 +25,15 @@ export default function Home() {
       houses = val
       updateHouses(val)
     })
+  }
+
+  function houseDetails(houseId: string){
+    console.log('hhouse details')
+    router.push("/houseList/" + houseId);
+  }
+
+  function houseLogs(link: string){
+    router.push(link)
   }
 
   return (
@@ -47,11 +61,14 @@ export default function Home() {
                     {row.houseName}
                   </a>
                 </h1>
-                <p className="text-grey-darker text-sm">11/1/19</p>
+                <p className="text-grey-darker text-sm">{row.location}</p>
               </header>
 
-              <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                <a
+              <footer className="flex items-start justify-between leading-none p-2 md:p-4">
+              <Button onClick={()=> {houseDetails(row["houseId"])}} variant="text">Edit Details</Button>
+              <Button onClick={()=> {houseLogs(link)}} variant="text">House Logs</Button>
+              <Button variant="text">Monthly Logs</Button>
+                {/* <a
                   className="flex items-center no-underline hover:underline text-black"
                   href="#"
                 >
@@ -61,7 +78,7 @@ export default function Home() {
                     src="https://picsum.photos/32/32/?random"
                   />
                   <p className="ml-2 text-sm">Location: {row.location}</p>
-                </a>
+                </a> */}
                 <a
                   className="no-underline text-grey-darker hover:text-red-dark"
                   href="#"
