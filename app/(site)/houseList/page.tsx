@@ -36,6 +36,10 @@ export default function Home() {
     router.push(link)
   }
 
+  function monthlyPL(link: string){
+    router.push(link)
+  }
+
   return (
     <div className="p-8 space-y-5">
       <h1 className="text-xl mb-2">Your properties</h1>
@@ -67,7 +71,7 @@ export default function Home() {
               <footer className="flex items-start justify-between leading-none p-2 md:p-4">
               <Button onClick={()=> {houseDetails(row["houseId"])}} variant="text">Edit Details</Button>
               <Button onClick={()=> {houseLogs(link)}} variant="text">House Logs</Button>
-              <Button variant="text">Monthly Logs</Button>
+              <Button onClick={()=> {monthlyPL("/monthlyPL/" + row["houseId"])}} variant="text">Monthly Logs</Button>
                 {/* <a
                   className="flex items-center no-underline hover:underline text-black"
                   href="#"

@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
 import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 import InputIcon from "@mui/icons-material/Input";
 import Dialog from "@mui/material/Dialog";
@@ -162,45 +163,38 @@ export default function HouseLogs() {
         Back
       </Button>
       <h2>House Details</h2>
-
-      {/* <Box sx={{ p: 1 }}>Name : {(houseDetail as any)["houseName"]}</Box>
-            <Box sx={{ p: 1 }}>
-              Installment : RM {(houseDetail as any)["installement"]}
-            </Box>
-            <Box sx={{ p: 1 }}>
-              Maintenance : RM {(houseDetail as any)["maintenance"]}
-            </Box>
-            <Box sx={{ p: 1 }}>
-              Sinking fund : RM : {(houseDetail as any)["sinkingFund"]}
-            </Box>
-            <Box sx={{ p: 1 }}>Wifi : RM {(houseDetail as any)["wifi"]}</Box> */}
-
-
-
-
       <div className="grid lg:grid-cols-6 gap-4 p-4">
         <div className="lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
             <p className="text-gray-600">Name</p>
-            <p className="text-2xl font-bold"> {(houseDetail as any)["houseName"]}</p>
+            <p className="text-2xl font-bold">
+              {" "}
+              {(houseDetail as any)["houseName"]}
+            </p>
           </div>
         </div>
         <div className="lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
             <p className="text-gray-600">Installment</p>
-            <p className="text-2xl font-bold">{(houseDetail as any)["installment"]}</p>
+            <p className="text-2xl font-bold">
+              RM {(houseDetail as any)["installment"]}
+            </p>
           </div>
         </div>
         <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
             <p className="text-gray-600">Maintenance+Sinking</p>
-            <p className="text-2xl font-bold">{(houseDetail as any)["maintenance"]}</p>
+            <p className="text-2xl font-bold">
+              RM {(houseDetail as any)["maintenance"]}
+            </p>
           </div>
         </div>
         <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
             <p className="text-gray-600">Wifi</p>
-            <p className="text-2xl font-bold">{(houseDetail as any)["wifi"]}</p>
+            <p className="text-2xl font-bold">
+              RM {(houseDetail as any)["wifi"]}
+            </p>
           </div>
         </div>
       </div>
@@ -271,6 +265,15 @@ export default function HouseLogs() {
               >
                 Query
               </Button>
+              <Button
+                style={{ margin: "10px" }}
+                variant="outlined"
+                className="mt-3"
+                onClick={createNewLogs}
+                endIcon={<AddIcon />}
+              >
+                Logs
+              </Button>
               <div className="col-span">
                 <label className="block text-sm font-medium leading-6 text-gray-900">
                   Total:
@@ -303,6 +306,9 @@ export default function HouseLogs() {
                   Details
                 </th>
                 <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+                  Category
+                </th>
+                <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
                   Image
                 </th>
                 <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
@@ -318,6 +324,18 @@ export default function HouseLogs() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {houseLogs.map((row: any, i: number) => {
+                let bgColor = "";
+                switch (row["category"]) {
+                  case "grocery":
+                    bgColor = "text-green-800 bg-green-200";
+                    break;
+                  case "cleaning":
+                    bgColor = "text-blue-800 bg-blue-200";
+                    break;
+                  case "damage":
+                    bgColor = "text-red-800 bg-red-200";
+                    break;
+                }
                 return (
                   <tr key={i} className="bg-white">
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
@@ -330,6 +348,13 @@ export default function HouseLogs() {
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       {row["notes"]}
+                    </td>
+                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                      <span
+                        className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
+                      >
+                        <span> {row["category"]} </span>
+                      </span>
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                       <Button

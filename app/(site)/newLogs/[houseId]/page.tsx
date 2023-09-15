@@ -9,7 +9,7 @@ import { PrimaryTextInputWithLabel } from "../../../component/input/PrimaryTextI
 import { PrimaryButton } from "../../../component/button/PrimaryButton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button, Stack,  } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,12 +33,20 @@ const formSchema = yup
   .required();
 
 export default function HouseLogs() {
+  const [category, updateCategory] = React.useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    updateCategory(event.target.value as string);
+  };
+
   const [file, setFile] = useState<File>();
-  const todayDate = new Date()
-  const day = todayDate.toLocaleString("en-US", { day : '2-digit'})
-  const month = todayDate.toLocaleString("en-US", { month: "long" })
-  const year = todayDate.getFullYear()
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs(`${year}-${month}-${day}`));
+  const todayDate = new Date();
+  const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
+  const month = todayDate.toLocaleString("en-US", { month: "long" });
+  const year = todayDate.getFullYear();
+  const [value, setValue] = React.useState<Dayjs | null>(
+    dayjs(`${year}-${month}-${day}`)
+  );
   const router = useRouter();
   const params = useParams();
   // console.log(params)
@@ -65,15 +73,20 @@ export default function HouseLogs() {
       date: new Date(date),
       filename: "",
       houseId: params["houseId"],
-      filenameForDelete: ""
+      filenameForDelete: "",
+      category: category
     };
     console.log(submitData);
     console.log(file);
 
-    if (file){
+    if (file) {
       file?.arrayBuffer().then((val) => {
         const storage = getStorage(firebase.app());
-        const filenameForDelete = "/uploads/"+ data.notes.replace(' ', '_') + params["houseId"] + `_${year}-${month}-${day}.jpg`
+        const filenameForDelete =
+          "/uploads/" +
+          data.notes.replace(" ", "_") +
+          params["houseId"] +
+          `_${year}-${month}-${day}.jpg`;
         const storageref = ref(storage, filenameForDelete);
         console.log(storageref);
         const uploadTask = uploadBytesResumable(storageref, val);
@@ -82,7 +95,7 @@ export default function HouseLogs() {
           (snapshot) => {
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  
+
             // setProgressUpload(progress) // to show progress upload
             switch (snapshot.state) {
               case "paused":
@@ -103,29 +116,30 @@ export default function HouseLogs() {
               // setDownloadURL(url)
               // we get the url here, then start updating the logs
               submitData["filename"] = url;
-              submitData["filenameForDelete"] = filenameForDelete
+              submitData["filenameForDelete"] = filenameForDelete;
               firebase
                 .firestore()
                 .collection("/houseLogs")
                 .doc()
-                .set(submitData).then(()=> {
-                  alert('success!')
-                })
+                .set(submitData)
+                .then(() => {
+                  alert("success!");
+                });
             });
           }
         );
       });
-    }else{
-      submitData["filename"] = '';
+    } else {
+      submitData["filename"] = "";
       firebase
         .firestore()
         .collection("/houseLogs")
         .doc()
-        .set(submitData).then(()=> {
-          alert('success!')
-        })
+        .set(submitData)
+        .then(() => {
+          alert("success!");
+        });
     }
-
   };
 
   return (
@@ -173,6 +187,20 @@ export default function HouseLogs() {
             errors={errors}
             register={register}
           />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Category</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={category}
+              label="Category"
+              onChange={handleChange}
+            >
+              <MenuItem value={'cleaning'}>Cleaning</MenuItem>
+              <MenuItem value={'grocery'}>Grocery</MenuItem>
+              <MenuItem value={'damage'}>Damage</MenuItem>
+            </Select>
+          </FormControl>
           <PrimaryButton
             type="submit"
             className="mt-3"
