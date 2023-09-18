@@ -27,6 +27,7 @@ type FormData = {
   address: string;
   maintenance: number;
   sinkingFund: number;
+  wifi: number;
   text1Key: string;
   text1Value: string;
   text2Key: string;
@@ -43,7 +44,7 @@ const formSchema = yup
   .required();
 
 export default function HouseLogs() {
-  var [houseDetail, updatehouseDetail] = useState({});
+  var [houseImage, updateHouseImage] = useState({});
   const [file, setFile] = useState<File>();
   const todayDate = new Date();
   const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
@@ -65,11 +66,12 @@ export default function HouseLogs() {
   async function getData() {
     getHouseDetails(params["houseId"].toString()).then((val) => {
       console.log(val);
-      updatehouseDetail(val);
+      updateHouseImage(val["house_image"]);
       setValue("houseName", val["houseName"]);
       setValue("installment", val["installment"]);
       setValue("address", val["address"]);
       setValue("maintenance", val["maintenance"]);
+      setValue("wifi", val["wifi"]);
       setValue("address", val["address"]);
       setValue("sinkingFund", val["sinkingFund"]);
       setValue("text1Key", val["text1Key"]);
@@ -105,10 +107,11 @@ export default function HouseLogs() {
       sinkingFund: data.sinkingFund,
       text1Key: data.text1Key,
       text1Value: data.text1Value,
-      text2Key: data.text2Key ?? '',
-      text2Value: data.text2Value ?? '',
+      text2Key: data.text2Key ?? "",
+      text2Value: data.text2Value ?? "",
       houseId: params["houseId"],
-      house_image: ''
+      house_image: houseImage,
+      wifi: data.wifi,
     };
     console.log(submitData);
     console.log(file);
@@ -154,7 +157,7 @@ export default function HouseLogs() {
               firebase
                 .firestore()
                 .collection("/houses")
-                .doc(submitData['houseId'].toString())
+                .doc(submitData["houseId"].toString())
                 .set(submitData)
                 .then(() => {
                   alert("success!");
@@ -164,11 +167,10 @@ export default function HouseLogs() {
         );
       });
     } else {
-
       firebase
         .firestore()
         .collection("/houses")
-        .doc(submitData['houseId'].toString())
+        .doc(submitData["houseId"].toString())
         .set(submitData)
         .then(() => {
           alert("success!");
@@ -223,6 +225,15 @@ export default function HouseLogs() {
                 errors={errors}
                 register={register}
               />
+              <PrimaryTextInputWithLabel
+                label="Wifi"
+                name="wifi"
+                placeholder=""
+                type="text"
+                required
+                errors={errors}
+                register={register}
+              />
               <PrimaryButton
                 type="submit"
                 className="mt-3"
@@ -258,7 +269,6 @@ export default function HouseLogs() {
                 name="text1Key"
                 placeholder=""
                 type="text"
-                
                 errors={errors}
                 register={register}
               />
@@ -267,7 +277,6 @@ export default function HouseLogs() {
                 name="text1Value"
                 placeholder=""
                 type="text"
-                
                 errors={errors}
                 register={register}
               />
@@ -276,7 +285,6 @@ export default function HouseLogs() {
                 name="text2Key"
                 placeholder=""
                 type="text"
-                
                 errors={errors}
                 register={register}
               />
@@ -285,7 +293,6 @@ export default function HouseLogs() {
                 name="text2Value"
                 placeholder=""
                 type="text"
-                
                 errors={errors}
                 register={register}
               />
