@@ -197,6 +197,8 @@ export default function HouseLogs() {
               onChange={handleChange}
             >
               <MenuItem value={'cleaning'}>Cleaning</MenuItem>
+              <MenuItem value={'utility'}>Utility</MenuItem>
+              <MenuItem value={'tax'}>Tax</MenuItem>
               <MenuItem value={'grocery'}>Grocery</MenuItem>
               <MenuItem value={'damage'}>Damage</MenuItem>
             </Select>

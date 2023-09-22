@@ -35,7 +35,8 @@ type FormData = {
   maintenance: number;
   sinkingFund: number;
   currentMonthExpenses: number;
-  currentMonthProfit: number;
+  currentMonthRevenue: number;
+  wifi: number;
 };
 const formSchema = yup
   .object({
@@ -84,6 +85,7 @@ export default function HouseLogs() {
       setValue("maintenance", val["maintenance"]);
       setValue("address", val["address"]);
       setValue("sinkingFund", val["sinkingFund"]);
+      setValue("wifi", val["wifi"]);
     });
     var accumulateAmount = 0.0;
     // get the amount for this month, get the total expenses and populate the text field
@@ -108,11 +110,10 @@ export default function HouseLogs() {
         monthArray.push(dateValue);
         monthExpenses.push(val[i]["expenses"]);
         monthProfit.push(val[i]["profit"]);
-
       }
-      monthArray.shift()
-      monthExpenses.shift()
-      monthProfit.shift()
+      monthArray.shift();
+      monthExpenses.shift();
+      monthProfit.shift();
       updateMonthArray(monthArray);
       updateMonthExpenses(monthExpenses);
       updateMonthProfit(monthProfit);
@@ -138,77 +139,94 @@ export default function HouseLogs() {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log(value!.format("DD/MM/YYYY"));
     const date = value!.format("YYYY-MM-DD");
+
+    console.log(date);
+    console.log(data);
+    const currentExpenses  = Number(data.currentMonthExpenses)
+    const totalExpenses = data.installment + data.maintenance + data.sinkingFund + data.wifi + currentExpenses
+    const currentMonthRevenue = Number(data.currentMonthRevenue)
+
+    const margin = currentMonthRevenue - totalExpenses
+
     var submitData = {
-      houseName: data.houseName,
-      address: data.address,
-      installment: data.installment,
-      maintenance: data.maintenance,
-      sinkingFund: data.sinkingFund,
+      date: new Date(date),
+      expenses: totalExpenses,
+      profit: currentMonthRevenue,
+      margin: Number(margin.toFixed(2)),
       houseId: params["houseId"],
-      house_image: "",
     };
-    console.log(submitData);
-    console.log(file);
 
-    if (file) {
-      file?.arrayBuffer().then((val) => {
-        const storage = getStorage(firebase.app());
-        const filenameForDelete =
-          "/uploads/" +
-          data.houseName.replace(" ", "_") +
-          params["houseId"] +
-          `_${year}-${month}-${day}.jpg`;
-        const storageref = ref(storage, filenameForDelete);
-        console.log(storageref);
-        const uploadTask = uploadBytesResumable(storageref, val);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(submitData)
+    firebase
+    .firestore()
+    .collection("/profitLossBreakdowns")
+    .doc(submitData["houseId"].toString())
+    .set(submitData)
+    .then(() => {
+      alert("success!");
+    });
+    // console.log(submitData);
+    // console.log(file);
 
-            // setProgressUpload(progress) // to show progress upload
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
-                break;
-              case "running":
-                console.log("Upload is running");
-                break;
-            }
-          },
-          (error) => {
-            // message.error(error.message)
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              //url is download url of file
-              console.log(url);
-              // setDownloadURL(url)
-              // we get the url here, then start updating the logs
-              submitData["house_image"] = url;
-              firebase
-                .firestore()
-                .collection("/houses")
-                .doc(submitData["houseId"].toString())
-                .set(submitData)
-                .then(() => {
-                  alert("success!");
-                });
-            });
-          }
-        );
-      });
-    } else {
-      firebase
-        .firestore()
-        .collection("/houses")
-        .doc(submitData["houseId"].toString())
-        .set(submitData)
-        .then(() => {
-          alert("success!");
-        });
-    }
+    // if (file) {
+    //   file?.arrayBuffer().then((val) => {
+    //     const storage = getStorage(firebase.app());
+    //     const filenameForDelete =
+    //       "/uploads/" +
+    //       data.houseName.replace(" ", "_") +
+    //       params["houseId"] +
+    //       `_${year}-${month}-${day}.jpg`;
+    //     const storageref = ref(storage, filenameForDelete);
+    //     console.log(storageref);
+    //     const uploadTask = uploadBytesResumable(storageref, val);
+    //     uploadTask.on(
+    //       "state_changed",
+    //       (snapshot) => {
+    //         const progress =
+    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+    //         // setProgressUpload(progress) // to show progress upload
+    //         switch (snapshot.state) {
+    //           case "paused":
+    //             console.log("Upload is paused");
+    //             break;
+    //           case "running":
+    //             console.log("Upload is running");
+    //             break;
+    //         }
+    //       },
+    //       (error) => {
+    //         // message.error(error.message)
+    //       },
+    //       () => {
+    //         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+    //           //url is download url of file
+    //           console.log(url);
+    //           // setDownloadURL(url)
+    //           // we get the url here, then start updating the logs
+    //           submitData["house_image"] = url;
+    //           firebase
+    //             .firestore()
+    //             .collection("/houses")
+    //             .doc(submitData["houseId"].toString())
+    //             .set(submitData)
+    //             .then(() => {
+    //               alert("success!");
+    //             });
+    //         });
+    //       }
+    //     );
+    //   });
+    // } else {
+    //   firebase
+    //     .firestore()
+    //     .collection("/houses")
+    //     .doc(submitData["houseId"].toString())
+    //     .set(submitData)
+    //     .then(() => {
+    //       alert("success!");
+    //     });
+    // }
   };
 
   function toChartPage() {
@@ -218,7 +236,7 @@ export default function HouseLogs() {
     router.push("/analysis/" + monthArray + monthExpenses + monthProfit);
   }
 
-  const labels = monthArray
+  const labels = monthArray;
 
   const data2 = {
     labels,
@@ -237,15 +255,10 @@ export default function HouseLogs() {
   };
 
   return (
-
-
-
     <div className="p-2 space-y-10">
-        <div>
-  <BarChart
-  data={data2}
-  />
-</div>
+      <div>
+        <BarChart data={data2} />
+      </div>
       <table className="w-full">
         <thead className="bg-gray-50 border-b-2 border-gray-200">
           <tr>
@@ -259,7 +272,7 @@ export default function HouseLogs() {
               Revenue
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Profit Margin %
+              Profit Margin 
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               Date
@@ -308,7 +321,7 @@ export default function HouseLogs() {
                   <span
                     className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
                   >
-                    <span> {row["profit"]} </span>
+                    <span> {row["margin"]} </span>
                   </span>
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
@@ -330,11 +343,21 @@ export default function HouseLogs() {
         <div className="grid grid-cols-2 gap-4 p-4">
           <div className="col-span">
             <Stack spacing={2} sx={{ width: 300 }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DatePicker"]}>
+                  <DatePicker
+                    label="Controlled picker"
+                    value={value}
+                    onChange={(newValue) => setDateValue(newValue)}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+
               <PrimaryTextInputWithLabel
                 label="Installment"
                 name="installment"
                 placeholder=""
-                type="number"
+                type="decimal"
                 required
                 errors={errors}
                 register={register}
@@ -343,7 +366,7 @@ export default function HouseLogs() {
                 label="Maintenance"
                 name="maintenance"
                 placeholder=""
-                type="text"
+                type="decimal"
                 required
                 errors={errors}
                 register={register}
@@ -352,7 +375,16 @@ export default function HouseLogs() {
                 label="Sinking Fund"
                 name="sinkingFund"
                 placeholder=""
-                type="text"
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="wifi"
+                name="wifi"
+                placeholder=""
+                type="decimal"
                 required
                 errors={errors}
                 register={register}
@@ -361,16 +393,16 @@ export default function HouseLogs() {
                 label="Current Expenses"
                 name="currentMonthExpenses"
                 placeholder=""
-                type="text"
+                type="decimal"
                 required
                 errors={errors}
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Month Profit"
-                name="currentMonthProfit"
+                label="Month Revenue"
+                name="currentMonthRevenue"
                 placeholder=""
-                type="text"
+                type="decimal"
                 required
                 errors={errors}
                 register={register}

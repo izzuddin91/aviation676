@@ -332,6 +332,12 @@ export default function HouseLogs() {
                   case "cleaning":
                     bgColor = "text-blue-800 bg-blue-200";
                     break;
+                  case "utility":
+                    bgColor = "text-orange-800 bg-orange-200";
+                    break;
+                  case "utility":
+                    bgColor = "text-grey-800 bg-grey-200";
+                    break;
                   case "damage":
                     bgColor = "text-red-800 bg-red-200";
                     break;
