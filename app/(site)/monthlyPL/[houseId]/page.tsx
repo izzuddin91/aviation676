@@ -143,7 +143,7 @@ export default function HouseLogs() {
     console.log(date);
     console.log(data);
     const currentExpenses  = Number(data.currentMonthExpenses)
-    const totalExpenses = data.installment + data.maintenance + data.sinkingFund + data.wifi + currentExpenses
+    const totalExpenses = Number(data.installment) + Number(data.maintenance) + Number(data.sinkingFund) + Number(data.wifi) + currentExpenses
     const currentMonthRevenue = Number(data.currentMonthRevenue)
 
     const margin = currentMonthRevenue - totalExpenses
@@ -160,7 +160,7 @@ export default function HouseLogs() {
     firebase
     .firestore()
     .collection("/profitLossBreakdowns")
-    .doc(submitData["houseId"].toString())
+    .doc()
     .set(submitData)
     .then(() => {
       alert("success!");
@@ -257,6 +257,7 @@ export default function HouseLogs() {
   return (
     <div className="p-2 space-y-10">
       <div>
+        <h1 style={{textAlign: 'center'}}>House: {(houseDetail as any)["houseName"] } </h1>
         <BarChart data={data2} />
       </div>
       <table className="w-full">
