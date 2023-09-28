@@ -1,12 +1,12 @@
 "use client";
 
-import firebase from "../../../clientApp";
+import firebase from "../../../../clientApp";
 import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import * as yup from "yup";
-import { PrimaryTextInputWithLabel } from "../../../component/input/PrimaryTextInputWithLabel";
-import { PrimaryButton } from "../../../component/button/PrimaryButton";
+import { PrimaryTextInputWithLabel } from "../../../../component/input/PrimaryTextInputWithLabel";
+import { PrimaryButton } from "../../../../component/button/PrimaryButton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Stack } from "@mui/material";
@@ -24,7 +24,7 @@ import {
   getHouseList,
   getHouseLogsOnDateRange,
   getProfitLossBreakdown,
-} from "../../service/firebase.service";
+} from "../../../service/firebase.service";
 import moment from "moment";
 import BarChart from "@/app/component/bar-chart";
 
@@ -142,16 +142,11 @@ export default function HouseLogs() {
 
     console.log(date);
     console.log(data);
-    const currentExpenses = Number(data.currentMonthExpenses);
-    const totalExpenses =
-      Number(data.installment) +
-      Number(data.maintenance) +
-      Number(data.sinkingFund) +
-      Number(data.wifi) +
-      currentExpenses;
-    const currentMonthRevenue = Number(data.currentMonthRevenue);
+    const currentExpenses  = Number(data.currentMonthExpenses)
+    const totalExpenses = Number(data.installment) + Number(data.maintenance) + Number(data.sinkingFund) + Number(data.wifi) + currentExpenses
+    const currentMonthRevenue = Number(data.currentMonthRevenue)
 
-    const margin = currentMonthRevenue - totalExpenses;
+    const margin = currentMonthRevenue - totalExpenses
 
     var submitData = {
       date: new Date(date),
@@ -161,20 +156,22 @@ export default function HouseLogs() {
       houseId: params["houseId"],
     };
 
-    console.log(submitData);
+    console.log(submitData)
     firebase
-      .firestore()
-      .collection("/profitLossBreakdowns")
-      .doc()
-      .set(submitData)
-      .then(() => {
-        alert("success!");
-      });
+    .firestore()
+    .collection("/profitLossBreakdowns")
+    .doc()
+    .set(submitData)
+    .then(() => {
+      alert("success!");
+    });
   };
 
-  function newMonthlyPL() {
-
-    router.push(`${params["houseId"].toString()}/newMonthlyPL`);
+  function toChartPage() {
+    console.log(monthArray);
+    console.log(monthExpenses);
+    console.log(monthProfit);
+    router.push("/analysis/" + monthArray + monthExpenses + monthProfit);
   }
 
   const labels = monthArray;
@@ -197,95 +194,93 @@ export default function HouseLogs() {
 
   return (
     <div className="p-2 space-y-10">
-      <div>
-        <Button style={{'margin': '10px'}} variant="outlined" onClick={() => router.back()}>
-          Back
-        </Button>
-        <Button variant="outlined" onClick={() => newMonthlyPL()}>
-          Create new PL
-        </Button>
-      </div>
-      <div>
-        <h1 style={{ textAlign: "center" }}>
-          House: {(houseDetail as any)["houseName"]}{" "}
-        </h1>
-        <BarChart data={data2} />
-      </div>
-      <table className="w-full">
-        <thead className="bg-gray-50 border-b-2 border-gray-200">
-          <tr>
-            <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
-              No.
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Expenses
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Revenue
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Profit Margin
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Date
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {profitLoss.map((row: any, i: number) => {
-            let bgColor = "";
-            switch (row["category"]) {
-              case "grocery":
-                bgColor = "text-green-800 bg-green-200";
-                break;
-              case "cleaning":
-                bgColor = "text-blue-800 bg-blue-200";
-                break;
-              case "damage":
-                bgColor = "text-red-800 bg-red-200";
-                break;
-            }
-            return (
-              <tr key={i} className="bg-white">
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <a
-                    href="#"
-                    className="font-bold text-blue-500 hover:underline"
-                  >
-                    {i + 1}
-                  </a>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <span
-                    className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
-                  >
-                    <span> {row["expenses"]} </span>
-                  </span>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <span
-                    className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
-                  >
-                    <span> {row["profit"]} </span>
-                  </span>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <span
-                    className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
-                  >
-                    <span> {row["margin"]} </span>
-                  </span>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  {row["date"]
-                    ? moment(row["date"].toDate()).format("DD-MM-YYYY")
-                    : ""}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Button variant="outlined" onClick={() => router.back()}>
+        Back
+      </Button>
+      <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
+        <h1>New Monthly PL</h1>
+        <div className="grid grid-cols-2 gap-4 p-4">
+          <div className="col-span">
+            <Stack spacing={2} sx={{ width: 300 }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DatePicker"]}>
+                  <DatePicker
+                    label="Controlled picker"
+                    value={value}
+                    onChange={(newValue) => setDateValue(newValue)}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+
+              <PrimaryTextInputWithLabel
+                label="Installment"
+                name="installment"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Maintenance"
+                name="maintenance"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Sinking Fund"
+                name="sinkingFund"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="wifi"
+                name="wifi"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Current Expenses"
+                name="currentMonthExpenses"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Month Revenue"
+                name="currentMonthRevenue"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryButton
+                type="submit"
+                className="mt-3"
+                isProcessing={isSubmitting}
+                disabled={isSubmitting}
+              >
+                Enter
+              </PrimaryButton>
+            </Stack>
+          </div>
+          <div className="col-span">
+            <Stack spacing={2} sx={{ width: 300 }}></Stack>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
