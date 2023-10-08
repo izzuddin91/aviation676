@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 import * as yup from "yup";
 import { PrimaryTextInputWithLabel } from "../../../../component/input/PrimaryTextInputWithLabel";
 import { PrimaryButton } from "../../../../component/button/PrimaryButton";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Stack } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -17,16 +16,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { getStorage } from "firebase/storage";
+
 import {
   getHouseDetails,
-  getHouseList,
   getHouseLogsOnDateRange,
   getProfitLossBreakdown,
 } from "../../../service/firebase.service";
 import moment from "moment";
-import BarChart from "@/app/component/bar-chart";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 type FormData = {
   houseName: string;
@@ -103,22 +105,6 @@ export default function HouseLogs() {
       accumulateAmount = Math.round(accumulateAmount * 100) / 100;
       setValue("currentMonthExpenses", accumulateAmount);
     });
-
-    getProfitLossBreakdown(params["houseId"].toString()).then((val) => {
-      for (var i = 0; i < val.length; i++) {
-        const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
-        monthArray.push(dateValue);
-        monthExpenses.push(val[i]["expenses"]);
-        monthProfit.push(val[i]["profit"]);
-      }
-      monthArray.shift();
-      monthExpenses.shift();
-      monthProfit.shift();
-      updateMonthArray(monthArray);
-      updateMonthExpenses(monthExpenses);
-      updateMonthProfit(monthProfit);
-      updateProfitLoss(val);
-    });
   }
 
   function setForm() {
@@ -142,11 +128,16 @@ export default function HouseLogs() {
 
     console.log(date);
     console.log(data);
-    const currentExpenses  = Number(data.currentMonthExpenses)
-    const totalExpenses = Number(data.installment) + Number(data.maintenance) + Number(data.sinkingFund) + Number(data.wifi) + currentExpenses
-    const currentMonthRevenue = Number(data.currentMonthRevenue)
+    const currentExpenses = Number(data.currentMonthExpenses);
+    const totalExpenses =
+      Number(data.installment) +
+      Number(data.maintenance) +
+      Number(data.sinkingFund) +
+      Number(data.wifi) +
+      currentExpenses;
+    const currentMonthRevenue = Number(data.currentMonthRevenue);
 
-    const margin = currentMonthRevenue - totalExpenses
+    const margin = currentMonthRevenue - totalExpenses;
 
     var submitData = {
       date: new Date(date),
@@ -154,25 +145,72 @@ export default function HouseLogs() {
       profit: currentMonthRevenue,
       margin: Number(margin.toFixed(2)),
       houseId: params["houseId"],
+      filename: "",
+      filenameForDelete: "",
     };
+    
+    if (file) {
+      file?.arrayBuffer().then((val) => {
+        const storage = getStorage(firebase.app());
+        const filenameForDelete =
+          "/uploads/" +
+          "profitLossBreakdown" +
+          params["houseId"] +
+          `_${year}-${month}-${day}.pdf`;
+        const storageref = ref(storage, filenameForDelete);
+        console.log(storageref);
+        const uploadTask = uploadBytesResumable(storageref, val);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-    console.log(submitData)
-    firebase
-    .firestore()
-    .collection("/profitLossBreakdowns")
-    .doc()
-    .set(submitData)
-    .then(() => {
-      alert("success!");
-    });
+            // setProgressUpload(progress) // to show progress upload
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // message.error(error.message)
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              //url is download url of file
+              console.log(url);
+              // setDownloadURL(url)
+              // we get the url here, then start updating the logs
+              submitData["filename"] = url;
+              submitData["filenameForDelete"] = filenameForDelete;
+              firebase
+                .firestore()
+                .collection("/profitLossBreakdowns")
+                .doc()
+                .set(submitData)
+                .then(() => {
+                  alert("success!");
+                });
+            });
+          }
+        );
+      });
+    } else {
+      submitData["filename"] = "";
+      firebase
+        .firestore()
+        .collection("/profitLossBreakdowns")
+        .doc()
+        .set(submitData)
+        .then(() => {
+          alert("success!");
+        });
+    }
   };
-
-  function toChartPage() {
-    console.log(monthArray);
-    console.log(monthExpenses);
-    console.log(monthProfit);
-    router.push("/analysis/" + monthArray + monthExpenses + monthProfit);
-  }
 
   const labels = monthArray;
 
@@ -211,7 +249,16 @@ export default function HouseLogs() {
                   />
                 </DemoContainer>
               </LocalizationProvider>
+              <input
+                accept="application/pdf"
+                type="file"
+                name="file"
+                onChange={(e) => {
+                  console.log(e.target.files);
 
+                  setFile(e.target.files?.[0]);
+                }}
+              />
               <PrimaryTextInputWithLabel
                 label="Installment"
                 name="installment"

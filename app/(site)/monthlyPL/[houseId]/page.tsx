@@ -9,7 +9,7 @@ import { PrimaryTextInputWithLabel } from "../../../component/input/PrimaryTextI
 import { PrimaryButton } from "../../../component/button/PrimaryButton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button, Stack } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -27,6 +27,7 @@ import {
 } from "../../service/firebase.service";
 import moment from "moment";
 import BarChart from "@/app/component/bar-chart";
+import PhotoIcon from "@mui/icons-material/Photo";
 
 type FormData = {
   houseName: string;
@@ -194,9 +195,33 @@ export default function HouseLogs() {
       },
     ],
   };
+  const [open, setOpen] = React.useState(false);
+  const [fileName, setFileName] = React.useState("");
+  function handleClickOpen(file: any) {
+    window.open(file, '_blank')
+  }
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="p-2 space-y-10">
+            <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Image</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          <embed src={fileName} type="application/pdf"   height="700px" width="500"/>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Dismiss</Button>
+        </DialogActions>
+      </Dialog>
       <div>
         <Button style={{'margin': '10px'}} variant="outlined" onClick={() => router.back()}>
           Back
@@ -228,6 +253,9 @@ export default function HouseLogs() {
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               Date
+            </th>
+            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+              File
             </th>
           </tr>
         </thead>
@@ -281,6 +309,14 @@ export default function HouseLogs() {
                     ? moment(row["date"].toDate()).format("DD-MM-YYYY")
                     : ""}
                 </td>
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                      <Button
+                        endIcon={<PhotoIcon />}
+                        onClick={() => {
+                          handleClickOpen(row["filename"]);
+                        }}
+                      ></Button>
+                    </td>
               </tr>
             );
           })}
