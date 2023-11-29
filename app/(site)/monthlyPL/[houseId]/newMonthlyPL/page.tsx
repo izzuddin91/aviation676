@@ -39,6 +39,7 @@ type FormData = {
   currentMonthExpenses: number;
   currentMonthRevenue: number;
   wifi: number;
+  notes: string;
 };
 const formSchema = yup
   .object({
@@ -147,6 +148,7 @@ export default function HouseLogs() {
       houseId: params["houseId"],
       filename: "",
       filenameForDelete: "",
+      notes: data.notes 
     };
     
     if (file) {
@@ -307,6 +309,15 @@ export default function HouseLogs() {
               <PrimaryTextInputWithLabel
                 label="Month Revenue"
                 name="currentMonthRevenue"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Notes"
+                name="notes"
                 placeholder=""
                 type="decimal"
                 required

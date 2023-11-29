@@ -16,6 +16,60 @@ const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
 const month = todayDate.toLocaleString("en-US", { month: "long" });
 const year = todayDate.getFullYear();
 
+export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promise<any> => {
+    let s = ''
+    file?.arrayBuffer().then((val: any) => {
+        const storage = getStorage(firebase.app());
+        const filenameForDelete =
+          "/uploads/" +
+          "profitLossBreakdown" +
+          houseId +
+          `_${year}-${month}-${day}.pdf`;
+        const storageref = ref(storage, filenameForDelete);
+        console.log(storageref);
+        const uploadTask = uploadBytesResumable(storageref, val);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+            // setProgressUpload(progress) // to show progress upload
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // message.error(error.message)
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              //url is download url of file
+              console.log(url);
+              s = url
+             
+            //   submitData["filenameForDelete"] = filenameForDelete;
+            //   firebase
+            //     .firestore()
+            //     .collection("/profitLossBreakdowns")
+            //     .doc()
+            //     .set(submitData)
+            //     .then(() => {
+            //       alert("success!");
+            //     });
+            });
+          }
+        );
+        return s;
+      });
+      
+}
+
 export const getProfitLossBreakdown = async (houseId: string): Promise<any> => {
     const uid = getUserAuth()
     console.log(uid)

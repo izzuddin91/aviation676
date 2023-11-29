@@ -50,8 +50,10 @@ const formSchema = yup
   .required();
 
 export default function HouseLogs() {
+
   var [profitLoss, updateProfitLoss] = useState([{}]);
   var [houseDetail, updatehouseDetail] = useState({});
+  var [descString, updateDescString] = useState('');
   const [file, setFile] = useState<File>();
   const todayDate = new Date();
   const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
@@ -172,7 +174,7 @@ export default function HouseLogs() {
         alert("success!");
       });
   };
-
+  var _ = require('lodash');
   function newMonthlyPL() {
 
     router.push(`${params["houseId"].toString()}/newMonthlyPL`);
@@ -204,6 +206,11 @@ export default function HouseLogs() {
     setOpen(false);
   };
 
+  function openPopup(string: string) {
+    updateDescString(string)
+    setOpen(true);
+  }
+
   return (
     <div className="p-2 space-y-10">
             <Dialog
@@ -212,10 +219,10 @@ export default function HouseLogs() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Image</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Details</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          <embed src={fileName} type="application/pdf"   height="700px" width="500"/>
+          <div style={{whiteSpace: 'pre-line'}}>{descString.split('\n')}</div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -253,6 +260,9 @@ export default function HouseLogs() {
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               Date
+            </th>
+            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+              Notes
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               File
@@ -307,6 +317,20 @@ export default function HouseLogs() {
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                   {row["date"]
                     ? moment(row["date"].toDate()).format("DD-MM-YYYY")
+                    : ""}
+                </td>
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                  {row["notes"]
+                    ?  
+                  //   <Button
+                  //   endIcon={<PhotoIcon />}
+                  //   onClick={() => {
+                  //     handleClickOpen(row["filename"]);
+                  //   }}
+                  // ></Button>
+                    <a onClick={()=> {openPopup(row["notes"])}} style={{color: 'blue'}}>{_.truncate(row["notes"]) }</a>
+                    
+                    
                     : ""}
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
