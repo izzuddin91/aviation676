@@ -36,8 +36,7 @@ import PhotoIcon from "@mui/icons-material/Photo";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 import firebase from "../../../clientApp";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
-// import { CSVLink, CSVDownload } from "react-csv";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import { LoadingIndicator } from "@/app/component/indicator/Loading";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -46,13 +45,6 @@ export interface SimpleDialogProps {
 }
 
 export default function HouseLogs() {
-  const csvData = [
-    ["firstname", "lastname", "email"],
-    ["Ahmed", "Tomi", "ah@smthing.co.com"],
-    ["Raed", "Labes", "rl@smthing.co.com"],
-    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-  ];
-
   const storage = getStorage(firebase.app());
   const [open, setOpen] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
@@ -70,7 +62,7 @@ export default function HouseLogs() {
     router.push("/newLogs/" + params["houseId"]);
   }
   var [houseDetail, updatehouseDetail] = useState({});
-  var [houseLogs, setHouseLogs]: any = useState([{}]);
+  var [houseLogs, setHouseLogs]: any = useState();
   var [amount, updateAmount] = useState(0);
   var [monthVal, updateMonthVal] = useState(1);
   var [year, updateYear] = useState(2023);
@@ -86,7 +78,7 @@ export default function HouseLogs() {
         updateMonthVal(month);
         updateYear(year);
         setHouseLogs(val);
-        updateTotalAmount(houseLogs);
+        updateTotalAmount(val ?? []);
       }
     );
     getHouseDetails(params["houseId"].toString()).then((val) => {
@@ -143,7 +135,7 @@ export default function HouseLogs() {
   }
   return (
     <div className="p-5 h-screen bg-gray-100">
-      <Dialog
+       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -296,101 +288,105 @@ export default function HouseLogs() {
           <div>
             <h1 style={{ float: "left" }}>Logs </h1>
           </div>
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b-2 border-gray-200">
-              <tr>
-                <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
-                  No.
-                </th>
-                <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                  Details
-                </th>
-                <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-                  Category
-                </th>
-                <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-                  Image
-                </th>
-                <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-                  Date
-                </th>
-                <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
-                  Total
-                </th>
-                <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
-                  Delete
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {houseLogs.map((row: any, i: number) => {
-                let bgColor = "";
-                switch (row["category"]) {
-                  case "grocery":
-                    bgColor = "text-green-800 bg-green-200";
-                    break;
-                  case "cleaning":
-                    bgColor = "text-blue-800 bg-blue-200";
-                    break;
-                  case "utility":
-                    bgColor = "text-orange-800 bg-orange-200";
-                    break;
-                  case "utility":
-                    bgColor = "text-grey-800 bg-grey-200";
-                    break;
-                  case "damage":
-                    bgColor = "text-red-800 bg-red-200";
-                    break;
-                }
-                return (
-                  <tr key={i} className="bg-white">
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <a
-                        href="#"
-                        className="font-bold text-blue-500 hover:underline"
-                      >
-                        {i + 1}
-                      </a>
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      {row["notes"]}
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <span
-                        className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
-                      >
-                        <span> {row["category"]} </span>
-                      </span>
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <Button
-                        endIcon={<PhotoIcon />}
-                        onClick={() => {
-                          handleClickOpen(row["filename"]);
-                        }}
-                      ></Button>
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      {row["date"]
-                        ? moment(row["date"].toDate()).format("DD-MM-YYYY")
-                        : ""}
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      {row["total"]}
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <Button
-                        endIcon={<DeleteIcon />}
-                        onClick={() =>
-                          deleteItem(row["id"], row["filenameForDelete"])
-                        }
-                      ></Button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          {houseLogs ? (
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
+                    No.
+                  </th>
+                  <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                    Details
+                  </th>
+                  <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+                    Category
+                  </th>
+                  <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+                    Image
+                  </th>
+                  <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+                    Date
+                  </th>
+                  <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
+                    Total
+                  </th>
+                  <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
+                    Delete
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {houseLogs.map((row: any, i: number) => {
+                  let bgColor = "";
+                  switch (row["category"]) {
+                    case "grocery":
+                      bgColor = "text-green-800 bg-green-200";
+                      break;
+                    case "cleaning":
+                      bgColor = "text-blue-800 bg-blue-200";
+                      break;
+                    case "utility":
+                      bgColor = "text-orange-800 bg-orange-200";
+                      break;
+                    case "utility":
+                      bgColor = "text-grey-800 bg-grey-200";
+                      break;
+                    case "damage":
+                      bgColor = "text-red-800 bg-red-200";
+                      break;
+                  }
+                  return (
+                    <tr key={i} className="bg-white">
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        <a
+                          href="#"
+                          className="font-bold text-blue-500 hover:underline"
+                        >
+                          {i + 1}
+                        </a>
+                      </td>
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        {row["notes"]}
+                      </td>
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        <span
+                          className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
+                        >
+                          <span> {row["category"]} </span>
+                        </span>
+                      </td>
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        <Button
+                          endIcon={<PhotoIcon />}
+                          onClick={() => {
+                            handleClickOpen(row["filename"]);
+                          }}
+                        ></Button>
+                      </td>
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        {row["date"]
+                          ? moment(row["date"].toDate()).format("DD-MM-YYYY")
+                          : ""}
+                      </td>
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        {row["total"]}
+                      </td>
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        <Button
+                          endIcon={<DeleteIcon />}
+                          onClick={() =>
+                            deleteItem(row["id"], row["filenameForDelete"])
+                          }
+                        ></Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <LoadingIndicator />
+          )}
         </div>
       </div>
     </div>

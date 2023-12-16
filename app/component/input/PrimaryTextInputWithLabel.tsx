@@ -23,7 +23,7 @@ export const PrimaryTextInputWithLabel = ({
       <div className="mb-2 block">
         <Label htmlFor={name} value={label} />
       </div>
-      <PrimaryTextInput style={{height: '40px'}} name={name} {...props} />
+      <PrimaryTextInput style={{height: '40px', paddingLeft: '40px'}} name={name} {...props} />
       {errors && (
         <span className="text-red-500 text-sm">{errors[name]?.message}</span>
       )}
