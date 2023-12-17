@@ -20,6 +20,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 import InputIcon from "@mui/icons-material/Input";
 import Dialog from "@mui/material/Dialog";
@@ -112,6 +113,10 @@ export default function HouseLogs() {
     updateAmount(amount ?? 0.0);
   }
 
+  function editItem(houseId: string){
+    router.push("/editHouseLogs/" + houseId);
+  }
+
   function deleteItem(event: any, filenameForDelete: any) {
     // delete this and show alert
     console.log(filenameForDelete);
@@ -135,7 +140,7 @@ export default function HouseLogs() {
   }
   return (
     <div className="p-5 h-screen bg-gray-100">
-       <Dialog
+      <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -167,25 +172,64 @@ export default function HouseLogs() {
         </div>
         <div className="lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
-            <p className="text-gray-600">Installment</p>
+            {/* <p className="text-gray-600">Installment</p>
             <p className="text-2xl font-bold">
               RM {(houseDetail as any)["installment"]}
-            </p>
+            </p> */}
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Month</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={monthVal}
+                label="Month"
+                onChange={updateMonth}
+              >
+                <MenuItem value={1}>January</MenuItem>
+                <MenuItem value={2}>February</MenuItem>
+                <MenuItem value={3}>March</MenuItem>
+                <MenuItem value={4}>April</MenuItem>
+                <MenuItem value={5}>May</MenuItem>
+                <MenuItem value={6}>June</MenuItem>
+                <MenuItem value={7}>July</MenuItem>
+                <MenuItem value={8}>August</MenuItem>
+                <MenuItem value={9}>September</MenuItem>
+                <MenuItem value={10}>October</MenuItem>
+                <MenuItem value={11}>November</MenuItem>
+                <MenuItem value={12}>December</MenuItem>
+              </Select>
+            </FormControl>
           </div>
         </div>
         <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
-            <p className="text-gray-600">Maintenance+Sinking</p>
+            {/* <p className="text-gray-600">Maintenance+Sinking</p>
             <p className="text-2xl font-bold">
               RM {(houseDetail as any)["maintenance"]}
-            </p>
+            </p> */}
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={year}
+                  label="Year"
+                  onChange={updateYearVal}
+                >
+                  <MenuItem value={2019}>2019</MenuItem>
+                  <MenuItem value={2020}>2020</MenuItem>
+                  <MenuItem value={2021}>2021</MenuItem>
+                  <MenuItem value={2022}>2022</MenuItem>
+                  <MenuItem value={2023}>2023</MenuItem>
+                </Select>
+              </FormControl>
           </div>
         </div>
         <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
-            <p className="text-gray-600">Wifi</p>
+            <p className="text-gray-600">Amount</p>
             <p className="text-2xl font-bold">
-              RM {(houseDetail as any)["wifi"]}
+            RM {amount.toFixed(2)}{" "}
             </p>
           </div>
         </div>
@@ -203,7 +247,7 @@ export default function HouseLogs() {
           </div>
         </div>
         <div className="col-span">
-          <FormControl fullWidth>
+          {/* <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Month</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -225,12 +269,12 @@ export default function HouseLogs() {
               <MenuItem value={11}>November</MenuItem>
               <MenuItem value={12}>December</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </div>
         <div className="col-span">
           <div className="grid grid-cols-2 gap-4 ">
             <div className="col-span">
-              <FormControl fullWidth>
+              {/* <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Year</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -245,7 +289,7 @@ export default function HouseLogs() {
                   <MenuItem value={2022}>2022</MenuItem>
                   <MenuItem value={2023}>2023</MenuItem>
                 </Select>
-              </FormControl>
+              </FormControl> */}
             </div>
             <div className="col-span">
               <Button
@@ -267,7 +311,7 @@ export default function HouseLogs() {
                 Logs
               </Button>
               <div className="col-span">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
+                {/* <label className="block text-sm font-medium leading-6 text-gray-900">
                   Total:
                 </label>
                 <div className="relative mt-3 rounded-md shadow-sm">
@@ -276,7 +320,7 @@ export default function HouseLogs() {
                       RM {amount.toFixed(2)}{" "}
                     </span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -309,6 +353,9 @@ export default function HouseLogs() {
                   </th>
                   <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
                     Total
+                  </th>
+                  <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
+                    Edit
                   </th>
                   <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
                     Delete
@@ -370,6 +417,14 @@ export default function HouseLogs() {
                       </td>
                       <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                         {row["total"]}
+                      </td>
+                      <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        <Button
+                          endIcon={<ModeEditIcon />}
+                          onClick={() =>
+                            editItem(row["id"])
+                          }
+                        ></Button>
                       </td>
                       <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                         <Button

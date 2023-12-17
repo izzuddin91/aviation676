@@ -199,6 +199,12 @@ export const getHouseDetails = async (houseId: String): Promise<any> => {
     return returnData
 }
 
+export const getHouseLogById = async (houseId: String): Promise<any> => {
+    const houseLog = await firebase.firestore().collection("houseLogs").doc(houseId.toString()).get()
+    var returnData = houseLog.data()
+    return returnData
+}
+
 export const getHouseLogsOnDateRange = async (
     houseId: String,
     selectedMonth: number,
