@@ -66,7 +66,7 @@ export default function HouseLogs() {
   var [houseLogs, setHouseLogs]: any = useState();
   var [amount, updateAmount] = useState(0);
   var [monthVal, updateMonthVal] = useState(1);
-  var [year, updateYear] = useState(2023);
+  var [yearVal, updateYear] = useState(2023);
   const params = useParams();
 
   useEffect(() => {
@@ -87,21 +87,25 @@ export default function HouseLogs() {
     });
   }, []);
 
-  function updateMonth(event: SelectChangeEvent<number>): void {
+  async function updateMonth(event: SelectChangeEvent<number>): Promise<void> {
     const vale: string | number = event.target.value.toString();
-    updateMonthVal(parseInt(vale));
+    updateMonthVal(parseInt(vale))
+    getHouseLogs(parseInt(vale), undefined)
   }
 
   function updateYearVal(event: SelectChangeEvent<number>) {
     const vale: string | number = event.target.value.toString();
     updateYear(parseInt(vale));
+    getHouseLogs(undefined, parseInt(vale))
   }
 
-  function getHouseLogs(): void {
-    getHouseLogsOnDateRange(params["houseId"].toString(), monthVal, year).then(
+  function getHouseLogs(month?: number, year?: number): void {
+    let targetMonth = month ?? monthVal
+    let targetYear = year ?? yearVal
+    getHouseLogsOnDateRange(params["houseId"].toString(), targetMonth, targetYear).then(
       (val: any) => {
-        updateMonthVal(monthVal);
-        updateYear(year);
+        updateMonthVal(targetMonth);
+        updateYear(targetYear);
         updateTotalAmount(val);
         setHouseLogs(val);
       }
@@ -212,7 +216,7 @@ export default function HouseLogs() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={year}
+                  value={yearVal}
                   label="Year"
                   onChange={updateYearVal}
                 >
@@ -247,60 +251,12 @@ export default function HouseLogs() {
           </div>
         </div>
         <div className="col-span">
-          {/* <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Month</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={monthVal}
-              label="Month"
-              onChange={updateMonth}
-            >
-              <MenuItem value={1}>January</MenuItem>
-              <MenuItem value={2}>February</MenuItem>
-              <MenuItem value={3}>March</MenuItem>
-              <MenuItem value={4}>April</MenuItem>
-              <MenuItem value={5}>May</MenuItem>
-              <MenuItem value={6}>June</MenuItem>
-              <MenuItem value={7}>July</MenuItem>
-              <MenuItem value={8}>August</MenuItem>
-              <MenuItem value={9}>September</MenuItem>
-              <MenuItem value={10}>October</MenuItem>
-              <MenuItem value={11}>November</MenuItem>
-              <MenuItem value={12}>December</MenuItem>
-            </Select>
-          </FormControl> */}
         </div>
         <div className="col-span">
           <div className="grid grid-cols-2 gap-4 ">
             <div className="col-span">
-              {/* <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Year</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={year}
-                  label="Year"
-                  onChange={updateYearVal}
-                >
-                  <MenuItem value={2019}>2019</MenuItem>
-                  <MenuItem value={2020}>2020</MenuItem>
-                  <MenuItem value={2021}>2021</MenuItem>
-                  <MenuItem value={2022}>2022</MenuItem>
-                  <MenuItem value={2023}>2023</MenuItem>
-                </Select>
-              </FormControl> */}
             </div>
             <div className="col-span">
-              <Button
-                style={{ margin: "10px" }}
-                variant="outlined"
-                className="mt-3"
-                onClick={getHouseLogs}
-                endIcon={<SearchIcon />}
-              >
-                Query
-              </Button>
               <Button
                 style={{ margin: "10px" }}
                 variant="outlined"
@@ -311,16 +267,6 @@ export default function HouseLogs() {
                 Logs
               </Button>
               <div className="col-span">
-                {/* <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Total:
-                </label>
-                <div className="relative mt-3 rounded-md shadow-sm">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <span className="text-gray-500 sm:text-sm">
-                      RM {amount.toFixed(2)}{" "}
-                    </span>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
