@@ -54,6 +54,7 @@ export default function HouseLogs() {
   var [profitLoss, updateProfitLoss] = useState([{}]);
   var [houseDetail, updatehouseDetail] = useState({});
   var [descString, updateDescString] = useState('');
+  var [descStringArray, updateDescStringArray] = useState(['']);
   const [file, setFile] = useState<File>();
   const todayDate = new Date();
   const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
@@ -80,7 +81,6 @@ export default function HouseLogs() {
 
   async function getData() {
     getHouseDetails(params["houseId"].toString()).then((val) => {
-      console.log(val);
       updatehouseDetail(val);
       setValue("houseName", val["houseName"]);
       setValue("installment", val["installment"]);
@@ -140,11 +140,7 @@ export default function HouseLogs() {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(value!.format("DD/MM/YYYY"));
     const date = value!.format("YYYY-MM-DD");
-
-    console.log(date);
-    console.log(data);
     const currentExpenses = Number(data.currentMonthExpenses);
     const totalExpenses =
       Number(data.installment) +
@@ -164,7 +160,6 @@ export default function HouseLogs() {
       houseId: params["houseId"],
     };
 
-    console.log(submitData);
     firebase
       .firestore()
       .collection("/profitLossBreakdowns")
@@ -203,6 +198,7 @@ export default function HouseLogs() {
     window.open(file, '_blank')
   }
   const handleClose = () => {
+    updateDescStringArray([''])
     setOpen(false);
   };
 
@@ -222,7 +218,9 @@ export default function HouseLogs() {
         <DialogTitle id="alert-dialog-title">Details</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          <div style={{whiteSpace: 'pre-line'}}>{descString.split('\n')}</div>
+             {descStringArray.map((row: any, i: number) => {
+              return ( <tr key={i} className="bg-white">{row}</tr> );
+             })}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -328,7 +326,15 @@ export default function HouseLogs() {
                   //     handleClickOpen(row["filename"]);
                   //   }}
                   // ></Button>
-                    <a onClick={()=> {openPopup(row["notes"])}} style={{color: 'blue'}}>{_.truncate(row["notes"]) }</a>
+                    <a onClick={()=> {
+                      let a = row['notes'].split('//')
+                      // updateDescStringArray(a)
+                      for (var i = 0 ; i < a.length ; i++ ){
+                        descStringArray.push(a[i])
+                        // updateDescStringArray(a[i])
+                      }
+                      updateDescStringArray(descStringArray)
+                      openPopup(row["notes"])}} style={{color: 'blue'}}>{_.truncate(row["notes"]) }</a>
                     
                     
                     : ""}
