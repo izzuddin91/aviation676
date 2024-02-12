@@ -46,7 +46,7 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-1 gap-4 p-4 pb-10;">
         <div>
-          <h2> Recent Updates </h2>
+          <h2> upcoming payment ascending order </h2>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 p-4 pb-10;">
@@ -74,21 +74,84 @@ export default function Home() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            <tr>
+          <tr>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                <a
-                  href="#"
-                  className="font-bold text-blue-500 hover:underline"
-                ></a>
+                1
               </td>
-              <td className="p-3 text-sm text-gray-700 whitespace-nowrap"></td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">Pangsapuri Suakasih electric</td>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                 <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
                   <a>Vehicle</a>
                 </span>
               </td>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {/* {row["date"]} */}
+                12 th
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                {/* {row["total"]} */}
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                {/* <button onClick={() => deleteItem(row['id'])}>
+                        {row['id']}
+                      </button> */}
+              </td>
+            </tr>
+            <tr>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                1
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">Trion water bill</td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
+                  <a>Vehicle</a>
+                </span>
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                14 th
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                {/* {row["total"]} */}
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                {/* <button onClick={() => deleteItem(row['id'])}>
+                        {row['id']}
+                      </button> */}
+              </td>
+            </tr>
+            <tr>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                1
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">Netizen electric</td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
+                  <a>Vehicle</a>
+                </span>
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                14 th
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                {/* {row["total"]} */}
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                {/* <button onClick={() => deleteItem(row['id'])}>
+                        {row['id']}
+                      </button> */}
+              </td>
+            </tr>
+            <tr>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                1
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">rumah kelantan</td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
+                  <a>Vehicle</a>
+                </span>
+              </td>
+              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                16 th
               </td>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                 {/* {row["total"]} */}
