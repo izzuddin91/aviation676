@@ -73,7 +73,7 @@ export default function HouseLogs() {
           >
             <div></div>
             <div >
-              <img className="rounded-lg"
+              <img className="object-contain rounded-lg"
                 src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/article%2FScreenshot%202024-05-11%20at%205.39.08%20PM.png?alt=media&token=a80e0cc7-60f4-4cd3-b923-83b67ed97b04"
                 alt=""
                 style={{ height: "400px" }}
@@ -96,7 +96,7 @@ export default function HouseLogs() {
           >
             <div></div>
             <div>
-              <img className="rounded-lg"
+              <img className="object-contain rounded-lg"
                 src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/article%2FScreenshot%202024-05-11%20at%205.36.20%20PM.png?alt=media&token=87a7c76c-6cba-4c83-aae1-6ce41f608f3c"
                 alt=""
                 style={{ height: "400px" }}

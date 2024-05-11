@@ -27,7 +27,7 @@ import {HiOutlineShoppingBag, } from 'react-icons/hi';
 
 export const SideMenu = () => {
   return (
-    <div className='flex'>
+    <div className='flex hidden lg:block xs:w-3/12 xs:h-128 w-3/12 visible xm:invisible'>
       <div className='fixed w-22 h-screen p-4 bg-white border-r-[1px] flex flex-col justify-between'> 
       <div className="flex flex-col items-center">
         <Link href={'/'}>
