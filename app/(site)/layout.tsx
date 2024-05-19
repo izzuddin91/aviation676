@@ -44,7 +44,7 @@ export default function RootLayout({
             <link rel="manifest" href="/backoffice/manifest.json" />
             <meta name="theme-color" content="#000" />
           </head>
-          <body>
+          <body suppressHydrationWarning={true}>
           <section className="flex min-h-screen flex-col items-left bg-gray-50">
               {/* <div className="grid">
                 <Header

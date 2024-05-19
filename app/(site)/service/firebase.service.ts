@@ -285,3 +285,20 @@ export const deleteHouseLog = async (houseId: string): Promise<any> => {
         })
     return status;
 }
+
+export const getLatestThreeArticle = async (): Promise<any> => {
+    const articles = await firebase.firestore().collection("articles")
+    const getArticles = await getDocs(articles)
+    var list: any = [{}]
+    getArticles.docs.map((doc, i) => {
+        list[i] = doc.data()
+        list[i]['id'] = doc.id // manual update the id here
+    });
+    return list;
+} 
+
+export const getArticleDetails = async (articleId: String): Promise<any> => {
+    const articlesCollection = await firebase.firestore().collection("articles").doc(articleId.toString()).get()
+    var returnData = articlesCollection.data()
+    return returnData;
+}
