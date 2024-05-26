@@ -103,8 +103,10 @@ export default function HouseLogs() {
   function getHouseLogs(month?: number, year?: number): void {
     let targetMonth = month ?? monthVal
     let targetYear = year ?? yearVal
+    console.log(params["houseId"])
     getHouseLogsOnDateRange(params["houseId"].toString(), targetMonth, targetYear).then(
       (val: any) => {
+
         updateMonthVal(targetMonth);
         updateYear(targetYear);
         updateTotalAmount(val);
@@ -115,7 +117,7 @@ export default function HouseLogs() {
 
   function updateTotalAmount(houseLogs: any) {
     amount = houseLogs.reduce((a: any, b: any) => +a + +b.total, 0);
-    updateAmount(amount ?? 0.0);
+    updateAmount(Number.isNaN(amount) ? 0.0 : amount);
   }
 
   function editItem(houseId: string){
@@ -164,6 +166,15 @@ export default function HouseLogs() {
       <Button variant="outlined" onClick={() => router.back()}>
         Back
       </Button>
+      <Button
+                style={{ margin: "10px" }}
+                variant="outlined"
+                className="mt-3"
+                onClick={createNewLogs}
+                endIcon={<AddIcon />}
+              >
+                Logs
+              </Button>
       <h2>House Details</h2>
       <div className="grid lg:grid-cols-6 gap-4 p-4">
         <div className="lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
@@ -259,15 +270,6 @@ export default function HouseLogs() {
             <div className="col-span">
             </div>
             <div className="col-span">
-              <Button
-                style={{ margin: "10px" }}
-                variant="outlined"
-                className="mt-3"
-                onClick={createNewLogs}
-                endIcon={<AddIcon />}
-              >
-                Logs
-              </Button>
               <div className="col-span">
               </div>
             </div>

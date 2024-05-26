@@ -201,6 +201,7 @@ export default function HouseLogs() {
               <MenuItem value={'tax'}>Tax</MenuItem>
               <MenuItem value={'grocery'}>Grocery</MenuItem>
               <MenuItem value={'damage'}>Damage</MenuItem>
+              <MenuItem value={'others'}>Others</MenuItem>
             </Select>
           </FormControl>
           <PrimaryButton

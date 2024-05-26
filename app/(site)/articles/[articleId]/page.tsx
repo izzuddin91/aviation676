@@ -11,7 +11,7 @@ import { title } from "process";
 
 export default function Article() {
   const params = useParams();
-  var [article, updateArticle] = useState({title: "", para1: "", para2: "", para3: ""});
+  var [article, updateArticle] = useState({title: "", para1: "", para2: "", para3: "", image1: "", image2: ""});
 
   useEffect(() => {
     getData();
@@ -41,7 +41,7 @@ export default function Article() {
             <div>
               <img
                 className="object-contain rounded-lg"
-                src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/article%2FScreenshot%202024-05-11%20at%205.39.08%20PM.png?alt=media&token=a80e0cc7-60f4-4cd3-b923-83b67ed97b04"
+                src={ article.image1 }
                 alt=""
                 style={{ height: "400px" }}
               />
@@ -62,7 +62,7 @@ export default function Article() {
             <div>
               <img
                 className="object-contain rounded-lg"
-                src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/article%2FScreenshot%202024-05-11%20at%205.36.20%20PM.png?alt=media&token=87a7c76c-6cba-4c83-aae1-6ce41f608f3c"
+                src={ article.image2 }
                 alt=""
                 style={{ height: "400px" }}
               />

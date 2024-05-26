@@ -39,6 +39,11 @@ type FormData = {
   currentMonthExpenses: number;
   currentMonthRevenue: number;
   wifi: number;
+  waterBill: number;
+  electricBill: number;
+  cleaning: number;
+  otherPayments: number;
+  otherPaymentsNotes: string;
   notes: string;
 };
 const formSchema = yup
@@ -89,6 +94,12 @@ export default function HouseLogs() {
       setValue("address", val["address"]);
       setValue("sinkingFund", val["sinkingFund"]);
       setValue("wifi", val["wifi"]);
+      setValue("waterBill", val["waterBill"])
+      setValue("waterBill", val["waterBill"])
+      setValue("electricBill", val["electricBill"])
+      setValue("cleaning", val["cleaning"])
+      setValue("otherPayments", val["otherPayments"])
+      setValue("otherPaymentsNotes", val["otherPaymentsNotes"])
     });
     var accumulateAmount = 0.0;
     // get the amount for this month, get the total expenses and populate the text field
@@ -148,9 +159,9 @@ export default function HouseLogs() {
       houseId: params["houseId"],
       filename: "",
       filenameForDelete: "",
-      notes: data.notes 
+      notes: data.notes,
     };
-    
+
     if (file) {
       file?.arrayBuffer().then((val) => {
         const storage = getStorage(firebase.app());
@@ -302,6 +313,55 @@ export default function HouseLogs() {
                 name="currentMonthExpenses"
                 placeholder=""
                 type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Water bill"
+                name="waterBill"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+            </Stack>
+          </div>
+          <div className="col-span">
+            <Stack spacing={2} sx={{ width: 300 }}>
+              <PrimaryTextInputWithLabel
+                label="Electric bill"
+                name="electricBill"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Cleaning"
+                name="cleaning"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Other Payments"
+                name="otherPayments"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Other Payments notes"
+                name="otherPaymentsNotes"
+                placeholder=""
+                type="string"
                 required
                 errors={errors}
                 register={register}
