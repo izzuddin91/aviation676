@@ -23,11 +23,12 @@ import {
   getHouseDetails,
   getHouseList,
   getHouseLogsOnDateRange,
-  getProfitLossBreakdown,
+  getProfitLossBreakdowns,
 } from "../../service/firebase.service";
 import moment from "moment";
 import BarChart from "@/app/component/bar-chart";
 import PhotoIcon from "@mui/icons-material/Photo";
+import ModeEdit from "@mui/icons-material/ModeEdit";
 
 type FormData = {
   houseName: string;
@@ -107,7 +108,7 @@ export default function HouseLogs() {
       setValue("currentMonthExpenses", accumulateAmount);
     });
 
-    getProfitLossBreakdown(params["houseId"].toString()).then((val) => {
+    getProfitLossBreakdowns(params["houseId"].toString()).then((val) => {
       for (var i = 0; i < val.length; i++) {
         const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
         monthArray.push(dateValue);
@@ -207,6 +208,12 @@ export default function HouseLogs() {
     setOpen(true);
   }
 
+  function editProfitLoss(id: string) {
+    console.log(id)
+    // pass the PL log id here 
+    router.push(`${id}/editMonthlyPL`);
+  }
+
   return (
     <div className="p-2 space-y-10">
             <Dialog
@@ -264,6 +271,9 @@ export default function HouseLogs() {
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               File
+            </th>
+            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+              Edit
             </th>
           </tr>
         </thead>
@@ -346,7 +356,16 @@ export default function HouseLogs() {
                           handleClickOpen(row["filename"]);
                         }}
                       ></Button>
-                    </td>
+                </td>
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                      <Button
+                        endIcon={<ModeEdit />}
+                        onClick={() => {
+                          editProfitLoss(row["id"]);
+                        }}
+                      ></Button>
+                </td>
+                    
               </tr>
             );
           })}

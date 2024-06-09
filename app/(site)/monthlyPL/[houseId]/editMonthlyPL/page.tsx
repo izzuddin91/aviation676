@@ -20,6 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 import {
   getHouseDetails,
   getHouseLogsOnDateRange,
+  getProfitLossBreakdown,
   getProfitLossBreakdowns,
 } from "../../../service/firebase.service";
 import moment from "moment";
@@ -31,20 +32,21 @@ import {
 } from "firebase/storage";
 
 type FormData = {
-  houseName: string;
-  installment: number;
-  address: string;
-  maintenance: number;
-  sinkingFund: number;
-  currentMonthExpenses: number;
-  currentMonthRevenue: number;
-  wifi: number;
-  waterBill: number;
-  electricBill: number;
+  id: string;
+  houseId: string;
+  revenue: number;
   cleaning: number;
-  otherPayments: number;
-  otherPaymentsNotes: string;
+  electricBill: number;
+  waterBill: number;
+  wifi: number;
+  otherExpenses: number;
+  totalExpenses: number;
+  profitBeforeAdminCharge: number
+  adminCharge: number;
+  profitAfterAdminCharge: number;
   notes: string;
+  houseName: string;
+  address: string;
 };
 const formSchema = yup
   .object({
@@ -69,6 +71,7 @@ export default function HouseLogs() {
   const [value, setDateValue] = React.useState<Dayjs | null>(
     dayjs(`${year}-${month}-${day}`)
   );
+
   const router = useRouter();
   const params = useParams();
 
@@ -84,22 +87,35 @@ export default function HouseLogs() {
   var [monthProfit, updateMonthProfit] = useState([0.0]);
 
   async function getData() {
-    getHouseDetails(params["houseId"].toString()).then((val) => {
-      console.log(val);
+    // this houseId is not actually the houseId, it's their own id. 
+    getProfitLossBreakdown(params["houseId"].toString()).then((val) => {
+      
       updatehouseDetail(val);
-      setValue("houseName", val["houseName"]);
-      setValue("installment", val["installment"]);
-      setValue("address", val["address"]);
-      setValue("maintenance", val["maintenance"]);
-      setValue("address", val["address"]);
-      setValue("sinkingFund", val["sinkingFund"]);
+      setValue("revenue", val["revenue"]);
+      setValue("cleaning", val["cleaning"]);
+      setValue("electricBill", val["electricBill"]);
+      setValue("waterBill", val["waterBill"]);
       setValue("wifi", val["wifi"]);
-      setValue("waterBill", val["waterBill"])
-      setValue("waterBill", val["waterBill"])
-      setValue("electricBill", val["electricBill"])
-      setValue("cleaning", val["cleaning"])
-      setValue("otherPayments", val["otherPayments"])
-      setValue("otherPaymentsNotes", val["otherPaymentsNotes"])
+      setValue("otherExpenses", val["otherExpenses"]);
+      setValue("totalExpenses", val["totalExpenses"]);
+      setValue("profitBeforeAdminCharge", val["profitBeforeAdminCharge"]);
+      setValue("adminCharge", val["adminCharge"]);
+      setValue("profitAfterAdminCharge", val["profitAfterAdminCharge"]);
+      setValue("notes", val["notes"]);
+      setValue("id", params["houseId"].toString());
+      setValue("houseId", val["houseId"].toString());
+
+      const returnDate = new Date(val["date"].seconds*1000);
+   
+
+      const day = returnDate.toLocaleString("en-US", { day: "2-digit" });
+      const month = returnDate.toLocaleString("en-US", { month: "long" });
+      const year = returnDate.getFullYear();
+
+      setDateValue(
+        dayjs(`${year}-${month}-${day}`)
+      )
+
     });
     var accumulateAmount = 0.0;
     // get the amount for this month, get the total expenses and populate the text field
@@ -109,13 +125,11 @@ export default function HouseLogs() {
       year
     ).then((val) => {
       // add date in the label array for graph
-
-      for (var i = 0; i < val.length; i++) {
-        accumulateAmount += val[i]["total"];
-      }
-
-      accumulateAmount = Math.round(accumulateAmount * 100) / 100;
-      setValue("currentMonthExpenses", accumulateAmount);
+      // for (var i = 0; i < val.length; i++) {
+      //   accumulateAmount += val[i]["total"];
+      // }
+      // accumulateAmount = Math.round(accumulateAmount * 100) / 100;
+      // setValue("expenses", accumulateAmount);
     });
   }
 
@@ -138,91 +152,35 @@ export default function HouseLogs() {
     console.log(value!.format("DD/MM/YYYY"));
     const date = value!.format("YYYY-MM-DD");
 
-    console.log(date);
-    console.log(data);
-    const currentExpenses = Number(data.currentMonthExpenses);
-    const totalExpenses =
-      Number(data.installment) +
-      Number(data.maintenance) +
-      Number(data.sinkingFund) +
-      Number(data.wifi) +
-      currentExpenses;
-    const currentMonthRevenue = Number(data.currentMonthRevenue);
-
-    const margin = currentMonthRevenue - totalExpenses;
-
     var submitData = {
       date: new Date(date),
-      expenses: totalExpenses,
-      profit: currentMonthRevenue,
-      margin: Number(margin.toFixed(2)),
-      houseId: params["houseId"],
-      filename: "",
-      filenameForDelete: "",
+      revenue: data.revenue,
+      cleaning: data.cleaning,
+      electricBill: data.electricBill,
+      waterBill: data.waterBill,
+      wifi: data.wifi,
+      otherExpenses: data.otherExpenses,
+      totalExpenses: data.totalExpenses,
+      profitBeforeAdminCharge: data.profitBeforeAdminCharge,
+      adminCharge: data.adminCharge,
+      profitAfterAdminCharge: data.profitAfterAdminCharge,
       notes: data.notes,
+      id: data.id,
+      houseId: data.houseId
     };
 
-    if (file) {
-      file?.arrayBuffer().then((val) => {
-        const storage = getStorage(firebase.app());
-        const filenameForDelete =
-          "/uploads/" +
-          "profitLossBreakdown" +
-          params["houseId"] +
-          `_${year}-${month}-${day}.pdf`;
-        const storageref = ref(storage, filenameForDelete);
-        console.log(storageref);
-        const uploadTask = uploadBytesResumable(storageref, val);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(submitData)
 
-            // setProgressUpload(progress) // to show progress upload
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
-                break;
-              case "running":
-                console.log("Upload is running");
-                break;
-            }
-          },
-          (error) => {
-            // message.error(error.message)
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              //url is download url of file
-              console.log(url);
-              // setDownloadURL(url)
-              // we get the url here, then start updating the logs
-              submitData["filename"] = url;
-              submitData["filenameForDelete"] = filenameForDelete;
-              firebase
-                .firestore()
-                .collection("/profitLossBreakdowns")
-                .doc()
-                .set(submitData)
-                .then(() => {
-                  alert("success!");
-                });
-            });
-          }
-        );
-      });
-    } else {
-      submitData["filename"] = "";
-      firebase
-        .firestore()
-        .collection("/profitLossBreakdowns")
-        .doc()
-        .set(submitData)
-        .then(() => {
-          alert("success!");
-        });
-    }
+    // update the exact profit loss breakdown 
+    firebase
+    .firestore()
+    .collection("/profitLossBreakdowns")
+    .doc(data.id)
+    .set(submitData)
+    .then(() => {
+      alert("success!");
+    });
+
   };
 
   const labels = monthArray;
@@ -259,6 +217,7 @@ export default function HouseLogs() {
                     label="Controlled picker"
                     value={value}
                     onChange={(newValue) => setDateValue(newValue)}
+                    format="DD/MM/YYYY"
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -273,66 +232,8 @@ export default function HouseLogs() {
                 }}
               />
               <PrimaryTextInputWithLabel
-                label="Installment"
-                name="installment"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Maintenance"
-                name="maintenance"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Sinking Fund"
-                name="sinkingFund"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="wifi"
-                name="wifi"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Current Expenses"
-                name="currentMonthExpenses"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Water bill"
-                name="waterBill"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-            </Stack>
-          </div>
-          <div className="col-span">
-            <Stack spacing={2} sx={{ width: 300 }}>
-              <PrimaryTextInputWithLabel
-                label="Electric bill"
-                name="electricBill"
+                label="Revenue"
+                name="revenue"
                 placeholder=""
                 type="decimal"
                 required
@@ -349,8 +250,8 @@ export default function HouseLogs() {
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Other Payments"
-                name="otherPayments"
+                label="Electric bill"
+                name="electricBill"
                 placeholder=""
                 type="decimal"
                 required
@@ -358,17 +259,66 @@ export default function HouseLogs() {
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Other Payments notes"
-                name="otherPaymentsNotes"
+                label="Water bill"
+                name="waterBill"
                 placeholder=""
-                type="string"
+                type="decimal"
                 required
                 errors={errors}
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Month Revenue"
-                name="currentMonthRevenue"
+                label="Wifi"
+                name="wifi"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+            </Stack>
+          </div>
+          <div className="col-span">
+            <Stack spacing={2} sx={{ width: 300 }}>
+              <PrimaryTextInputWithLabel
+                label="Other Expenses"
+                name="otherExpenses"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Total Expenses"
+                name="totalExpenses"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Profit before 20% charge"
+                name="profitBeforeAdminCharge"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="20% charge"
+                name="adminCharge"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Profit after 20% charge"
+                name="profitAfterAdminCharge"
                 placeholder=""
                 type="decimal"
                 required
@@ -379,7 +329,7 @@ export default function HouseLogs() {
                 label="Notes"
                 name="notes"
                 placeholder=""
-                type="decimal"
+                type="string"
                 required
                 errors={errors}
                 register={register}

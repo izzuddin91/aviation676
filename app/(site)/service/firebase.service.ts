@@ -70,17 +70,23 @@ export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promis
       
 }
 
-export const getProfitLossBreakdown = async (houseId: string): Promise<any> => {
+export const getProfitLossBreakdowns = async (houseId: string): Promise<any> => {
     const uid = getUserAuth()
     console.log(uid)
     const carPartsCollection = await firebase.firestore().collection("profitLossBreakdowns").where("houseId", "==", houseId).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {
-
         list[i] = doc.data()
+        list[i]["id"] = doc.id
     });
     return list
+}
+
+export const getProfitLossBreakdown = async (id: String): Promise<any> => {
+    const houseLog = await firebase.firestore().collection("profitLossBreakdowns").doc(id.toString()).get()
+    var returnData = houseLog.data()
+    return returnData
 }
 
 
