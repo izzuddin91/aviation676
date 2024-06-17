@@ -207,7 +207,7 @@ export default function HouseLogs() {
         Back
       </Button>
       <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
-        <h1>New Monthly PL</h1>
+        <h1>Edit Monthly Revenue</h1>
         <div className="grid grid-cols-2 gap-4 p-4">
           <div className="col-span">
             <Stack spacing={2} sx={{ width: 300 }}>

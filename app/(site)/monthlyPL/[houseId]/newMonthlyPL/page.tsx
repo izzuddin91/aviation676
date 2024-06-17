@@ -31,21 +31,23 @@ import {
 } from "firebase/storage";
 
 type FormData = {
-  houseName: string;
-  installment: number;
-  address: string;
-  maintenance: number;
-  sinkingFund: number;
-  currentMonthExpenses: number;
-  currentMonthRevenue: number;
-  wifi: number;
-  waterBill: number;
-  electricBill: number;
+  id: string;
+  houseId: string;
+  revenue: number;
   cleaning: number;
-  otherPayments: number;
-  otherPaymentsNotes: string;
+  electricBill: number;
+  waterBill: number;
+  wifi: number;
+  otherExpenses: number;
+  totalExpenses: number;
+  profitBeforeAdminCharge: number
+  adminCharge: number;
+  profitAfterAdminCharge: number;
   notes: string;
+  houseName: string;
+  address: string;
 };
+
 const formSchema = yup
   .object({
     // logsTitle: yup.string().required("please key in title"),
@@ -85,21 +87,21 @@ export default function HouseLogs() {
 
   async function getData() {
     getHouseDetails(params["houseId"].toString()).then((val) => {
-      console.log(val);
+
       updatehouseDetail(val);
-      setValue("houseName", val["houseName"]);
-      setValue("installment", val["installment"]);
-      setValue("address", val["address"]);
-      setValue("maintenance", val["maintenance"]);
-      setValue("address", val["address"]);
-      setValue("sinkingFund", val["sinkingFund"]);
+      setValue("revenue", val["revenue"]);
+      setValue("cleaning", val["cleaning"]);
+      setValue("electricBill", val["electricBill"]);
+      setValue("waterBill", val["waterBill"]);
       setValue("wifi", val["wifi"]);
-      setValue("waterBill", val["waterBill"])
-      setValue("waterBill", val["waterBill"])
-      setValue("electricBill", val["electricBill"])
-      setValue("cleaning", val["cleaning"])
-      setValue("otherPayments", val["otherPayments"])
-      setValue("otherPaymentsNotes", val["otherPaymentsNotes"])
+      setValue("otherExpenses", val["otherExpenses"]);
+      setValue("totalExpenses", val["totalExpenses"]);
+      setValue("profitBeforeAdminCharge", val["profitBeforeAdminCharge"]);
+      setValue("adminCharge", val["adminCharge"]);
+      setValue("profitAfterAdminCharge", val["profitAfterAdminCharge"]);
+      setValue("notes", val["notes"]);
+      setValue("id", params["houseId"].toString());
+      setValue("houseId", val["houseId"].toString());
     });
     var accumulateAmount = 0.0;
     // get the amount for this month, get the total expenses and populate the text field
@@ -115,7 +117,7 @@ export default function HouseLogs() {
       }
 
       accumulateAmount = Math.round(accumulateAmount * 100) / 100;
-      setValue("currentMonthExpenses", accumulateAmount);
+      setValue("otherExpenses", accumulateAmount);
     });
   }
 
@@ -138,29 +140,25 @@ export default function HouseLogs() {
     console.log(value!.format("DD/MM/YYYY"));
     const date = value!.format("YYYY-MM-DD");
 
-    console.log(date);
-    console.log(data);
-    const currentExpenses = Number(data.currentMonthExpenses);
-    const totalExpenses =
-      Number(data.installment) +
-      Number(data.maintenance) +
-      Number(data.sinkingFund) +
-      Number(data.wifi) +
-      currentExpenses;
-    const currentMonthRevenue = Number(data.currentMonthRevenue);
-
-    const margin = currentMonthRevenue - totalExpenses;
-
     var submitData = {
       date: new Date(date),
-      expenses: totalExpenses,
-      profit: currentMonthRevenue,
-      margin: Number(margin.toFixed(2)),
-      houseId: params["houseId"],
-      filename: "",
-      filenameForDelete: "",
+      revenue: Number(data.revenue),
+      cleaning: Number(data.cleaning),
+      electricBill: Number(data.electricBill),
+      waterBill: Number(data.waterBill),
+      wifi: Number(data.wifi),
+      otherExpenses: Number(data.otherExpenses),
+      totalExpenses: Number(data.totalExpenses),
+      profitBeforeAdminCharge: Number(data.profitBeforeAdminCharge),
+      adminCharge: Number(data.adminCharge),
+      profitAfterAdminCharge: Number(data.profitAfterAdminCharge),
       notes: data.notes,
+      id: data.id,
+      houseId: data.houseId,
+      filename: '',
+      filenameForDelete: ''
     };
+
 
     if (file) {
       file?.arrayBuffer().then((val) => {
@@ -249,7 +247,7 @@ export default function HouseLogs() {
         Back
       </Button>
       <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
-        <h1>New Monthly PL</h1>
+        <h1>Edit Monthly Revenue</h1>
         <div className="grid grid-cols-2 gap-4 p-4">
           <div className="col-span">
             <Stack spacing={2} sx={{ width: 300 }}>
@@ -259,6 +257,7 @@ export default function HouseLogs() {
                     label="Controlled picker"
                     value={value}
                     onChange={(newValue) => setDateValue(newValue)}
+                    format="DD/MM/YYYY"
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -273,66 +272,8 @@ export default function HouseLogs() {
                 }}
               />
               <PrimaryTextInputWithLabel
-                label="Installment"
-                name="installment"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Maintenance"
-                name="maintenance"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Sinking Fund"
-                name="sinkingFund"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="wifi"
-                name="wifi"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Current Expenses"
-                name="currentMonthExpenses"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Water bill"
-                name="waterBill"
-                placeholder=""
-                type="decimal"
-                required
-                errors={errors}
-                register={register}
-              />
-            </Stack>
-          </div>
-          <div className="col-span">
-            <Stack spacing={2} sx={{ width: 300 }}>
-              <PrimaryTextInputWithLabel
-                label="Electric bill"
-                name="electricBill"
+                label="Revenue"
+                name="revenue"
                 placeholder=""
                 type="decimal"
                 required
@@ -349,8 +290,8 @@ export default function HouseLogs() {
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Other Payments"
-                name="otherPayments"
+                label="Electric bill"
+                name="electricBill"
                 placeholder=""
                 type="decimal"
                 required
@@ -358,17 +299,66 @@ export default function HouseLogs() {
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Other Payments notes"
-                name="otherPaymentsNotes"
+                label="Water bill"
+                name="waterBill"
                 placeholder=""
-                type="string"
+                type="decimal"
                 required
                 errors={errors}
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Month Revenue"
-                name="currentMonthRevenue"
+                label="Wifi"
+                name="wifi"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+            </Stack>
+          </div>
+          <div className="col-span">
+            <Stack spacing={2} sx={{ width: 300 }}>
+              <PrimaryTextInputWithLabel
+                label="Other Expenses"
+                name="otherExpenses"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Total Expenses"
+                name="totalExpenses"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Profit before 20% charge"
+                name="profitBeforeAdminCharge"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="20% charge"
+                name="adminCharge"
+                placeholder=""
+                type="decimal"
+                required
+                errors={errors}
+                register={register}
+              />
+              <PrimaryTextInputWithLabel
+                label="Profit after 20% charge"
+                name="profitAfterAdminCharge"
                 placeholder=""
                 type="decimal"
                 required
@@ -379,7 +369,7 @@ export default function HouseLogs() {
                 label="Notes"
                 name="notes"
                 placeholder=""
-                type="decimal"
+                type="string"
                 required
                 errors={errors}
                 register={register}

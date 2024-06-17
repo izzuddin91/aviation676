@@ -29,6 +29,7 @@ import moment from "moment";
 import BarChart from "@/app/component/bar-chart";
 import PhotoIcon from "@mui/icons-material/Photo";
 import ModeEdit from "@mui/icons-material/ModeEdit";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type FormData = {
   houseName: string;
@@ -112,8 +113,8 @@ export default function HouseLogs() {
       for (var i = 0; i < val.length; i++) {
         const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
         monthArray.push(dateValue);
-        monthExpenses.push(val[i]["expenses"]);
-        monthProfit.push(val[i]["profit"]);
+        monthExpenses.push(val[i]["profitBeforeAdminCharge"]);
+        monthProfit.push(val[i]["revenue"]);
       }
       monthArray.shift();
       monthExpenses.shift();
@@ -214,6 +215,19 @@ export default function HouseLogs() {
     router.push(`${id}/editMonthlyPL`);
   }
 
+  function deleteProfitLoss(id: string) {
+    console.log(id)
+
+    firebase
+    .firestore()
+    .collection("/profitLossBreakdowns")
+    .doc(id)
+    .delete()
+    .then(() => {
+      alert("success!");
+    });
+  }
+
   return (
     <div className="p-2 space-y-10">
             <Dialog
@@ -261,9 +275,6 @@ export default function HouseLogs() {
               Revenue
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Profit Margin
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               Date
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
@@ -274,6 +285,9 @@ export default function HouseLogs() {
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               Edit
+            </th>
+            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+              Delete
             </th>
           </tr>
         </thead>
@@ -305,21 +319,14 @@ export default function HouseLogs() {
                   <span
                     className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
                   >
-                    <span> {row["expenses"]} </span>
+                    <span> {row["profitBeforeAdminCharge"]} </span>
                   </span>
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                   <span
                     className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
                   >
-                    <span> {row["profit"]} </span>
-                  </span>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <span
-                    className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
-                  >
-                    <span> {row["margin"]} </span>
+                    <span> {row["revenue"]} </span>
                   </span>
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
@@ -362,6 +369,14 @@ export default function HouseLogs() {
                         endIcon={<ModeEdit />}
                         onClick={() => {
                           editProfitLoss(row["id"]);
+                        }}
+                      ></Button>
+                </td>
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                      <Button
+                        endIcon={<DeleteIcon />}
+                        onClick={() => {
+                          deleteProfitLoss(row["id"]);
                         }}
                       ></Button>
                 </td>
