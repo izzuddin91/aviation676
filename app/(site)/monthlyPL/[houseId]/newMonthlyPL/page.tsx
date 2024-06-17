@@ -20,9 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 import {
   getHouseDetails,
   getHouseLogsOnDateRange,
-  getProfitLossBreakdowns,
 } from "../../../service/firebase.service";
-import moment from "moment";
 import {
   getDownloadURL,
   getStorage,
@@ -59,7 +57,6 @@ const formSchema = yup
   .required();
 
 export default function HouseLogs() {
-  var [profitLoss, updateProfitLoss] = useState([{}]);
   var [houseDetail, updatehouseDetail] = useState({});
   const [file, setFile] = useState<File>();
   const todayDate = new Date();
@@ -78,12 +75,8 @@ export default function HouseLogs() {
     getData();
   }, []);
 
-  var [houses, updateHouses]: any = useState([{}]);
   const month2 = todayDate.toLocaleString("en-US", { month: "2-digit" });
 
-  var [monthArray, updateMonthArray] = useState([""]);
-  var [monthExpenses, updateMonthExpenses] = useState([0.0]);
-  var [monthProfit, updateMonthProfit] = useState([0.0]);
 
   async function getData() {
     getHouseDetails(params["houseId"].toString()).then((val) => {
@@ -223,31 +216,13 @@ export default function HouseLogs() {
     }
   };
 
-  const labels = monthArray;
-
-  const data2 = {
-    labels,
-    datasets: [
-      {
-        label: "Expenses",
-        data: monthExpenses,
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Revenue",
-        data: monthProfit,
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
-
   return (
     <div className="p-2 space-y-10">
       <Button variant="outlined" onClick={() => router.back()}>
         Back
       </Button>
       <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
-        <h1>Edit Monthly Revenue</h1>
+        <h1>New Monthly Revenue</h1>
         <div className="grid grid-cols-2 gap-4 p-4">
           <div className="col-span">
             <Stack spacing={2} sx={{ width: 300 }}>

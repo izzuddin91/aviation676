@@ -4,7 +4,6 @@ import firebase from "../../../../clientApp";
 import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import * as yup from "yup";
 import { PrimaryTextInputWithLabel } from "../../../../component/input/PrimaryTextInputWithLabel";
 import { PrimaryButton } from "../../../../component/button/PrimaryButton";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -16,20 +15,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
-
 import {
-  getHouseDetails,
-  getHouseLogsOnDateRange,
   getProfitLossBreakdown,
-  getProfitLossBreakdowns,
+  updateProfitLossBreakdown,
 } from "../../../service/firebase.service";
-import moment from "moment";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { successAlert } from "@/app/(site)/service/alert.service";
 
 type FormData = {
   id: string;
@@ -48,26 +38,14 @@ type FormData = {
   houseName: string;
   address: string;
 };
-const formSchema = yup
-  .object({
-    // logsTitle: yup.string().required("please key in title"),
-    houseName: yup.string().required("please key in description"),
-    text2Key: yup.string().default(" "),
-    text2Value: yup.string().required(" "),
-    installment: yup.number().required("need to add installment"),
-  })
-  .required();
 
 export default function HouseLogs() {
-  var [profitLoss, updateProfitLoss] = useState([{}]);
-  var [houseDetail, updatehouseDetail] = useState({});
   const [file, setFile] = useState<File>();
   const todayDate = new Date();
   const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
   const month = todayDate.toLocaleString("en-US", { month: "long" });
 
   const year = todayDate.getFullYear();
-  var [amount, updateAmount] = useState(0.0);
   const [value, setDateValue] = React.useState<Dayjs | null>(
     dayjs(`${year}-${month}-${day}`)
   );
@@ -79,18 +57,9 @@ export default function HouseLogs() {
     getData();
   }, []);
 
-  var [houses, updateHouses]: any = useState([{}]);
-  const month2 = todayDate.toLocaleString("en-US", { month: "2-digit" });
-
-  var [monthArray, updateMonthArray] = useState([""]);
-  var [monthExpenses, updateMonthExpenses] = useState([0.0]);
-  var [monthProfit, updateMonthProfit] = useState([0.0]);
-
   async function getData() {
     // this houseId is not actually the houseId, it's their own id. 
     getProfitLossBreakdown(params["houseId"].toString()).then((val) => {
-      
-      updatehouseDetail(val);
       setValue("revenue", val["revenue"]);
       setValue("cleaning", val["cleaning"]);
       setValue("electricBill", val["electricBill"]);
@@ -106,8 +75,6 @@ export default function HouseLogs() {
       setValue("houseId", val["houseId"].toString());
 
       const returnDate = new Date(val["date"].seconds*1000);
-   
-
       const day = returnDate.toLocaleString("en-US", { day: "2-digit" });
       const month = returnDate.toLocaleString("en-US", { month: "long" });
       const year = returnDate.getFullYear();
@@ -117,27 +84,8 @@ export default function HouseLogs() {
       )
 
     });
-    var accumulateAmount = 0.0;
-    // get the amount for this month, get the total expenses and populate the text field
-    getHouseLogsOnDateRange(
-      params["houseId"].toString(),
-      Number(month2),
-      year
-    ).then((val) => {
-      // add date in the label array for graph
-      // for (var i = 0; i < val.length; i++) {
-      //   accumulateAmount += val[i]["total"];
-      // }
-      // accumulateAmount = Math.round(accumulateAmount * 100) / 100;
-      // setValue("expenses", accumulateAmount);
-    });
   }
 
-  function setForm() {
-    const data2 = new FormData();
-  }
-
-  const [message, setMessage] = useState("");
   const {
     control,
     register,
@@ -149,9 +97,7 @@ export default function HouseLogs() {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(value!.format("DD/MM/YYYY"));
     const date = value!.format("YYYY-MM-DD");
-
     var submitData = {
       date: new Date(date),
       revenue: data.revenue,
@@ -168,37 +114,12 @@ export default function HouseLogs() {
       id: data.id,
       houseId: data.houseId
     };
-
-    console.log(submitData)
-
-    // update the exact profit loss breakdown 
-    firebase
-    .firestore()
-    .collection("/profitLossBreakdowns")
-    .doc(data.id)
-    .set(submitData)
-    .then(() => {
-      alert("success!");
+    
+    await updateProfitLossBreakdown(data.id, submitData).then((val) => {
+      if (val == 'success'){
+        successAlert('Success', 'Data updated')
+      }
     });
-
-  };
-
-  const labels = monthArray;
-
-  const data2 = {
-    labels,
-    datasets: [
-      {
-        label: "Expenses",
-        data: monthExpenses,
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Revenue",
-        data: monthProfit,
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
   };
 
   return (
@@ -226,8 +147,6 @@ export default function HouseLogs() {
                 type="file"
                 name="file"
                 onChange={(e) => {
-                  console.log(e.target.files);
-
                   setFile(e.target.files?.[0]);
                 }}
               />

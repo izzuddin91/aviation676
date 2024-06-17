@@ -89,6 +89,33 @@ export const getProfitLossBreakdown = async (id: String): Promise<any> => {
     return returnData
 }
 
+export const updateProfitLossBreakdown = async (id: string, submitData: any): Promise<any> => {
+    let status = ''
+    await firebase
+    .firestore()
+    .collection("/profitLossBreakdowns")
+    .doc(id)
+    .set(submitData)
+    .then((_) => {
+      status = 'success'
+    });
+    return status;
+}
+
+export const deleteProfitLossBreakdown = async (id: string): Promise<any> => {
+    let status = ''
+    await firebase
+    .firestore()
+    .collection("/profitLossBreakdowns")
+    .doc(id)
+    .delete()
+    .then((_) => {
+        status = 'success'
+      });
+      return status;
+
+}
+
 
 export const getVehicles = async (): Promise<any> => {
     const uid = getUserAuth()
