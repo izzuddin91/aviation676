@@ -113,7 +113,6 @@ export const deleteProfitLossBreakdown = async (id: string): Promise<any> => {
         status = 'success'
       });
       return status;
-
 }
 
 

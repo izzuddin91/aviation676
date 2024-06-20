@@ -64,7 +64,6 @@ export default function HouseLogs() {
   const month = todayDate.toLocaleString("en-US", { month: "long" });
 
   const year = todayDate.getFullYear();
-  var [amount, updateAmount] = useState(0.0);
   const [value, setDateValue] = React.useState<Dayjs | null>(
     dayjs(`${year}-${month}-${day}`)
   );
@@ -80,8 +79,6 @@ export default function HouseLogs() {
 
   async function getData() {
     getHouseDetails(params["houseId"].toString()).then((val) => {
-
-      updatehouseDetail(val);
       setValue("revenue", val["revenue"]);
       setValue("cleaning", val["cleaning"]);
       setValue("electricBill", val["electricBill"]);

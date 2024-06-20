@@ -1,6 +1,5 @@
 "use client";
 
-import firebase from "../../../../clientApp";
 import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -87,13 +86,11 @@ export default function HouseLogs() {
   }
 
   const {
-    control,
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    // resolver: yupResolver(formSchema),
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {

@@ -83,7 +83,6 @@ export default function HouseLogs() {
       }
     );
     getHouseDetails(params["houseId"].toString()).then((val) => {
-      console.log(params["houseId"].toString())
       updatehouseDetail(val);
     });
   }, []);
