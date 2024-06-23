@@ -2201,7 +2201,7 @@
     "node-html-better-parser" "^1.4.0"
     "pako" "^1.0.11"
 
-"@pdfme/schemas@latest":
+"@pdfme/schemas@^4.0.2", "@pdfme/schemas@latest":
   "integrity" "sha512-WH8yaHYj9uCMiP96FWZR20T0WWNkROX6Es6hTMG23Sh0tjZ/X7tcn+lOL+HnMSs9q+p1PPgH7gL2XrQboi2MJw=="
   "resolved" "https://registry.npmjs.org/@pdfme/schemas/-/schemas-4.0.2.tgz"
   "version" "4.0.2"
