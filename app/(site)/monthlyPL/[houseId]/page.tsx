@@ -107,6 +107,8 @@ export default function HouseLogs() {
   const [open, setOpen] = React.useState(false);
   function handleClickOpen(file: any) {
     // window.open(file, "_blank");
+    // console.log('xx')
+    console.log((file['date']))
     const domContainer = document.getElementById('container2')!;
     const template: Template = 
     {
@@ -176,7 +178,7 @@ export default function HouseLogs() {
             "width": 90.46,
             "height": 11.93,
             "fontSize": 14,
-            "alignment": "center",
+            "alignment": "left",
             "content": "Your Service Description"
           },
           "Qty1": {
@@ -224,7 +226,7 @@ export default function HouseLogs() {
             "width": 90.46,
             "height": 11.93,
             "fontSize": 14,
-            "alignment": "center",
+            "alignment": "left",
             "content": "Your Service Description"
           },
           "Qty2": {
@@ -272,7 +274,7 @@ export default function HouseLogs() {
             "width": 90.46,
             "height": 11.93,
             "fontSize": 14,
-            "alignment": "center",
+            "alignment": "left",
             "content": "Your Service Description"
           },
           "Qty3": {
@@ -320,7 +322,7 @@ export default function HouseLogs() {
             "width": 90.46,
             "height": 11.93,
             "fontSize": 14,
-            "alignment": "center",
+            "alignment": "left",
             "content": "Your Service Description"
           },
           "Qty4": {
@@ -368,7 +370,7 @@ export default function HouseLogs() {
             "width": 90.46,
             "height": 11.93,
             "fontSize": 14,
-            "alignment": "center",
+            "alignment": "left",
             "content": "Your Service Description"
           },
           "Qty5": {
@@ -416,7 +418,7 @@ export default function HouseLogs() {
             "width": 90.46,
             "height": 11.93,
             "fontSize": 14,
-            "alignment": "center",
+            "alignment": "left",
             "content": "Your Service Description"
           },
           "Qty6": {
@@ -464,7 +466,7 @@ export default function HouseLogs() {
             "width": 90.46,
             "height": 11.93,
             "fontSize": 14,
-            "alignment": "center",
+            "alignment": "left",
             "content": "Your Service Description"
           },
           "Qty7": {
@@ -574,7 +576,21 @@ export default function HouseLogs() {
     }
 // This is initial data.
 
-const inputs = [{ No: 'a1', Description1: 'b1', Price1: 'c1' }];
+const inputs = [{ 
+  // No: 'a1', 
+  Description1: 'Revenue', 
+  Price1: 'RM' + file['revenue'].toString(),
+  Description2: 'Total Expenses', 
+  Price2: 'RM' + file['totalExpenses'].toString(),
+  Description3: 'Profit Before 20 % Charge', 
+  Price3: 'RM' + file['profitBeforeAdminCharge'].toString(),
+  Description4: 'Admin 20 % Charge', 
+  Price4: 'RM' + file['adminCharge'].toString(),
+  Description5: 'Profit After 20 % Charge', 
+  Price5: 'RM' + file['profitAfterAdminCharge'].toString(),
+  Date: moment(file["date"].toDate()).format("DD-MM-YYYY")
+
+}];
 
 generate({ template, inputs }).then((pdf) => {
   console.log(pdf);
@@ -750,7 +766,7 @@ generate({ template, inputs }).then((pdf) => {
                   <Button
                     endIcon={<PhotoIcon />}
                     onClick={() => {
-                      handleClickOpen(row["filename"]);
+                      handleClickOpen(row);
                     }}
                   ></Button>
                 </td>
