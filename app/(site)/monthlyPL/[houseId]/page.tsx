@@ -588,7 +588,7 @@ const inputs = [{
   Price4: 'RM' + file['adminCharge'].toString(),
   Description5: 'Profit After 20 % Charge', 
   Price5: 'RM' + file['profitAfterAdminCharge'].toString(),
-  Date: moment(file["date"].toDate()).format("DD-MM-YYYY")
+  Date: file['date']
 
 }];
 

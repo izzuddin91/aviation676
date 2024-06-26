@@ -10,8 +10,6 @@ import { PrimaryButton } from "@/app/component/button/PrimaryButton";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { LoadingIndicator } from "@/app/component/indicator/Loading";
-// import { LoadingIndicator } from "@/app/component/indicator/loading";
-// import { LoadingIndicator } from "@/app/component/indicator/loading";
 
 export default function Home() {
   const router = useRouter();

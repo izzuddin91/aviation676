@@ -25,43 +25,54 @@ import { RxSketchLogo, RxDashboard, RxPerson } from 'react-icons/rx'
 import {FiSettings} from 'react-icons/fi'
 import {HiOutlineShoppingBag, } from 'react-icons/hi';
 
+
+
 export const SideMenu = () => {
   return (
-    <div className='flex hidden lg:block xs:w-3/12 xs:h-128 w-3/12 visible xm:invisible'>
-      <div className='fixed w-22 h-screen p-4 bg-white border-r-[1px] flex flex-col justify-between'> 
-      <div className="flex flex-col items-center">
-        <Link href={'/'}>
-          <div className="bg-purple-800 text-white p-3 rounded-lg inline-block">
-            <RxSketchLogo size={20}></RxSketchLogo>
-          </div>
-        </Link>
-        <span className="border-b-[1px] border-gray-200 w-full p-2"></span>
-        <Link href={'/dashboard'}>
-          <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
-            <HiMenuAlt1 size={20}></HiMenuAlt1>
-          </div>
-        </Link>
-        <Link href={'/houseList'}>
-          <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
-            <HiHome size={20}></HiHome>
-          </div>
-        </Link>
-        <Link href={'/vehicle'}>
-          <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
-            <HiTruck size={20}></HiTruck>
-          </div>
-        </Link>
-        <Link href={'/analysis'}>
-          <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
-            <HiChartBar size={20}></HiChartBar>
-          </div>
-        </Link>
-      </div>
-      <main className="ml-20 w-full">
-
-      </main>
-      </div>
+    <div className="fixed top-0 left-0 h-screen w-16 m-0
+    flex flex-col
+    bg-gray-900
+    text-white
+    shadow-lg
+    ">
+      <SideBarIcon icon={<HiHome size={20}></HiHome>} text={'Houses'} link={'/houseList'}></SideBarIcon> 
+      <SideBarIcon icon={<HiMenuAlt1 size={20}></HiMenuAlt1>} text={'Dashboard'} link={'/dashboard'}></SideBarIcon>
     </div>
+    // <div className='flex hidden lg:block xs:w-3/12 xs:h-128 w-3/12 visible xm:invisible'>
+    //   <div className='fixed w-22 h-screen p-4 bg-white border-r-[1px] flex flex-col justify-between'> 
+    //   <div className="flex flex-col items-center">
+    //     <Link href={'/'}>
+    //       <div className="bg-purple-800 text-white p-3 rounded-lg inline-block">
+    //         <RxSketchLogo size={20}></RxSketchLogo>
+    //       </div>
+    //     </Link>
+    //     <span className="border-b-[1px] border-gray-200 w-full p-2"></span>
+    //     <Link href={'/dashboard'}>
+    //       <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
+    //         <HiMenuAlt1 size={20}></HiMenuAlt1>
+    //       </div>
+    //     </Link>
+    //     <Link href={'/houseList'}>
+    //       <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
+    //         <HiHome size={20}></HiHome>
+    //       </div>
+    //     </Link>
+    //     <Link href={'/vehicle'}>
+    //       <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
+    //         <HiTruck size={20}></HiTruck>
+    //       </div>
+    //     </Link>
+    //     <Link href={'/analysis'}>
+    //       <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
+    //         <HiChartBar size={20}></HiChartBar>
+    //       </div>
+    //     </Link>
+    //   </div>
+    //   <main className="ml-20 w-full">
+
+    //   </main>
+    //   </div>
+    // </div>
     
     // <Sidebar
     //   theme={{
@@ -100,3 +111,16 @@ export const SideMenu = () => {
     // </Sidebar>
   );
 };
+
+const SideBarIcon = ({ icon, text, link }) => {
+return(  
+  <Link href={link}>
+<div className="sidebar-icon group">
+    {icon}
+    <span className='sidebar-tooltip group-hover:visible'>
+      {text}
+    </span>
+</div>
+
+</Link>)
+}
