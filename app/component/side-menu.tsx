@@ -112,7 +112,13 @@ export const SideMenu = () => {
   );
 };
 
-const SideBarIcon = ({ icon, text, link }) => {
+type SideBarTooltip = {
+  icon: any,
+  text: string,
+  link: string
+}
+
+const SideBarIcon: React.FC<SideBarTooltip> = ({ icon, text, link }) => {
 return(  
   <Link href={link}>
 <div className="sidebar-icon group">
