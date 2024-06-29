@@ -48,13 +48,13 @@ export default function HouseLogs() {
   var [monthProfit, updateMonthProfit] = useState([0.0]);
 
   async function getData() {
-    getHouseDetails(params["houseId"].toString()).then((val) => {
+    getHouseDetails(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
       updatehouseDetail(val);
     });
     var accumulateAmount = 0.0;
     // get the amount for this month, get the total expenses and populate the text field
     getHouseLogsOnDateRange(
-      params["houseId"].toString(),
+      ("bKViazj3szhlNjl2CiVI").toString(),
       Number(month2),
       year
     ).then((val) => {
@@ -65,7 +65,7 @@ export default function HouseLogs() {
       accumulateAmount = Math.round(accumulateAmount * 100) / 100;
     });
 
-    getProfitLossBreakdowns(params["houseId"].toString()).then((val) => {
+    getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
       for (var i = 0; i < val.length; i++) {
         const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
         monthArray.push(dateValue);
@@ -84,7 +84,7 @@ export default function HouseLogs() {
 
   var _ = require("lodash");
   function newMonthlyPL() {
-    router.push(`${params["houseId"].toString()}/newMonthlyPL`);
+    router.push(`${("bKViazj3szhlNjl2CiVI").toString()}/newMonthlyPL`);
   }
 
   const labels = monthArray;
