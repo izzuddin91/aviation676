@@ -111,10 +111,10 @@ const month = today.getMonth() + 1; // getMonth() returns month index starting f
 const day = today.getDate();
 
     console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
-    let start = new Date(year + "-" + month + "-" + day);
+    let start = new Date(2024 + "-" + 6 + "-" + 29);
     const uid = getUserAuth()
     console.log(uid)
-    const carPartsCollection = await firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').orderBy('date', 'asc')
+    const carPartsCollection = await firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", start).orderBy('date', 'asc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {
