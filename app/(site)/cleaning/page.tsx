@@ -85,93 +85,88 @@ export default function Cleaning() {
 
   return (
     <div className="p-5 h-screen bg-gray-100">
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Image</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <img src={fileName} alt="" />
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Dismiss</Button>
-        </DialogActions>
-      </Dialog>
-      <div className="grid grid-cols gap-4 p-4">
-        <div className="overflow-auto rounded-lg shadow hidden md:block ">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b-2 border-gray-200">
-              <tr>
-                <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
-                  No.
-                </th>
-                <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                  House Name
-                </th>
-                <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
-                  Date
-                </th>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">Image</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          <img src={fileName} alt="" />
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Dismiss</Button>
+      </DialogActions>
+    </Dialog>
+    <div className="grid grid-cols gap-4 p-4">
+    Upcoming cleaning
+      <div className="overflow-auto rounded-lg shadow">
+        
+        <table className="w-full">
+          <thead className="bg-gray-50 border-b-2 border-gray-200">
+            <tr>
+              <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
+                No.
+              </th>
+              <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                House Name
+              </th>
+              <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
+                Date
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {carParts.map((row: any, i: number) => (
+              <tr key={i} className="bg-white">
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                  <a
+                    href="#"
+                    className="font-bold text-blue-500 hover:underline"
+                  >
+                    {i + 1}
+                  </a>
+                </td>
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                  {row["houseName"]}
+                </td>
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                  {row["date"]
+                    ? moment(row["date"].toDate()).format("DD-MM-YYYY")
+                    : ""}
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {carParts.map((row: any, i: number) => {
-                return (
-                  <tr key={i} className="bg-white">
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <a
-                        href="#"
-                        className="font-bold text-blue-500 hover:underline"
-                      >
-                        {i + 1}
-                      </a>
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      {row["houseName"]}
-                    </td>
-                    <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      {row["date"]
-                        ? moment(row["date"].toDate()).format("DD-MM-YYYY")
-                        : ""}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className="grid grid-cols-1 gap-1 md:hidden">
-          Upcoming Cleaning List
-          {carParts.map((row: any, i: number) => {
-            // if (row.length > 1 && row[0].category === 'cleaning')
-            return(
-              // eslint-disable-next-line react/jsx-key
-              <div className="bg-white p-4 rounded-lg shadow">
-              <div className="flex items-center space-x-2 text-sm">
-                <div>Date: </div>
-                <div>
-                  <strong>
-                    {row["date"]
-                      ? moment(row["date"].toDate()).format("DD-MM-YYYY")
-                      : ""}
-                  </strong>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <div>Location: </div>
-                <div>
-                  <strong>{row["houseName"]}</strong>
-                </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {/* <div className="grid grid-cols-1 gap-1">
+        Upcoming Cleaning List
+        {carParts.map((row, i) => (
+          <div key={i} className="bg-white p-4 rounded-lg shadow">
+            <div className="flex items-center space-x-2 text-sm">
+              <div>Date: </div>
+              <div>
+                <strong>
+                  {row["date"]
+                    ? moment(row["date"].toDate()).format("DD-MM-YYYY")
+                    : ""}
+                </strong>
               </div>
             </div>
-            );
-
-          })}
-        </div>
-      </div>
+            <div className="flex items-center space-x-2 text-sm">
+              <div>Location: </div>
+              <div>
+                <strong>{row["houseName"]}</strong>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div> */}
     </div>
+  </div>
   );
 }
