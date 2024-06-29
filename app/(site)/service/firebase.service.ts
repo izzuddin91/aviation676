@@ -105,9 +105,16 @@ export const getProfitLossBreakdowns = async (houseId: string): Promise<any> => 
 }
 
 export const getProfitLossBreakdowns2 = async (houseId: string): Promise<any> => {
+    const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth() + 1; // getMonth() returns month index starting from 0
+const day = today.getDate();
+
+    console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
+    let start = new Date(year + "-" + month + "-" + day);
     const uid = getUserAuth()
     console.log(uid)
-    const carPartsCollection = await firebase.firestore().collection("houseLogs").where("houseId", "==", houseId).where("category", "==", "cleaning").orderBy('date', 'asc')
+    const carPartsCollection = await firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", start).orderBy('date', 'asc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {
