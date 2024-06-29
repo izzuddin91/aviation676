@@ -19,6 +19,7 @@ import {
   getHouseDetails,
   getHouseLogsOnDateRange,
   getProfitLossBreakdowns,
+  getProfitLossBreakdowns2,
 } from "../service/firebase.service";
 import moment from "moment";
 import BarChart from "@/app/component/bar-chart";
@@ -66,7 +67,7 @@ export default function HouseLogs() {
       accumulateAmount = Math.round(accumulateAmount * 100) / 100;
     });
 
-    getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
+    getProfitLossBreakdowns2(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
       for (var i = 0; i < val.length; i++) {
         const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
         monthArray.push(dateValue);
@@ -81,10 +82,6 @@ export default function HouseLogs() {
       updateMonthProfit(monthProfit);
       updateProfitLoss(val);
     });
-    
-    getCleaningList().then((val) => {
-      updateProfitLoss(val);
-    })
 
   }
 

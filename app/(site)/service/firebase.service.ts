@@ -16,6 +16,7 @@ const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
 const month = todayDate.toLocaleString("en-US", { month: "long" });
 const year = todayDate.getFullYear();
 
+
 export const getCleaningList = async (): Promise<any> => {
 
 // get the year, date month of today
@@ -102,6 +103,20 @@ export const getProfitLossBreakdowns = async (houseId: string): Promise<any> => 
     });
     return list
 }
+
+export const getProfitLossBreakdowns2 = async (houseId: string): Promise<any> => {
+    const uid = getUserAuth()
+    console.log(uid)
+    const carPartsCollection = await firebase.firestore().collection("houseLogs").where("houseId", "==", houseId).orderBy('date', 'desc')
+    const carParts = await getDocs(carPartsCollection)
+    var list: any = [{}]
+    carParts.docs.map((doc, i) => {
+        list[i] = doc.data()
+        list[i]["id"] = doc.id
+    });
+    return list
+}
+
 
 export const getProfitLossBreakdown = async (id: String): Promise<any> => {
     const houseLog = await firebase.firestore().collection("profitLossBreakdowns").doc(id.toString()).get()
