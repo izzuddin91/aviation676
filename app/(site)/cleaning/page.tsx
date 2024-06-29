@@ -103,9 +103,9 @@ export default function Cleaning() {
     </Dialog>
     <div className="grid grid-cols gap-4 p-4">
     Upcoming cleaning
-    {carParts.map((row: any, i: number) => (
-      <div key={i}>row</div>
-    ))}
+    {carParts.map((row: any, i: number) => {
+      return ( <div key={i}>asd</div> )
+    })}
       <div className="overflow-auto rounded-lg shadow">
         
         <table className="w-full">
