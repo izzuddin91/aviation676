@@ -107,7 +107,7 @@ export const getProfitLossBreakdowns = async (houseId: string): Promise<any> => 
 export const getProfitLossBreakdowns2 = async (houseId: string): Promise<any> => {
     const uid = getUserAuth()
     console.log(uid)
-    const carPartsCollection = await firebase.firestore().collection("houseLogs").where("houseId", "==", houseId).orderBy('date', 'desc')
+    const carPartsCollection = await firebase.firestore().collection("houseLogs").where("category", "==", "cleaning").orderBy('date', 'asc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {
