@@ -27,7 +27,7 @@ const day = today.getDate();
 
     console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
     let start = new Date(year + "-" + month + "-" + day);
-    const housesCollection = await firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", start).orderBy('date', 'asc')
+    const housesCollection = await firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", new Date()).orderBy('date', 'asc')
     const houses = await getDocs(housesCollection)
     var list: any = [{}]
     houses.docs.map((doc, i) => {
