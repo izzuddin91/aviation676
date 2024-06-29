@@ -66,25 +66,22 @@ export default function HouseLogs() {
       accumulateAmount = Math.round(accumulateAmount * 100) / 100;
     });
 
-    // getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
-    //   for (var i = 0; i < val.length; i++) {
-    //     const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
-    //     monthArray.push(dateValue);
-    //     monthExpenses.push(val[i]["profitBeforeAdminCharge"]);
-    //     monthProfit.push(val[i]["revenue"]);
-    //   }
-    //   monthArray.shift();
-    //   monthExpenses.shift();
-    //   monthProfit.shift();
-    //   updateMonthArray(monthArray);
-    //   updateMonthExpenses(monthExpenses);
-    //   updateMonthProfit(monthProfit);
-    //   updateProfitLoss(val);
-    // });
+    getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
+      for (var i = 0; i < val.length; i++) {
+        const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
+        monthArray.push(dateValue);
+        monthExpenses.push(val[i]["profitBeforeAdminCharge"]);
+        monthProfit.push(val[i]["revenue"]);
+      }
+      monthArray.shift();
+      monthExpenses.shift();
+      monthProfit.shift();
+      updateMonthArray(monthArray);
+      updateMonthExpenses(monthExpenses);
+      updateMonthProfit(monthProfit);
+      updateProfitLoss(val);
+    });
 
-    getCleaningList().then((val) => {
-      updateProfitLoss(val)
-    })
   }
 
   var _ = require("lodash");
