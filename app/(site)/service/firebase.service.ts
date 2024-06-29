@@ -114,7 +114,7 @@ const day = today.getDate();
     let start = new Date(2024 + "-" + 6 + "-" + 29);
     const uid = getUserAuth()
     console.log(uid)
-    const carPartsCollection = firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", start).orderBy('date', 'asc')
+    const carPartsCollection = firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').orderBy('date', 'asc').limit(10)
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {
