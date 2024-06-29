@@ -66,21 +66,24 @@ export default function HouseLogs() {
       accumulateAmount = Math.round(accumulateAmount * 100) / 100;
     });
 
-    getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
-      for (var i = 0; i < val.length; i++) {
-        const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
-        monthArray.push(dateValue);
-        monthExpenses.push(val[i]["profitBeforeAdminCharge"]);
-        monthProfit.push(val[i]["revenue"]);
-      }
-      monthArray.shift();
-      monthExpenses.shift();
-      monthProfit.shift();
-      updateMonthArray(monthArray);
-      updateMonthExpenses(monthExpenses);
-      updateMonthProfit(monthProfit);
+    // getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
+    //   for (var i = 0; i < val.length; i++) {
+    //     const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
+    //     monthArray.push(dateValue);
+    //     monthExpenses.push(val[i]["profitBeforeAdminCharge"]);
+    //     monthProfit.push(val[i]["revenue"]);
+    //   }
+    //   monthArray.shift();
+    //   monthExpenses.shift();
+    //   monthProfit.shift();
+    //   updateMonthArray(monthArray);
+    //   updateMonthExpenses(monthExpenses);
+    //   updateMonthProfit(monthProfit);
+    //   updateProfitLoss(val);
+    // });
+    getCleaningList().then((val) => {
       updateProfitLoss(val);
-    });
+    })
 
   }
 
@@ -669,36 +672,14 @@ generate({ template, inputs }).then((pdf) => {
       </div>
       <div>
         <h1 style={{ textAlign: "center" }}>
-          House: {(houseDetail as any)["houseName"]}{" "}
+          House:{" "}
         </h1>
-        <BarChart data={data2} />
       </div>
       <table className="w-full">
         <thead className="bg-gray-50 border-b-2 border-gray-200">
           <tr>
-            <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
-              No.
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Expenses
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Revenue
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+          <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               Date
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Notes
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              File
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Edit
-            </th>
-            <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              Delete
             </th>
           </tr>
         </thead>
@@ -719,74 +700,9 @@ generate({ template, inputs }).then((pdf) => {
             return (
               <tr key={i} className="bg-white">
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <a
-                    href="#"
-                    className="font-bold text-blue-500 hover:underline"
-                  >
-                    {i + 1}
-                  </a>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <span
-                    className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
-                  >
-                    <span> {row["profitBeforeAdminCharge"]} </span>
-                  </span>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <span
-                    className={`p-1.5 text-xs font-medium uppercase tracking-wider ${bgColor} rounded-lg bg-opacity-50`}
-                  >
-                    <span> {row["revenue"]} </span>
-                  </span>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                   {row["date"]
                     ? moment(row["date"].toDate()).format("DD-MM-YYYY")
                     : ""}
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  {row["notes"] ? (
-                    <a
-                      onClick={() => {
-                        let a = row["notes"].split("//");
-                        for (var i = 0; i < a.length; i++) {
-                          descStringArray.push(a[i]);
-                        }
-                        updateDescStringArray(descStringArray);
-                        openPopup();
-                      }}
-                      style={{ color: "blue" }}
-                    >
-                      {_.truncate(row["notes"])}
-                    </a>
-                  ) : (
-                    ""
-                  )}
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <Button
-                    endIcon={<PhotoIcon />}
-                    onClick={() => {
-                      handleClickOpen(row);
-                    }}
-                  ></Button>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <Button
-                    endIcon={<ModeEdit />}
-                    onClick={() => {
-                      editProfitLoss(row["id"]);
-                    }}
-                  ></Button>
-                </td>
-                <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  <Button
-                    endIcon={<DeleteIcon />}
-                    onClick={() => {
-                      deleteProfitLoss(row["id"]);
-                    }}
-                  ></Button>
                 </td>
               </tr>
             );
