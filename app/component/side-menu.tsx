@@ -15,15 +15,16 @@ import {
   HiLightBulb,
   HiCog,
   HiMenuAlt1,
-  HiChartBar
+  HiChartBar,
+  HiTrash
 } from "react-icons/hi";
 
 import React from 'react'
 import Link from "next/link";
-import Image from 'next/image';
-import { RxSketchLogo, RxDashboard, RxPerson } from 'react-icons/rx'
-import {FiSettings} from 'react-icons/fi'
-import {HiOutlineShoppingBag, } from 'react-icons/hi';
+// import Image from 'next/image';
+// import { RxSketchLogo, RxDashboard, RxPerson } from 'react-icons/rx'
+// import {FiSettings} from 'react-icons/fi'
+// import {HiOutlineShoppingBag, } from 'react-icons/hi';
 
 
 
@@ -34,9 +35,11 @@ export const SideMenu = () => {
     bg-gray-900
     text-white
     shadow-lg
+    hidden md:block
     ">
       <SideBarIcon icon={<HiHome size={20}></HiHome>} text={'Houses'} link={'/houseList'}></SideBarIcon> 
       <SideBarIcon icon={<HiMenuAlt1 size={20}></HiMenuAlt1>} text={'Dashboard'} link={'/dashboard'}></SideBarIcon>
+      <SideBarIcon icon={<HiTrash size={20}></HiTrash>} text={'Cleaning'} link={'/cleaning'}></SideBarIcon>
     </div>
     // <div className='flex hidden lg:block xs:w-3/12 xs:h-128 w-3/12 visible xm:invisible'>
     //   <div className='fixed w-22 h-screen p-4 bg-white border-r-[1px] flex flex-col justify-between'> 

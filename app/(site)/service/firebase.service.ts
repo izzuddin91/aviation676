@@ -16,6 +16,26 @@ const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
 const month = todayDate.toLocaleString("en-US", { month: "long" });
 const year = todayDate.getFullYear();
 
+export const getCleaningList = async (): Promise<any> => {
+
+// get the year, date month of today
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth() + 1; // getMonth() returns month index starting from 0
+const day = today.getDate();
+
+    console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
+    let start = new Date(year + "-" + month + "-" + day);
+    const housesCollection = await firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", start).orderBy('date', 'asc')
+    const houses = await getDocs(housesCollection)
+    var list: any = [{}]
+    houses.docs.map((doc, i) => {
+        list[i] = doc.data()
+    });
+    return list
+}
+
+
 export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promise<any> => {
     let s = ''
     file?.arrayBuffer().then((val: any) => {

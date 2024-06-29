@@ -49,7 +49,7 @@ export default function HouseLogs() {
   );
   const router = useRouter();
   const params = useParams();
-  // console.log(params)
+  console.log(params)
 
   function setForm() {
     const data2 = new FormData();
@@ -72,7 +72,8 @@ export default function HouseLogs() {
       total: data.total,
       date: new Date(date),
       filename: "",
-      houseId: params["houseId"],
+      houseId: params["houseId"].toString().split('-')[0],
+      houseName: params["houseId"].toString().split('-')[1].replaceAll('_', ' '),
       filenameForDelete: "",
       category: category
     };

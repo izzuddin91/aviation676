@@ -27,12 +27,13 @@ export default function Home() {
     });
   }
 
-  function houseDetails(houseId: string) {
-    router.push("/houseList/" + houseId);
+  function houseDetails(houseId: string, houseName: string) {
+    // router.push("/houseList/" + houseId + '-' + houseName);
   }
 
-  function houseLogs(link: string) {
-    router.push(link);
+  function houseLogs(link: string, houseName: string) {
+    console.log(link)
+    router.push(link + '-' + houseName.replaceAll(' ', '_').replaceAll('@', '_'));
   }
 
   function monthlyPL(link: string) {
@@ -75,7 +76,7 @@ export default function Home() {
                 <footer className="flex items-start justify-between leading-none p-2 md:p-4">
                   <Button
                     onClick={() => {
-                      houseDetails(row["houseId"]);
+                      houseDetails(row["houseId"], row["houseName"]);
                     }}
                     variant="text"
                   >
@@ -83,7 +84,7 @@ export default function Home() {
                   </Button>
                   <Button
                     onClick={() => {
-                      houseLogs(link);
+                      houseLogs(link, row["houseName"]);
                     }}
                     variant="text"
                   >
