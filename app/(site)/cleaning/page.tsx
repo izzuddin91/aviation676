@@ -13,17 +13,21 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
-
+import {
+  deleteProfitLossBreakdown,
+  getHouseDetails,
+  getHouseLogsOnDateRange,
+  getProfitLossBreakdowns,
+} from "../service/firebase.service";
 import moment from "moment";
 import BarChart from "@/app/component/bar-chart";
 import PhotoIcon from "@mui/icons-material/Photo";
 import ModeEdit from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { confirmAlert, successAlert } from "../service/alert.service";
 import { Template, BLANK_PDF } from '@pdfme/common';
 import { Designer, Form, Viewer } from '@pdfme/ui';
 import { generate } from '@pdfme/generator';
-import { deleteProfitLossBreakdown, getHouseDetails, getHouseLogsOnDateRange, getProfitLossBreakdowns } from "../service/firebase.service";
-import { confirmAlert, successAlert } from "../service/alert.service";
 
 export default function HouseLogs() {
   var [profitLoss, updateProfitLoss] = useState([{}]);
