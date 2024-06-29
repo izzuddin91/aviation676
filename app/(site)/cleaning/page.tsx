@@ -66,21 +66,22 @@ export default function HouseLogs() {
       accumulateAmount = Math.round(accumulateAmount * 100) / 100;
     });
 
-    // getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
-    //   for (var i = 0; i < val.length; i++) {
-    //     const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
-    //     monthArray.push(dateValue);
-    //     monthExpenses.push(val[i]["profitBeforeAdminCharge"]);
-    //     monthProfit.push(val[i]["revenue"]);
-    //   }
-    //   monthArray.shift();
-    //   monthExpenses.shift();
-    //   monthProfit.shift();
-    //   updateMonthArray(monthArray);
-    //   updateMonthExpenses(monthExpenses);
-    //   updateMonthProfit(monthProfit);
-    //   updateProfitLoss(val);
-    // });
+    getProfitLossBreakdowns(("bKViazj3szhlNjl2CiVI").toString()).then((val) => {
+      for (var i = 0; i < val.length; i++) {
+        const dateValue = moment(val[i]["date"].toDate()).format("DD-MM-YYYY");
+        monthArray.push(dateValue);
+        monthExpenses.push(val[i]["profitBeforeAdminCharge"]);
+        monthProfit.push(val[i]["revenue"]);
+      }
+      monthArray.shift();
+      monthExpenses.shift();
+      monthProfit.shift();
+      updateMonthArray(monthArray);
+      updateMonthExpenses(monthExpenses);
+      updateMonthProfit(monthProfit);
+      updateProfitLoss(val);
+    });
+    
     getCleaningList().then((val) => {
       updateProfitLoss(val);
     })
@@ -672,8 +673,9 @@ generate({ template, inputs }).then((pdf) => {
       </div>
       <div>
         <h1 style={{ textAlign: "center" }}>
-          House:{" "}
+          House: {(houseDetail as any)["houseName"]}{" "}
         </h1>
+        <BarChart data={data2} />
       </div>
       <table className="w-full">
         <thead className="bg-gray-50 border-b-2 border-gray-200">
