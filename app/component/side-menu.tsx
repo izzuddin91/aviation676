@@ -40,7 +40,7 @@ export const SideMenu = () => {
       <SideBarIcon icon={<HiHome size={20}></HiHome>} text={'Houses'} link={'/houseList'}></SideBarIcon> 
       <SideBarIcon icon={<HiMenuAlt1 size={20}></HiMenuAlt1>} text={'Dashboard'} link={'/dashboard'}></SideBarIcon>
       <SideBarIcon icon={<HiTrash size={20}></HiTrash>} text={'Cleaning'} link={'/cleaning'}></SideBarIcon>
-    </div>
+    </div>    
     // <div className='flex hidden lg:block xs:w-3/12 xs:h-128 w-3/12 visible xm:invisible'>
     //   <div className='fixed w-22 h-screen p-4 bg-white border-r-[1px] flex flex-col justify-between'> 
     //   <div className="flex flex-col items-center">

@@ -25,7 +25,7 @@ const year = today.getFullYear();
 const month = today.getMonth() + 1; // getMonth() returns month index starting from 0
 const day = today.getDate();
 
-    console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
+    // console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
     let start = new Date(year + "-" + month + "-" + day);
     const housesCollection = await firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", new Date()).orderBy('date', 'asc')
     const houses = await getDocs(housesCollection)
@@ -47,7 +47,7 @@ export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promis
           houseId +
           `_${year}-${month}-${day}.pdf`;
         const storageref = ref(storage, filenameForDelete);
-        console.log(storageref);
+        // console.log(storageref);
         const uploadTask = uploadBytesResumable(storageref, val);
         uploadTask.on(
           "state_changed",
@@ -58,10 +58,10 @@ export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promis
             // setProgressUpload(progress) // to show progress upload
             switch (snapshot.state) {
               case "paused":
-                console.log("Upload is paused");
+                // console.log("Upload is paused");
                 break;
               case "running":
-                console.log("Upload is running");
+                // console.log("Upload is running");
                 break;
             }
           },
@@ -71,7 +71,7 @@ export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promis
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
               //url is download url of file
-              console.log(url);
+              // console.log(url);
               s = url
              
             //   submitData["filenameForDelete"] = filenameForDelete;
@@ -93,7 +93,7 @@ export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promis
 
 export const getProfitLossBreakdowns = async (houseId: string): Promise<any> => {
     const uid = getUserAuth()
-    console.log(uid)
+    // console.log(uid)
     const carPartsCollection = await firebase.firestore().collection("profitLossBreakdowns").where("houseId", "==", houseId).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
@@ -110,10 +110,10 @@ const year = today.getFullYear();
 const month = today.getMonth() + 1; // getMonth() returns month index starting from 0
 const day = today.getDate();
 
-    console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
+    // console.log(`Year: ${year}, Month: ${month}, Day: ${day}`);
     let start = new Date(2024 + "-" + 6 + "-" + 29);
     const uid = getUserAuth()
-    console.log(uid)
+    // console.log(uid)
     const carPartsCollection = firebase.firestore().collection("houseLogs").where("category", "==", 'cleaning').where("date", ">", new Date()).orderBy('date', 'asc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
@@ -160,12 +160,12 @@ export const deleteProfitLossBreakdown = async (id: string): Promise<any> => {
 
 export const getVehicles = async (): Promise<any> => {
     const uid = getUserAuth()
-    console.log(uid)
+    // console.log(uid)
     const carPartsCollection = await firebase.firestore().collection("cars").where("uid", "==", uid).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
     carParts.docs.map((doc, i) => {
-        console.log(doc.data())
+        // console.log(doc.data())
         list[i] = doc.data()
     });
     return list
@@ -182,7 +182,7 @@ export const createNewVehicle = async (data: any, file?: File): Promise<any> => 
                   data.uid +
                 `_${year}-${month}-${day}.jpg`;
             const storageref = ref(storage, filenameForDelete);
-            console.log(storageref);
+            // console.log(storageref);
             const uploadTask = uploadBytesResumable(storageref, val);
             uploadTask.on(
                 "state_changed",
@@ -193,10 +193,10 @@ export const createNewVehicle = async (data: any, file?: File): Promise<any> => 
                     // setProgressUpload(progress) // to show progress upload
                     switch (snapshot.state) {
                         case "paused":
-                            console.log("Upload is paused");
+                            // console.log("Upload is paused");
                             break;
                         case "running":
-                            console.log("Upload is running");
+                            // console.log("Upload is running");
                             break;
                     }
                 },
@@ -206,7 +206,7 @@ export const createNewVehicle = async (data: any, file?: File): Promise<any> => 
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                         //url is download url of file
-                        console.log(url);
+                        // console.log(url);
                         // setDownloadURL(url)
                         // we get the url here, then start updating the logs
                         data['photoLink'] = url;
@@ -245,7 +245,7 @@ export const createNewVehicle = async (data: any, file?: File): Promise<any> => 
 
 export const getCarPartsList = async (vehicleId: string): Promise<any> => {
     const uid = getUserAuth()
-    console.log(uid)
+    // console.log(uid)
     const carPartsCollection = await firebase.firestore().collection("carParts").where("uid", "==", uid).where("vehicleId", "==", vehicleId).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
@@ -263,7 +263,7 @@ export const getHouseList = async (): Promise<any> => {
     houses.docs.map((doc, i) => {
         list[i] = doc.data()
     });
-    console.log(list)
+    // console.log(list)
     return list
 }
 
@@ -343,7 +343,7 @@ export const getCarLogsOnDateRange = async (
         list[i] = doc.data()
         list[i]['id'] = doc.id // manual update the id here
     });
-    console.log(list)
+    // console.log(list)
     return list
 }
 
@@ -354,7 +354,7 @@ export const deleteHouseLog = async (houseId: string): Promise<any> => {
         .collection("/houseLogs")
         .doc(houseId)
         .delete().then((val: any) => {
-            console.log(val)
+            // console.log(val)
             status = val
         })
     return status;
