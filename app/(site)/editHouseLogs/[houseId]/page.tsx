@@ -20,6 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getStorage } from "firebase/storage";
 import { getHouseLogById } from "../../service/firebase.service";
+import { doc, documentId } from "firebase/firestore";
 
 var value2: any = {}
 
@@ -35,6 +36,8 @@ var formSchema = yup
 //   .required();
 
 export default function HouseLogs() {
+  const [houseName, setHouseName] = React.useState("");
+  const [houseId, setHouseId] = React.useState("");
   const [category, updateCategory] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -46,20 +49,14 @@ export default function HouseLogs() {
     getSelectData();
   }, []);
 
-  const getSelectData = async () => {
-    const repo = await getHouseLogById(params['houseId'].toString())
-    console.log(repo)
-    setValue("notes", repo.notes)
-    setValue("total", repo.total)
-    updateCategory(repo.category)
-  }
+
 
   const [file, setFile] = useState<File>();
   const todayDate = new Date();
   const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
   const month = todayDate.toLocaleString("en-US", { month: "long" });
   const year = todayDate.getFullYear();
-  const [values, setValues] = React.useState<Dayjs | null>(
+  const [value, setValues] = React.useState<Dayjs | null>(
     dayjs(`${year}-${month}-${day}`)
   );
   const router = useRouter();
@@ -68,6 +65,27 @@ export default function HouseLogs() {
 
   function setForm() {
     const data2 = new FormData();
+  }
+
+  const getSelectData = async () => {
+    
+    const repo = await getHouseLogById(params['houseId'].toString())
+    console.log(repo)
+    setValue("notes", repo.notes)
+    setValue("total", repo.total)
+    setHouseName(repo.houseName)
+    setHouseId(repo.houseId)
+    updateCategory(repo.category)
+
+    const returnDate = new Date(repo["date"].seconds*1000);
+    const day = returnDate.toLocaleString("en-US", { day: "2-digit" });
+    const month = returnDate.toLocaleString("en-US", { month: "long" });
+    const year = returnDate.getFullYear();
+
+    setValues(
+      dayjs(`${year}-${month}-${day}`)
+    )
+    console.log(value)
   }
 
   const [message, setMessage] = useState("");
@@ -81,16 +99,17 @@ export default function HouseLogs() {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(values!.format("DD/MM/YYYY"));
-    const date = values!.format("YYYY-MM-DD");
+    console.log(value!.format("DD/MM/YYYY"));
+    const date = value!.format("YYYY-MM-DD");
     var submitData = {
       notes: data.notes,
       total: data.total,
       date: new Date(date),
       filename: "",
-      houseId: params["houseId"],
+      houseId: houseId,
       filenameForDelete: "",
-      category: category
+      category: category,
+      houseName: houseName
     };
     console.log(submitData);
     console.log(file);
@@ -136,7 +155,7 @@ export default function HouseLogs() {
               firebase
                 .firestore()
                 .collection("/houseLogs")
-                .doc()
+                .doc(params['houseId'].toString())
                 .set(submitData)
                 .then(() => {
                   alert("success!");
@@ -146,11 +165,12 @@ export default function HouseLogs() {
         );
       });
     } else {
+
       submitData["filename"] = "";
       firebase
         .firestore()
         .collection("/houseLogs")
-        .doc()
+        .doc(params['houseId'].toString())
         .set(submitData)
         .then(() => {
           alert("success!");
@@ -173,7 +193,7 @@ export default function HouseLogs() {
             <DemoContainer components={["DatePicker"]}>
               <DatePicker
                 label="Controlled picker"
-                value={values}
+                value={value}
                 onChange={(newValue) => setValues(newValue)}
               />
             </DemoContainer>
@@ -184,7 +204,6 @@ export default function HouseLogs() {
             name="file"
             onChange={(e) => {
               console.log(e.target.files);
-
               setFile(e.target.files?.[0]);
             }}
           />

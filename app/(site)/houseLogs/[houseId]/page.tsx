@@ -76,7 +76,6 @@ export default function HouseLogs() {
     const month = date.getMonth() + 1;
     const houseId = params["houseId"].toString().split("-")[0]
     const houseName= params["houseId"].toString().split("-")[1]
-    console.log(houseName)
     getHouseLogsOnDateRange(houseId.toString(), month, year).then(
       (val: any) => {
         updateMonthVal(month);
