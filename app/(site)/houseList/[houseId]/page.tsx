@@ -61,11 +61,12 @@ export default function HouseLogs() {
     getData();
   }, []);
 
-  var [houses, updateHouses]: any = useState([{}]);
+  var [houseId, updateHouseId]: any = useState([{}]);
 
   async function getData() {
-    getHouseDetails(params["houseId"].toString()).then((val) => {
-      console.log(val);
+    const houseIdFiltered = params["houseId"].toString().split("-")[0]
+    updateHouseId(houseIdFiltered)
+    getHouseDetails(houseIdFiltered).then((val) => {
       updateHouseImage(val["house_image"]);
       setValue("houseName", val["houseName"]);
       setValue("installment", val["installment"]);
@@ -102,19 +103,14 @@ export default function HouseLogs() {
     var submitData = {
       houseName: data.houseName,
       address: data.address,
-      installment: data.installment,
-      maintenance: data.maintenance,
-      sinkingFund: data.sinkingFund,
       text1Key: data.text1Key,
       text1Value: data.text1Value,
       text2Key: data.text2Key ?? "",
       text2Value: data.text2Value ?? "",
-      houseId: params["houseId"],
+      houseId: houseId,
       house_image: houseImage,
       wifi: data.wifi,
     };
-    console.log(submitData);
-    console.log(file);
 
     if (file) {
       file?.arrayBuffer().then((val) => {
@@ -208,15 +204,6 @@ export default function HouseLogs() {
                 register={register}
               />
               <PrimaryTextInputWithLabel
-                label="Total"
-                name="installment"
-                placeholder=""
-                type="number"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
                 label="Address"
                 name="address"
                 placeholder=""
@@ -246,24 +233,6 @@ export default function HouseLogs() {
           </div>
           <div className="col-span">
             <Stack spacing={2} sx={{ width: 300 }}>
-              <PrimaryTextInputWithLabel
-                label="Maintenance"
-                name="maintenance"
-                placeholder=""
-                type="text"
-                required
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Sinking Fund"
-                name="sinkingFund"
-                placeholder=""
-                type="text"
-                required
-                errors={errors}
-                register={register}
-              />
               <PrimaryTextInputWithLabel
                 label="Info 1"
                 name="text1Key"

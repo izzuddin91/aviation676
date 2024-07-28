@@ -160,7 +160,7 @@ export const deleteProfitLossBreakdown = async (id: string): Promise<any> => {
 
 export const getVehicles = async (): Promise<any> => {
     const uid = getUserAuth()
-    // console.log(uid)
+    console.log(uid)
     const carPartsCollection = await firebase.firestore().collection("cars").where("uid", "==", uid).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]

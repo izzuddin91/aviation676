@@ -28,10 +28,13 @@ export default function Home() {
   }
 
   function houseDetails(houseId: string, houseName: string) {
-    // router.push("/houseList/" + houseId + '-' + houseName);
+    console.log(houseId)
+    console.log(houseName)
+    router.push("/houseList/" + houseId + '-' + houseName);
   }
 
   function houseLogs(link: string, houseName: string) {
+    console.log('test')
     router.push(
       link + "-" + houseName.replaceAll(" ", "_").replaceAll("@", "_")
     );
@@ -77,11 +80,13 @@ export default function Home() {
                   <footer className="flex items-start justify-between leading-none p-2 md:p-4">
                     <Button
                       onClick={() => {
+                        console.log(link)
+                        console.log(row["houseName"])
                         houseDetails(row["houseId"], row["houseName"]);
                       }}
                       variant="text"
                     >
-                      Edit Details
+                      House Details
                     </Button>
                     <Button
                       onClick={() => {
