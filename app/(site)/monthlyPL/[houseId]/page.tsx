@@ -597,10 +597,33 @@ export default function HouseLogs() {
   };
 
 
-  var inputs = [{ a: 'a1', b: 'b1', c: 'c1' }];
+ // var inputs = [{ a: 'a1', b: 'b1', c: 'c1' }];
 
   const [open, setOpen] = React.useState(false);
   function handleClickOpen(file: any) {
+
+    // console.log(file['revenue'].toString())
+    // console.log(file['totalExpenses'].toString())
+
+    // console.log(file['profitBeforeAdminCharge'].toString())
+    // console.log(file['adminCharge'].toString())
+    // console.log(file['profitAfterAdminCharge'].toString())
+    const inputs = [{ 
+      // No: 'a1', 
+      Description1: 'Revenue', 
+      Price1: 'RM' + file['revenue'].toString(),
+      Description2: 'Total Expenses', 
+      Price2: 'RM' + file['totalExpenses'].toString(),
+      Description3: 'Profit Before 20 % Charge', 
+      Price3: 'RM' + file['profitBeforeAdminCharge'].toString(),
+      Description4: 'Admin 20 % Charge', 
+      Price4: 'RM' + file['adminCharge'].toString(),
+      Description5: 'Profit After 20 % Charge', 
+      Price5: 'RM' + file['profitAfterAdminCharge'].toString(),
+      //Date: file['date']
+    }];
+
+    console.log(inputs)
     
     generate({ template, inputs }).then((pdf) => {
       console.log(pdf);
