@@ -24,7 +24,7 @@ export default function RootLayout({
       console.log(session)
         const authorized: boolean = isAuthAuthorized();
         // console.log('authorized is ' + authorized)
-        if (session) {
+        if (authorized) {
           setIsAuthorized(true);
           updateName(getUserAuth()) 
           name = getUserAuth();

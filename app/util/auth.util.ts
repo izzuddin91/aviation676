@@ -26,22 +26,24 @@ export async function encrypt(payload: any){
 }
 
 export const login = async (username: string, password: string, uid: string, session: String) => {
-  // secureLocalStorage.setItem("uid", uid);
-  // secureLocalStorage.setItem("session", session);
+  console.log('test in login')
+  secureLocalStorage.setItem("uid", uid);
+  secureLocalStorage.setItem("session", session);
 
   // create the session 
-  const user = { name: username, password: password }
-  const expires = new Date(Date.now() + 300 * 1000)
-  const session2 = await encrypt({user, expires})
+  // const user = { name: username, password: password }
+  // const nowTime = new Date(Date.now())
+  // const expires = nowTime.setMinutes(nowTime.getMinutes() + 100000000000)
+  // const session2 = await encrypt({user, expires})
  
-
-  cookies().set({
-    name: 'session',
-    value: session2,
-    httpOnly: true,
-    expires: expires,
-    // path: '/houseList',
-  })
+  // console.log('expires at '+ expires)
+  // cookies().set({
+  //   name: 'session',
+  //   value: session2,
+  //   httpOnly: true,
+  //   expires: expires,
+  //   // path: '/houseList',
+  // })
 
 };
 
