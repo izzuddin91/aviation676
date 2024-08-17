@@ -15,7 +15,7 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { initializeApp, getApps } from "firebase/app";
 // import { setAuth } from "../util/auth.util";
 import Swal from "sweetalert2";
-import { setAuth } from "../util/auth.util";
+import { login } from "../util/auth.util";
 
 // // Initialize Firebase
 const auth = getAuth(firebase.app());
@@ -53,7 +53,7 @@ export default function Home() {
       .signInWithEmailAndPassword(data.email, data.password)
       .then(async (value) => {
         if (value.user) {
-          setAuth(value.user.uid, data.password);
+          login(data.email, data.password, value.user.uid, data.password);
           router.push("/dashboard");
         }
       })

@@ -1,7 +1,7 @@
 "use client";
 
 import { SideMenu } from "@/app/component/side-menu";
-import { isAuthAuthorized, getUserAuth } from "@/app/util/auth.util";
+import { isAuthAuthorized, getUserAuth, getSession } from "@/app/util/auth.util";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"
  
@@ -18,10 +18,13 @@ export default function RootLayout({
         authCheck();
       }, []);
 
-    function authCheck() {
+    async function authCheck() {
+      const session = await getSession();
+      console.log('check session ')
+      console.log(session)
         const authorized: boolean = isAuthAuthorized();
-        console.log('authorized is ' + authorized)
-        if (authorized) {
+        // console.log('authorized is ' + authorized)
+        if (session) {
           setIsAuthorized(true);
           updateName(getUserAuth()) 
           name = getUserAuth();
@@ -37,7 +40,7 @@ export default function RootLayout({
           <html lang="en">
           <head>
             <title>I.Z Properties</title>
-            <link rel="manifest" href="/backoffice/manifest.json" />
+        
             <meta name="theme-color" content="#000" />
           </head>
           <body suppressHydrationWarning={true}>
