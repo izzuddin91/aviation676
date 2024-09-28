@@ -147,8 +147,16 @@ export default function HouseLogs() {
         });
     });
   }
+
+  const houseLogs2 = Array.from({ length: 20 }, (v, i) => ({
+    id: i + 1,
+    details: `Detail ${i + 1}`,
+    category: `Category ${i % 5}`,
+    date: `2024-09-${i + 1}`,
+    total: `${(i + 1) * 100} USD`,
+  }));
   return (
-    <div className="p-5 h-screen bg-gray-100">
+    <div style={{"height": "860px"}} className="p-5 h-screen bg-gray-100">
       <Dialog
         open={open}
         onClose={handleClose}
@@ -280,13 +288,14 @@ export default function HouseLogs() {
       </div>
       <div className="grid grid-cols-5 gap-4 p-4"></div>
       <div>
-        <div className="overflow-auto rounded-lg shadow hidden md:block">
+        <div className="overflow-hidden rounded-lg shadow">
           <div>
-            <h1 style={{ float: "left" }}>Logs </h1>
+            {/* <h1 style={{ float: "left" }}>Logs </h1> */}
           </div>
           {houseLogs ? (
+            <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
             <table className="w-full">
-              <thead className="bg-gray-50 border-b-2 border-gray-200">
+            <thead className="bg-gray-50 sticky top-0 border-b-2 border-gray-200">
                 <tr>
                   <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
                     No.
@@ -391,9 +400,11 @@ export default function HouseLogs() {
                 })}
               </tbody>
             </table>
+            </div>
+
           ) : (
             <LoadingIndicator />
-          )}
+          )} 
         </div>
       </div>
     </div>
