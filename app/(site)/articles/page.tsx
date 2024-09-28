@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getLatestThreeArticle } from "../service/firebase.service";
 import { LoadingIndicator } from "@/app/component/indicator/Loading";
-import  VideoBackground  from "@/app/component/VideoBackground";
+//import  VideoBackground  from "@/app/component/VideoBackground";
 
 export default function Articles() {
   const router = useRouter();
