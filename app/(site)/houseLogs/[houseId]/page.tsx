@@ -75,9 +75,9 @@ export default function HouseLogs() {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const houseId = params["houseId"].toString().split("-")[0]
-    const houseName= params["houseId"].toString().split("-")[1]
     getHouseLogsOnDateRange(houseId.toString(), month, year).then(
       (val: any) => {
+        console.log(val)
         updateMonthVal(month);
         updateYear(year);
         setHouseLogs(val);
@@ -105,7 +105,8 @@ export default function HouseLogs() {
     let targetMonth = month ?? monthVal
     let targetYear = year ?? yearVal
     console.log(params["houseId"])
-    getHouseLogsOnDateRange(params["houseId"].toString(), targetMonth, targetYear).then(
+    const houseId = params["houseId"].toString().split("-")[0]
+    getHouseLogsOnDateRange(houseId, targetMonth, targetYear).then(
       (val: any) => {
 
         updateMonthVal(targetMonth);

@@ -283,7 +283,7 @@ export const getHouseLogsOnDateRange = async (
     houseId: String,
     selectedMonth: number,
     selectedYear: number): Promise<any> => {
-
+console.log(houseId)
     let start = new Date(selectedYear + "-" + selectedMonth + "-01");
     var month = selectedMonth;
     var year = selectedYear;
@@ -303,7 +303,9 @@ export const getHouseLogsOnDateRange = async (
         .where("houseId", "==", houseId)
         .where("date", ">", start)
         .where("date", "<", end);
+       
     const houseLogsVal = await getDocs(houseLogs);
+    console.log(getDocs(houseLogs));
     var list: any = [{}]
     houseLogsVal.docs.map((doc, i) => {
         list[i] = doc.data()

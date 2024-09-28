@@ -32,13 +32,18 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.text-airbnb-red {
+  color: #FF5A5F; /* Airbnb's brand red */
+}
+
 @layer component {
+  
   .sidebar-icon {
     @apply relative flex items-center justify-center h-12 w-12 mx-auto
     mt-2 mb-2
     bg-gray-800 
-    text-green-500
-    hover:bg-green-600
+    text-white
+    hover:bg-blue-600
     hover:text-white
     rounded-3xl hover:rounded-xl
     transition-all

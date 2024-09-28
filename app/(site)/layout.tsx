@@ -50,7 +50,7 @@ export default function RootLayout({
                 <div className="col-span-2 justify-self-stretch">
                   <SideMenu />
                 </div>
-                <div className="col-start-2 col-end-13 bg-white p-3 my-3 ml-2 mr-3 rounded border shadow-sm">
+                <div id="plate" className="col-start-2 col-end-13 bg-white p-3 my-3 ml-2 mr-3 rounded border shadow-sm">
                   <hr className="h-px my-2 bg-gray-400 border-0 " />
                   <h1>{children}</h1>
                 </div>
@@ -61,7 +61,7 @@ export default function RootLayout({
                 <div className="col-span-2 justify-self-stretch">
                   <SideMenu />
                 </div>
-                <div className="col-start-2 col-end-13 bg-white p-3 my-3 ml-2 mr-3 rounded border shadow-sm">
+                <div id="plate" className="col-start-2 col-end-13 bg-white p-3 my-3 ml-2 mr-3 rounded border shadow-sm">
                   <hr className="h-px my-2 bg-gray-400 border-0 " />
                   <h1>{children}</h1>
                 </div>

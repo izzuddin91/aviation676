@@ -19,7 +19,7 @@ const ArticleSection = () => {
                             It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout...
                         </p>
                         <div className="flex justify-center">
-                            <a href="/article/1" className="bg-violet-600 text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-violet-700 transition duration-300">
+                            <a href="/article/1" className="bg-blue-600 text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">
                                 Read More
                             </a>
                         </div>
