@@ -1,48 +1,9 @@
 "use client";
 
 import "firebase/compat/firestore";
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import * as yup from "yup";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Button, Stack } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React from "react";
-import dayjs, { Dayjs } from "dayjs";
 
-import moment from "moment";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-
-type FormData = {
-  houseName: string;
-  installment: number;
-  address: string;
-  maintenance: number;
-  sinkingFund: number;
-  currentMonthExpenses: number;
-  currentMonthRevenue: number;
-  wifi: number;
-  notes: string;
-};
-
-const formSchema = yup
-  .object({
-    // logsTitle: yup.string().required("please key in title"),
-    houseName: yup.string().required("please key in description"),
-    text2Key: yup.string().default(" "),
-    text2Value: yup.string().required(" "),
-    installment: yup.number().required("need to add installment"),
-  })
-  .required();
 
 export default function HouseLogs() {
   const params = useParams();
