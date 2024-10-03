@@ -34,3 +34,37 @@
     object-fit: cover;
   }
   
+  /* Floating WhatsApp icon */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #25D366; /* WhatsApp's green color */
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+
+.whatsapp-icon {
+  width: 50px;
+  height: 50px;
+}
+
+/* Shrink the button in mobile view */
+@media (max-width: 768px) {
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+  }
+
+  .whatsapp-icon {
+    width: 30px;
+    height: 30px;
+  }
+}

@@ -1,0 +1,111 @@
+/* Container for all groups */
+.house-tiles-container {
+    width: 100%;
+    padding: 20px;
+  }
+  
+  /* Group title */
+  .house-group {
+    margin-bottom: 40px;
+  }
+  
+  .house-group h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Each individual tile */
+  .house-tile {
+    display: flex;
+    align-items: stretch;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 250px; /* Adjust the height for desktop view */
+  }
+  
+  /* The image section covers the entire height and has no padding */
+  .house-image {
+    width: 30%;
+    background-size: cover;
+    background-position: center;
+    height: 100%; /* Ensures the image covers the full height of the tile */
+  }
+  
+  /* Center content (title and description) */
+  .house-content {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .house-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+  }
+  
+  .house-content p {
+    margin: 0;
+    color: #555;
+  }
+  
+  /* Button that takes up the entire height and width */
+  .house-button {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #007bff;
+  }
+  
+  .house-button .see-more-btn {
+    color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .house-button .see-more-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive design for mobile view */
+  @media (max-width: 768px) {
+    .house-tile {
+      flex-direction: column;
+      height: auto; /* Allow the height to adjust for stacked layout */
+    }
+  
+    /* The image now takes the full width */
+    .house-image {
+      width: 100%;
+      height: 200px; /* Set a fixed height for the image in mobile view */
+    }
+  
+    /* Content and button stack below the image */
+    .house-content, .house-button {
+      width: 100%;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+  
+    .house-content {
+      text-align: center;
+    }
+  
+    .house-button .see-more-btn {
+      font-size: 14px;
+      padding: 10px;
+    }
+  }
+  

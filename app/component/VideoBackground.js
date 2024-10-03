@@ -44,7 +44,7 @@ const VideoBackground = () => {
           <p style={styles.cardDescription}>
             Enjoy a top-tier Airbnb experience with beautifully managed homes in premium locations. Exceptional service and comfort guaranteed.
           </p>
-          <a href="#more" style={styles.cardLink}>Read More</a>
+          <a href="/airbnbHouses" style={styles.cardLink}>Read More</a>
         </div>
 
         <div className='card'>
@@ -56,6 +56,15 @@ const VideoBackground = () => {
           <a href="#more" style={styles.cardLink}>Read More</a>
         </div>
       </div>
+
+            {/* Floating WhatsApp logo */}
+      <a href="https://wa.me/+60132711668" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" // Example WhatsApp icon link
+          alt="WhatsApp"
+          className="whatsapp-icon"
+        />
+      </a>
     </div>
   );
 };
