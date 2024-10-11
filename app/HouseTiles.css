@@ -108,4 +108,147 @@
       padding: 10px;
     }
   }
+
+  .page-container {
+    display: flex;
+    align-items: flex-start; /* Align items at the top */
+    justify-content: center; /* Centers content horizontally */
+    
+    height: 100vh; /* Full viewport height for proper centering */
+    padding: 20px;
+  }
+
+  .image-slider {
+    position: relative;
+    width: 40%;
+    overflow: hidden;
+  }
   
+  .product-image {
+    width: 100%;
+    height: auto;
+    opacity: 1; /* Ensure the image is visible by default */
+    transition: opacity 0.5s ease-in-out;
+    flex-shrink: 0;
+  }
+  
+  .arrow-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .left-arrow {
+    left: 10px;
+  }
+  
+  .right-arrow {
+    right: 10px;
+  }
+  
+  .arrow-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .size-button {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 40px;
+    text-align: center;
+  }
+  
+  .size-button:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+  }
+  
+  .size-button.selected {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .size-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .quantity-dropdown {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100px;
+  }
+  
+  .product-info p {
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+  
+  .product-info p.bold {
+    font-weight: bold; /* Use this for bold lines */
+  }
+  
+
+  .product-price {
+    color: red; /* Price in red */
+    font-size: 24px; /* Make the price stand out */
+    font-weight: bold;
+  }
+
+  h1.product-title {
+    font-size: 36px; /* Increase title size */
+    margin-top: 0;
+    margin-bottom: 20px;
+    line-height: 1.2; /* Ensures the title height is consistent */
+    font-weight: bold; /* Make the title bold */
+  }
+
+  .info-section {
+    margin-top: 20px;
+  }
+  
+  .section-title {
+    font-weight: bold;
+    color: black;
+    font-size: 1.1rem;
+  }
+  
+  hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+  }
+  
+  .section-content {
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+
+  .add-to-cart-button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #1e90ff; /* Button background color */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .add-to-cart-button:hover {
+    background-color: #0073e6; /* Darker shade on hover */
+    transform: scale(1.05); /* Slight scale animation */
+  }
