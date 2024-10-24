@@ -21,6 +21,7 @@ const ProductTile: React.FC<ProductTileProps> = ({ product }) => {
 
 
 
+  
   return (
     <div className="relative bg-white border border-gray-300 rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
       {product.isSoldOut && (
