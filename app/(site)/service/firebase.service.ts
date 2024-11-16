@@ -36,7 +36,6 @@ const day = today.getDate();
     return list
 }
 
-
 export const uploadFileAndReturnUrl = async (file: any, houseId: string): Promise<any> => {
     let s = ''
     file?.arrayBuffer().then((val: any) => {
@@ -123,7 +122,6 @@ const day = today.getDate();
     });
     return list
 }
-
 
 export const getProfitLossBreakdown = async (id: String): Promise<any> => {
     const houseLog = await firebase.firestore().collection("profitLossBreakdowns").doc(id.toString()).get()

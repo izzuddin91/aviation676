@@ -1,40 +1,29 @@
 "use client";
 import Image from "next/image";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import firebase from "../../clientApp";
-import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
-import { getHouseList } from "../service/firebase.service";
-import { PrimaryButton } from "@/app/component/button/PrimaryButton";
-import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { getHouseList } from "../service/firebase.service";
+import { Button } from "@mui/material";
 import { LoadingIndicator } from "@/app/component/indicator/Loading";
 
 export default function Home() {
   const router = useRouter();
+  const [houses, setHouses]: any = useState();
 
   useEffect(() => {
     getData();
   }, []);
 
-  var [houses, updateHouses]: any = useState();
-
   async function getData() {
-    getHouseList().then((val: any) => {
-      houses = val;
-      updateHouses(val);
-    });
+    const houseList = await getHouseList();
+    setHouses(houseList);
   }
 
   function houseDetails(houseId: string, houseName: string) {
-    console.log(houseId)
-    console.log(houseName)
-    router.push("/houseList/" + houseId + '-' + houseName);
+    router.push("/houseList/" + houseId + "-" + houseName);
   }
 
   function houseLogs(link: string, houseName: string) {
-    console.log('test')
     router.push(
       link + "-" + houseName.replaceAll(" ", "_").replaceAll("@", "_")
     );
@@ -46,149 +35,57 @@ export default function Home() {
 
   return (
     <div className="p-8 space-y-5">
-      <div className="hidden md:block">
-        <h1 className="text-xl mb-2">Your properties</h1>
-        <div className="grid grid-cols-3 gap-3 ">
-          {houses ? (
-            houses.map((row: any) => {
-              var link = "/houseLogs/" + row["houseId"];
-              return (
-                <article
-                  key={row["houseId"]}
-                  className="overflow-hidden rounded-lg shadow-lg"
-                >
-                  <a href={link}>
-                    <img
-                      alt="Placeholder"
-                      className="block h-auto w-full"
-                      src={row["house_image"]}
-                    />
-                  </a>
-
-                  <header className="flex items-center justify-between leading-tight p-2 md:p-4">
-                    <h1 className="text-lg">
-                      <a
-                        className="no-underline hover:underline text-black"
-                        href="#"
-                      >
-                        {row.houseName}
-                      </a>
-                    </h1>
-                    <p className="text-grey-darker text-sm">{row.location}</p>
-                  </header>
-
-                  <footer className="flex items-start justify-between leading-none p-2 md:p-4">
-                    <Button
-                      onClick={() => {
-                        console.log(link)
-                        console.log(row["houseName"])
-                        houseDetails(row["houseId"], row["houseName"]);
-                      }}
-                      variant="text"
-                    >
-                      House Details
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        houseLogs(link, row["houseName"]);
-                      }}
-                      variant="text"
-                    >
-                      House Logs
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        monthlyPL("/monthlyPL/" + row["houseId"]);
-                      }}
-                      variant="text"
-                    >
-                      Monthly Logs
-                    </Button>
-                    <a
-                      className="no-underline text-grey-darker hover:text-red-dark"
-                      href="#"
-                    >
-                      <span className="hidden">Like</span>
-                      <i className="fa fa-heart"></i>
-                    </a>
-                  </footer>
-                </article>
-              );
-            })
-          ) : (
-            <LoadingIndicator />
-          )}
-        </div>
-      </div>
-      <div className="md:hidden">
+      <h1 className="text-xl mb-2">Your Properties</h1>
       {houses ? (
-            houses.map((row: any) => {
-              var link = "/houseLogs/" + row["houseId"];
-              return (
-                <article
-                  key={row["houseId"]}
-                  className="overflow-hidden rounded-lg shadow-lg"
-                >
-                  <a href={link}>
-                    <img
-                      alt="Placeholder"
-                      className="block h-auto w-full"
-                      src={row["house_image"]}
-                    />
-                  </a>
-
-                  <header className="flex items-center justify-between leading-tight p-2 md:p-4">
-                    <h1 className="text-lg">
-                      <a
-                        className="no-underline hover:underline text-black"
-                        href="#"
-                      >
-                        {row.houseName}
-                      </a>
-                    </h1>
-                    <p className="text-grey-darker text-sm">{row.location}</p>
-                  </header>
-
-                  <footer className="flex items-start justify-between leading-none p-2 md:p-4">
-                    <Button
-                      onClick={() => {
-                        houseDetails(row["houseId"], row["houseName"]);
-                      }}
-                      variant="text"
-                    >
-                      Edit Details
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        houseLogs(link, row["houseName"]);
-                      }}
-                      variant="text"
-                    >
-                      House Logs
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        monthlyPL("/monthlyPL/" + row["houseId"]);
-                      }}
-                      variant="text"
-                    >
-                      Monthly Logs
-                    </Button>
-                    <a
-                      className="no-underline text-grey-darker hover:text-red-dark"
-                      href="#"
-                    >
-                      <span className="hidden">Like</span>
-                      <i className="fa fa-heart"></i>
-                    </a>
-                  </footer>
-                </article>
-              );
-            })
-          ) : (
-            <LoadingIndicator />
-          )}
-      </div>
+        houses.map((row: any) => {
+          const link = "/houseLogs/" + row["houseId"];
+          return (
+            <div
+              key={row["houseId"]}
+              className="flex flex-row items-center rounded-lg shadow-lg p-4 space-x-4 bg-white"
+            >
+              {/* Image */}
+              <img
+                alt={row.houseName}
+                className="rounded-lg object-cover w-40 h-28"
+                src={row["house_image"]}
+              />
+              {/* Details */}
+              <div className="flex-1">
+                <h1 className="text-lg font-semibold text-black">
+                  {row.houseName}
+                </h1>
+                <p className="text-gray-500 text-sm">{row.location}</p>
+                <div className="mt-2 flex space-x-3">
+                  <Button
+                    onClick={() => houseDetails(row["houseId"], row["houseName"])}
+                    variant="outlined"
+                    size="small"
+                  >
+                    Details
+                  </Button>
+                  <Button
+                    onClick={() => houseLogs(link, row["houseName"])}
+                    variant="outlined"
+                    size="small"
+                  >
+                    Logs
+                  </Button>
+                  <Button
+                    onClick={() => monthlyPL("/monthlyPL/" + row["houseId"])}
+                    variant="outlined"
+                    size="small"
+                  >
+                    Monthly Logs
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      ) : (
+        <LoadingIndicator />
+      )}
     </div>
   );
 }

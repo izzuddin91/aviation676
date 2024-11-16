@@ -186,7 +186,7 @@ export default function HouseLogs() {
                 Logs
               </Button>
       <h2>House Details</h2>
-      <div className="grid lg:grid-cols-6 gap-4 p-4">
+      <div className="grid lg:grid-cols-6 gap-4 pt-4">
         <div className="lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex flex-col w-full pb-4">
             <p className="text-gray-600">Name</p>
@@ -263,16 +263,6 @@ export default function HouseLogs() {
       </div>
 
       <div className="grid grid-cols-3 gap-4 p-4">
-        <div className="col-span border bg-white p-4 rounded-lg">
-          <div>
-            {" "}
-            <img
-              alt="Placeholder"
-              className="block h-auto w-full"
-              src={(houseDetail as any)["house_image"]}
-            />{" "}
-          </div>
-        </div>
         <div className="col-span">
         </div>
         <div className="col-span">
