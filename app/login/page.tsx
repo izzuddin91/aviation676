@@ -54,7 +54,7 @@ export default function Home() {
       .then(async (value) => {
         if (value.user) {
           login(data.email, data.password, value.user.uid, data.password);
-          router.push("/dashboard");
+          router.push("/houseList");
         }
       })
       .catch((err) => {
