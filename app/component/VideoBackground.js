@@ -27,36 +27,6 @@ const VideoBackground = () => {
         </div>
       </div>
 
-      {/* Cards Section */}
-      <div className='cardsContainer'>
-        <div className='card'>
-          <img src="https://i.pinimg.com/originals/36/e6/a2/36e6a2c6682fda658e49483b2dbd7eed.jpg" alt="Charter Jet Service" style={styles.cardImage} />
-          <h2 style={styles.cardTitle}>Private Charter Jet Service</h2>
-          <p style={styles.cardDescription}>
-            Offering luxury private jet charter services for business and leisure. Fly anywhere with comfort and personalized service.
-          </p>
-          <a href="#more" style={styles.cardLink}>Read More</a>
-        </div>
-
-        <div className='card'>
-          <img src="https://postandporch.com/cdn/shop/articles/AdobeStock_209124760.jpg?v=1662575433&width=1100" alt="Airbnb Business" style={styles.cardImage} />
-          <h2 style={styles.cardTitle}>Luxurious Airbnb Stays</h2>
-          <p style={styles.cardDescription}>
-            Enjoy a top-tier Airbnb experience with beautifully managed homes in premium locations. Exceptional service and comfort guaranteed.
-          </p>
-          <a href="/airbnbHouses" style={styles.cardLink}>Read More</a>
-        </div>
-
-        <div className='card'>
-          <img src="https://www.simons-voss.com/_Resources/Persistent/e/5/b/5/e5b530f3b694693558f73ee296961add7ebc27f5/schluesseluebergabe-wohnung.jpg" alt="Airbnb Hosting Services" style={styles.cardImage} />
-          <h2 style={styles.cardTitle}>Airbnb Hosting Services for Homeowners</h2>
-          <p style={styles.cardDescription}>
-            Let us manage your property on Airbnb. We take care of everything, from listing to guest services, so you earn more effortlessly.
-          </p>
-          <a href="#more" style={styles.cardLink}>Read More</a>
-        </div>
-      </div>
-
             {/* Floating WhatsApp logo */}
 
       <a href="https://wa.me/+60132711668?text=baju 2 helai size S" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
