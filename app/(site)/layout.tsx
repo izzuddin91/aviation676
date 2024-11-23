@@ -32,7 +32,7 @@ export default function RootLayout({
       name = await getUserAuth();
     } else {
       // router.push("/login");
-      setIsAuthorized(false);
+      // setIsAuthorized(false);
     }
   }
 
