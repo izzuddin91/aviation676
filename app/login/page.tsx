@@ -53,7 +53,8 @@ export default function Home() {
       .signInWithEmailAndPassword(data.email, data.password)
       .then(async (value) => {
         if (value.user) {
-          login(data.email, data.password, value.user.uid, data.password);
+          console.log(value.user.uid);
+          login(data.email, data.password, value.user.uid);
           router.push("/houseList");
         }
       })

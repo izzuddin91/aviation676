@@ -24,16 +24,14 @@ export default function RootLayout({
 
   async function authCheck() {
     const session = await getSession();
-    console.log("check session ");
-    console.log(session);
-    const authorized: boolean = isAuthAuthorized();
+    const authorized: boolean = await isAuthAuthorized();
     // console.log('authorized is ' + authorized)
     if (authorized) {
       setIsAuthorized(true);
-      updateName(getUserAuth());
-      name = getUserAuth();
+      updateName(await getUserAuth());
+      name = await getUserAuth();
     } else {
-      router.push("/login");
+      // router.push("/login");
       setIsAuthorized(false);
     }
   }

@@ -255,7 +255,15 @@ export const getCarPartsList = async (vehicleId: string): Promise<any> => {
 
 
 export const getHouseList = async (): Promise<any> => {
-    const housesCollection = await firebase.firestore().collection("houses")
+    const uid = await getUserAuth()
+    console.log(uid)
+    var housesCollection = await firebase.firestore().collection("houses").where("user_id", "==", uid)
+    if (uid == "bA3XYEhRLxPbAj7DeJpQOvHNXYA3"){
+        housesCollection = await firebase.firestore().collection("houses") // superadmin
+    }else{
+    }
+    
+    
     const houses = await getDocs(housesCollection)
     var list: any = [{}]
     houses.docs.map((doc, i) => {

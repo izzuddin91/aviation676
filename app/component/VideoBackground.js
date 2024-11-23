@@ -17,7 +17,7 @@ const VideoBackground = () => {
   return (
     <div>
       <div className="videoContainer" style={styles.videoContainer}>
-        <Navbar />
+        {/* <Navbar /> */}
         <video autoPlay muted loop playsInline style={styles.video}>
           <source src="/videos/sample.mp4" type="video/mp4" />
           Your browser does not support the video tag.

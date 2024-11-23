@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getHouseList } from "../service/firebase.service";
 import { Button } from "@mui/material";
 import { LoadingIndicator } from "@/app/component/indicator/Loading";
+import secureLocalStorage from "react-secure-storage";
 
 export default function Home() {
   const router = useRouter();
@@ -15,6 +16,9 @@ export default function Home() {
   }, []);
 
   async function getData() {
+    console.log("data")
+    const uid = secureLocalStorage.getItem("uid");
+    console.log(uid)
     const houseList = await getHouseList();
     setHouses(houseList);
   }
