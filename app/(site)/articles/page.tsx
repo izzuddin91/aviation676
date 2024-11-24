@@ -9,7 +9,8 @@ type Article = {
   id: string;
   title: string;
   para1: string;
-  youtubeVideoId?: string;
+  tiktok_url?: string; // TikTok URL
+  thumbnail?: string; // Thumbnail URL (resolved dynamically)
 };
 
 export default function Articles() {
@@ -24,11 +25,34 @@ export default function Articles() {
   async function fetchArticles() {
     try {
       const articlesData = await getLatestThreeArticle();
-      setArticles(articlesData || []); // Default to an empty array if no data is returned
+
+      // Resolve TikTok thumbnails for each article
+      const articlesWithThumbnails = await Promise.all(
+        (articlesData || []).map(async (article: Article) => {
+          if (article.tiktok_url) {
+            const thumbnail = await fetchTikTokThumbnail(article.tiktok_url);
+            return { ...article, thumbnail };
+          }
+          return article;
+        })
+      );
+
+      setArticles(articlesWithThumbnails);
     } catch (error) {
       console.error("Error fetching articles:", error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchTikTokThumbnail(url: string): Promise<string | undefined> {
+    try {
+      const response = await fetch(`https://www.tiktok.com/oembed?url=${url}`);
+      const data = await response.json();
+      return data.thumbnail_url; // TikTok thumbnail URL
+    } catch (error) {
+      console.error("Error fetching TikTok thumbnail:", error);
+      return undefined;
     }
   }
 
@@ -49,43 +73,51 @@ export default function Articles() {
   }
 
   return (
-    <div style={{borderTopWidth: '30px'}} className="grid lg:grid-cols-3 gap-6 p-6">
-      {articles.map((article) => {
-        // Construct YouTube thumbnail URL or use placeholder
-        const youtubeThumbnail = article.youtubeVideoId
-          ? `https://img.youtube.com/vi/${article.youtubeVideoId}/0.jpg`
-          : `https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg`;
-
-        return (
+<div
+  style={{ borderTopWidth: "30px" }}
+  className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_150px)] gap-2 justify-center p-4"
+>
+  {articles.map((article) => (
+    <div
+      key={article.id}
+      className="bg-white border rounded-lg shadow-md transform hover:scale-105 transition duration-300 flex flex-col items-center"
+      style={{ width: "100%" }} // Allow full width for mobile view
+    >
+      <div className="relative overflow-hidden rounded-t-lg">
+        {/* TikTok Thumbnail */}
+        {article.thumbnail ? (
+          <img
+            src={article.thumbnail}
+            alt={article.title || "TikTok Thumbnail"}
+            className="w-full sm:w-[150px] object-cover rounded-lg"
+            style={{ aspectRatio: "9 / 16" }}
+          />
+        ) : (
           <div
-            key={article.id}
-            className="bg-white border rounded-xl shadow-lg transform hover:scale-105 transition duration-300"
+            className="w-full sm:w-[150px] bg-gray-300 flex items-center justify-center text-gray-600"
+            style={{ aspectRatio: "9 / 16" }}
           >
-            <div className="relative overflow-hidden rounded-t-xl">
-              {/* YouTube Thumbnail */}
-              <img
-                src={youtubeThumbnail}
-                alt={article.title || "YouTube Thumbnail"}
-                className="w-full h-48 object-cover"
-              />
-            </div>
-            <div className="p-6">
-              <p className="text-2xl font-bold mb-2">{article.title || "Untitled Article"}</p>
-              <p className="text-gray-600 mb-4">
-                {article.para1 ? `${article.para1.substring(0, 200)}...` : "No content available."}
-              </p>
-              <div className="flex justify-center">
-                <button
-                  onClick={() => handleArticleClick(article.id)}
-                  className="bg-violet-600 text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-violet-700 transition duration-300"
-                >
-                  Read More
-                </button>
-              </div>
-            </div>
+            No Thumbnail Available
           </div>
-        );
-      })}
+        )}
+      </div>
+      <div className="p-3 flex-1 flex flex-col text-center">
+        <p className="text-base font-bold mb-2">{article.title || "Untitled Article"}</p>
+        <p className="text-sm text-gray-600 mb-4 flex-1">
+          {article.para1 ? `${article.para1.substring(0, 100)}...` : "No content available."}
+        </p>
+        <div className="flex justify-center mt-2">
+          <button
+            onClick={() => handleArticleClick(article.id)}
+            className="bg-violet-600 text-white text-sm font-semibold py-1 px-2 rounded-lg hover:bg-violet-700 transition duration-300"
+          >
+            Read More
+          </button>
+        </div>
+      </div>
     </div>
+  ))}
+</div>
+
   );
 }
