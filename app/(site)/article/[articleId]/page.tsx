@@ -7,7 +7,6 @@ import React from "react";
 
 export default function HouseLogs() {
   const params = useParams();
-  console.log(params["articleId"].toString());
   async function getData() {}
   return (
     <div className="grid lg:grid-cols-1 gap-4 p-4">

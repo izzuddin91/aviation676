@@ -158,7 +158,6 @@ export const deleteProfitLossBreakdown = async (id: string): Promise<any> => {
 
 export const getVehicles = async (): Promise<any> => {
     const uid = getUserAuth()
-    console.log(uid)
     const carPartsCollection = await firebase.firestore().collection("cars").where("uid", "==", uid).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
@@ -256,7 +255,6 @@ export const getCarPartsList = async (vehicleId: string): Promise<any> => {
 
 export const getHouseList = async (): Promise<any> => {
     const uid = await getUserAuth()
-    console.log(uid)
     var housesCollection = await firebase.firestore().collection("houses").where("user_id", "==", uid)
     if (uid == "bA3XYEhRLxPbAj7DeJpQOvHNXYA3"){
         housesCollection = await firebase.firestore().collection("houses") // superadmin
@@ -311,7 +309,6 @@ console.log(houseId)
         .where("date", "<", end);
        
     const houseLogsVal = await getDocs(houseLogs);
-    console.log(getDocs(houseLogs));
     var list: any = [{}]
     houseLogsVal.docs.map((doc, i) => {
         list[i] = doc.data()
@@ -383,4 +380,89 @@ export const getArticleDetails = async (articleId: String): Promise<any> => {
     const articlesCollection = await firebase.firestore().collection("articles").doc(articleId.toString()).get()
     var returnData = articlesCollection.data()
     return returnData;
+}
+
+export const getAdminById = async (uid: String): Promise<any> => {
+    const houseLog = await firebase.firestore().collection("admins").doc(uid.toString()).get()
+    var returnData = houseLog.data()
+
+    const carPartsCollection = await firebase.firestore().collection("admins").where("uid", "==", uid)
+    const carParts = await getDocs(carPartsCollection)
+    var list: any = [{}]
+    carParts.docs.map((doc, i) => {
+        // console.log(doc.data())
+        list[i] = doc.data()
+    });
+    console.log(list)
+    return list[0]
+}
+
+export const getAddOnList = async (): Promise<any> => {
+    
+    const addOns = await firebase.firestore().collection("addOns")
+    const getAddOns = await getDocs(addOns)
+    var list: any = [{}]
+    getAddOns.docs.map((doc, i) => {
+        list[i] = doc.data()
+        list[i]['id'] = doc.id // manual update the id here
+    });
+    return list;
+} 
+
+// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+// import firebase from "firebase/app"; // Assuming Firebase is already initialized
+
+export const saveAddOn = async ({
+  title,
+  description,
+  price,
+  photo,
+}: {
+  title: string;
+  description: string;
+  price: string;
+  photo: File;
+}): Promise<void> => {
+  try {
+    // Initialize Firebase Storage and Firestore
+    const storage = getStorage(firebase.app());
+    const firestore = getFirestore(firebase.app());
+
+    // Create a storage reference for the photo
+    const storageRef = ref(storage, `uploads/${photo.name}`);
+
+    // Upload the photo
+    const uploadTask = await uploadBytesResumable(storageRef, photo);
+    const photoUrl = await getDownloadURL(uploadTask.ref);
+
+    // Save add-on data to Firestore
+    const addOnsCollection = collection(firestore, "addOns");
+    await addDoc(addOnsCollection, {
+      title,
+      description,
+      price: parseFloat(price),
+      imageUrl: photoUrl,
+      createdAt: serverTimestamp(),
+    });
+
+    console.log("Add-On saved successfully!");
+  } catch (error) {
+    console.error("Error saving add-on:", error);
+    throw error;
+  }
+};
+
+
+  export const deleteAddOn = async (id: string): Promise<any> => {
+    let status = ''
+    await firebase
+    .firestore()
+    .collection("/addOns")
+    .doc(id)
+    .delete()
+    .then((_) => {
+        status = 'success'
+      });
+      return status;
 }

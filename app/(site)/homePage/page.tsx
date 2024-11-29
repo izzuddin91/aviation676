@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getLatestThreeArticle } from "../service/firebase.service";
+// import { getLatestThreeArticle } from "../service/firebase.service";
 import VideoBackground from "@/app/component/VideoBackground";
+import { getLatestThreeArticle } from "../service/firebase.service";
 
 export default function Articles() {
   const router = useRouter();
@@ -115,3 +116,4 @@ export default function Articles() {
     </div>
   );
 }
+

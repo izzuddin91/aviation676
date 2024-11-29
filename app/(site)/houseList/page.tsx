@@ -16,9 +16,7 @@ export default function Home() {
   }, []);
 
   async function getData() {
-    console.log("data")
     const uid = secureLocalStorage.getItem("uid");
-    console.log(uid)
     const houseList = await getHouseList();
     setHouses(houseList);
   }

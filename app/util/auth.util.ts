@@ -16,7 +16,7 @@ export async function encrypt(payload: any) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('15m') // Session expires in 15 minutes
+    .setExpirationTime('15m')
     .sign(key);
 }
 
@@ -91,16 +91,32 @@ export const clearAuth = () => {
 };
 
 export async function getSession() {
-  const session = cookies().get('session')?.value;
-  if (!session) return null;
+  const cookieStore = cookies();
+  const session = cookieStore.get('session')?.value;  // Getting the session cookie
+
+  if (!session) {
+    return null;
+  }
 
   try {
-    return await decrypt(session);
+    return await decrypt(session); // If session exists, decrypt it
   } catch (error) {
     console.error('Failed to get session:', error);
     return null;
   }
 }
+
+// export async function getSession() {
+//   const session = cookies().get('session')?.value;
+//   if (!session) return null;
+
+//   try {
+//     return await decrypt(session);
+//   } catch (error) {
+//     console.error('Failed to get session:', error);
+//     return null;
+//   }
+// }
 
 export async function updateSession(request: NextRequest) {
   const session = request.cookies.get('session')?.value;

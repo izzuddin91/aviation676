@@ -1,21 +1,20 @@
 "use client";
 import { Alert } from "flowbite-react";
-import firebase from "./../clientApp";
+import firebase from "../../clientApp";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useState } from "react";
 import * as yup from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { PrimaryTextInputWithLabel } from "./../component/input/PrimaryTextInputWithLabel";
+import { PrimaryTextInputWithLabel } from "../../component/input/PrimaryTextInputWithLabel";
 import { HiUser, HiKey, HiInformationCircle } from "react-icons/hi";
-import { PrimaryButton } from "./../component/button/PrimaryButton";
+import { PrimaryButton } from "../../component/button/PrimaryButton";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import { initializeApp, getApps } from "firebase/app";
-// import { setAuth } from "../util/auth.util";
+import { getAuth } from "firebase/auth";
+import { useSearchParams } from 'next/navigation';
 import Swal from "sweetalert2";
-import { login } from "../util/auth.util";
+import { login } from "../../util/auth.util";
 
 // // Initialize Firebase
 const auth = getAuth(firebase.app());
@@ -45,6 +44,8 @@ export default function Home() {
   });
 
   const [message, setMessage] = useState("");
+  const searchParams = useSearchParams();
+  const role = searchParams.get('role'); // Get the 'role' query parameter
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     firebase
@@ -53,9 +54,14 @@ export default function Home() {
       .signInWithEmailAndPassword(data.email, data.password)
       .then(async (value) => {
         if (value.user) {
-          console.log(value.user.uid);
           login(data.email, data.password, value.user.uid);
-          router.push("/houseList");
+          // here, redirect to it's respective page: 
+          if (role == 'admin'){
+            router.push("/admin/dashboard")
+          }else {
+            router.push("/houseList");
+          }
+          
         }
       })
       .catch((err) => {
@@ -76,7 +82,7 @@ export default function Home() {
         <div className="w-full bg-white rounded-lg shadow mt-0">
           <div className="p-8 space-y-10">
             <h1 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">
-              Sign in Property Management App
+              Sign in as: {role}
             </h1>
 
             <form
@@ -125,3 +131,4 @@ export default function Home() {
     </div>
   );
 }
+

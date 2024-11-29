@@ -28,7 +28,6 @@ export default function Vehicle() {
   var [total, updateTotal] = useState(0.0);
   var [year, updateYear] = useState(2023);
   const params = useParams();
-  console.log(params);
   
   useEffect(() => {
     getCarPartsList(params["vehicleId"].toString()).then((val) => {

@@ -74,7 +74,6 @@ export default function Articles() {
 
   return (
 <div
-  style={{ borderTopWidth: "30px" }}
   className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_150px)] gap-2 justify-center p-4"
 >
   {articles.map((article) => (

@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Lato, Poppins } from "next/font/google";
 import Navbar from "./component/Navbar";
+import { getUserAuth } from "./util/auth.util";
 
 const lato = Lato({
   weight: ["400", "100", "300", "700", "900"],
@@ -24,9 +25,11 @@ export default function RootLayout({
         <title>House&Car Maintenances</title>
         <meta name="theme-color" content="#000" />
       </head>
-      <body>
-        <Navbar />
-        {children}
+      
+      <body >
+      <Navbar />
+        <div style={{marginTop: '60px'}}>{children}</div>
+        
       </body>
     </html>
   );

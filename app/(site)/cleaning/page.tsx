@@ -15,7 +15,6 @@ export default function Cleaning() {
 
   useEffect(() => {
     getCleaningList().then((val) => {
-      console.log(val)
       updateCarParts(val);
     });
   }, []);
