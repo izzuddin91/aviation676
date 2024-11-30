@@ -15,6 +15,8 @@ import { getAuth } from "firebase/auth";
 import { useSearchParams } from 'next/navigation';
 import Swal from "sweetalert2";
 import { login } from "../../util/auth.util";
+import secureLocalStorage from "react-secure-storage";
+
 
 // // Initialize Firebase
 const auth = getAuth(firebase.app());
@@ -55,7 +57,8 @@ export default function Home() {
       .then(async (value) => {
         if (value.user) {
           login(data.email, data.password, value.user.uid);
-          // here, redirect to it's respective page: 
+          // here, redirect to it's respective page:
+          secureLocalStorage.setItem("role", role!);
           if (role == 'admin'){
             router.push("/admin/dashboard")
           }else {

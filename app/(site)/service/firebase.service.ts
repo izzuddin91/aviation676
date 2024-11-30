@@ -7,7 +7,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "../../clientApp";
 import "firebase/compat/firestore";
 import { useState } from "react";
-import { getDocs } from "firebase/firestore";
+import { getDocs, query, where } from "firebase/firestore";
 import { getUserAuth } from "@/app/util/auth.util";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 
@@ -253,23 +253,29 @@ export const getCarPartsList = async (vehicleId: string): Promise<any> => {
 }
 
 
-export const getHouseList = async (): Promise<any> => {
-    const uid = await getUserAuth()
-    var housesCollection = await firebase.firestore().collection("houses").where("user_id", "==", uid)
-    if (uid == "bA3XYEhRLxPbAj7DeJpQOvHNXYA3"){
-        housesCollection = await firebase.firestore().collection("houses") // superadmin
-    }else{
+export const getHouseList = async (role: string): Promise<any> => {
+    const uid = await getUserAuth(); // Get user ID
+    let housesQuery;
+  
+    if (role === "admin") {
+      // Admin: Get all houses
+      housesQuery = collection(firebase.firestore(), "houses");
+    } else {
+      // Regular user: Get houses matching their UID
+      housesQuery = query(
+        collection(firebase.firestore(), "houses"),
+        where("user_id", "==", uid)
+      );
     }
-    
-    
-    const houses = await getDocs(housesCollection)
-    var list: any = [{}]
-    houses.docs.map((doc, i) => {
-        list[i] = doc.data()
-    });
-    // console.log(list)
-    return list
-}
+  
+    const housesSnapshot = await getDocs(housesQuery); // Fetch the data
+    const list: any[] = housesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  
+    return list; // Return as an array
+  };
 
 export const getHouseDetails = async (houseId: String): Promise<any> => {
     const housesCollection = await firebase.firestore().collection("houses").doc(houseId.toString()).get()
