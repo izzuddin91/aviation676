@@ -277,7 +277,7 @@ export const getHouseList = async (role: string): Promise<any> => {
     return list; // Return as an array
   };
 
-export const getHouseDetails = async (houseId: String): Promise<any> => {
+export const getHouse = async (houseId: String): Promise<any> => {
     const housesCollection = await firebase.firestore().collection("houses").doc(houseId.toString()).get()
     var returnData = housesCollection.data()
     return returnData
@@ -472,3 +472,20 @@ export const saveAddOn = async ({
       });
       return status;
 }
+
+export const getHouseDetails = async (houseId: String): Promise<any> => {
+    const snapshot = await firebase.firestore().collection("houseDetails").where("houseId", "==", houseId).get()
+    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    console.log(data)
+    return data
+}
+
+export const addHouseDetail = async (key: string, value: string, houseId: string): Promise<any> => {
+    const newDetail = { key, value, houseId };
+  
+    // Add the new detail to the Firestore collection
+    const docRef = await firebase.firestore().collection("houseDetails").add(newDetail);
+  
+    // Return the newly created detail with its generated Firestore ID
+    return { id: docRef.id, ...newDetail };
+  };

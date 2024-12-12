@@ -4,173 +4,114 @@ import firebase from "../../../clientApp";
 import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import * as yup from "yup";
 import { PrimaryTextInputWithLabel } from "../../../component/input/PrimaryTextInputWithLabel";
 import { PrimaryButton } from "../../../component/button/PrimaryButton";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, Modal, Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React from "react";
-import dayjs, { Dayjs } from "dayjs";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { getStorage } from "firebase/storage";
-import { getHouseDetails, getHouseList } from "../../service/firebase.service";
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from "firebase/storage";
+import { addHouseDetail, getHouse, getHouseDetails } from "../../service/firebase.service";
 
 type FormData = {
   houseName: string;
-  installment: number;
   address: string;
-  maintenance: number;
-  sinkingFund: number;
   wifi: number;
-  text1Key: string;
-  text1Value: string;
-  text2Key: string;
-  text2Value: string;
 };
-const formSchema = yup
-  .object({
-    // logsTitle: yup.string().required("please key in title"),
-    houseName: yup.string().required("please key in description"),
-    text2Key: yup.string().default(" "),
-    text2Value: yup.string().required(" "),
-    installment: yup.number().required("need to add installment"),
-  })
-  .required();
+
+type DetailFormData = {
+  key: string;
+  value: string;
+};
 
 export default function HouseLogs() {
-  var [houseImage, updateHouseImage] = useState({});
   const [file, setFile] = useState<File>();
-  const todayDate = new Date();
-  const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
-  const month = todayDate.toLocaleString("en-US", { month: "long" });
-  const year = todayDate.getFullYear();
-  const [value, setDateValue] = React.useState<Dayjs | null>(
-    dayjs(`${year}-${month}-${day}`)
-  );
+  const [detailsList, setDetailsList] = useState<any[]>([]);
+  const [houseImage, updateHouseImage] = useState({});
+  const [houseId, updateHouseId] = useState<string>("");
+  const [isModalOpen, setModalOpen] = useState(false); // Modal State
   const router = useRouter();
   const params = useParams();
-  // console.log(params)
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  var [houseId, updateHouseId]: any = useState([{}]);
-
-  async function getData() {
-    const houseIdFiltered = params["houseId"].toString().split("-")[0]
-    updateHouseId(houseIdFiltered)
-    getHouseDetails(houseIdFiltered).then((val) => {
-      updateHouseImage(val["house_image"]);
-      setValue("houseName", val["houseName"]);
-      setValue("installment", val["installment"]);
-      setValue("address", val["address"]);
-      setValue("maintenance", val["maintenance"]);
-      setValue("wifi", val["wifi"]);
-      setValue("address", val["address"]);
-      setValue("sinkingFund", val["sinkingFund"]);
-      setValue("text1Key", val["text1Key"]);
-      setValue("text1Value", val["text1Value"]);
-      setValue("text2Key", val["text2Key"]);
-      setValue("text2Value", val["text2Value"]);
-    });
-  }
-
-  function setForm() {
-    const data2 = new FormData();
-  }
-
-  const [message, setMessage] = useState("");
   const {
-    control,
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    // resolver: yupResolver(formSchema),
-  });
+  } = useForm<FormData>();
 
+  const {
+    register: modalRegister,
+    handleSubmit: handleModalSubmit,
+    reset: resetModalForm,
+    formState: { errors: modalErrors },
+  } = useForm<DetailFormData>();
+
+  useEffect(() => {
+    getData();
+    fetchDetails();
+  }, []);
+
+  // Fetch House Data
+  async function getData() {
+    const houseIdFiltered = params["houseId"].toString().split("-")[0];
+    updateHouseId(houseIdFiltered);
+    getHouse(houseIdFiltered).then((val) => {
+      updateHouseImage(val["house_image"]);
+      setValue("houseName", val["houseName"]);
+      setValue("address", val["address"]);
+      setValue("wifi", val["wifi"]);
+    });
+  }
+
+  // Fetch Details Collection
+  async function fetchDetails() {
+    const houseIdFiltered = params["houseId"].toString().split("-")[0]; // Get the current houseId
+    const houseDetails = await getHouseDetails(houseIdFiltered);
+    setDetailsList(houseDetails); // Update the state with the filtered data
+  }
+
+  // Add Detail Modal Submit Handle
+  const onAddDetail: SubmitHandler<DetailFormData> = async (data) => {
+    try {
+      const houseIdFiltered = params["houseId"].toString().split("-")[0];
+  
+      // Call the Firebase service to add a new detail
+      const newDetail = await addHouseDetail(data.key, data.value, houseIdFiltered);
+  
+      // Update the state with the new detail
+      setDetailsList((prev) => [...prev, newDetail]);
+      resetModalForm();
+      setModalOpen(false);
+    } catch (error) {
+      console.error("Error adding house detail:", error);
+    }
+  };
+
+  // Form Submit Handler
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(value!.format("DD/MM/YYYY"));
-    const date = value!.format("YYYY-MM-DD");
-    var submitData = {
-      houseName: data.houseName,
-      address: data.address,
-      text1Key: data.text1Key,
-      text1Value: data.text1Value,
-      text2Key: data.text2Key ?? "",
-      text2Value: data.text2Value ?? "",
-      houseId: houseId,
-      house_image: houseImage,
-      wifi: data.wifi,
-    };
+    const submitData = { ...data, houseId, house_image: houseImage };
 
     if (file) {
-      file?.arrayBuffer().then((val) => {
-        const storage = getStorage(firebase.app());
-        const filenameForDelete =
-          "/uploads/" +
-          data.houseName.replace(" ", "_") +
-          params["houseId"] +
-          `_${year}-${month}-${day}.jpg`;
-        const storageref = ref(storage, filenameForDelete);
-        console.log(storageref);
-        const uploadTask = uploadBytesResumable(storageref, val);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      const storage = getStorage(firebase.app());
+      const storageref = ref(storage, `/uploads/${data.houseName}_${houseId}.jpg`);
+      const uploadTask = uploadBytesResumable(storageref, file);
 
-            // setProgressUpload(progress) // to show progress upload
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
-                break;
-              case "running":
-                console.log("Upload is running");
-                break;
-            }
-          },
-          (error) => {
-            // message.error(error.message)
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              //url is download url of file
-              console.log(url);
-              // setDownloadURL(url)
-              // we get the url here, then start updating the logs
-              submitData["house_image"] = url;
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => console.error(error),
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          submitData["house_image"] = url;
 
-              firebase
-                .firestore()
-                .collection("/houses")
-                .doc(submitData["houseId"].toString())
-                .set(submitData)
-                .then(() => {
-                  alert("success!");
-                });
-            });
-          }
-        );
-      });
+          await firebase.firestore().collection("/houses").doc(houseId).set(submitData);
+          alert("Data saved successfully!");
+        }
+      );
     } else {
-      firebase
-        .firestore()
-        .collection("/houses")
-        .doc(submitData["houseId"].toString())
-        .set(submitData)
-        .then(() => {
-          alert("success!");
-        });
+      await firebase.firestore().collection("/houses").doc(houseId).set(submitData);
+      alert("Data saved successfully!");
     }
   };
 
@@ -179,20 +120,19 @@ export default function HouseLogs() {
       <Button variant="outlined" onClick={() => router.back()}>
         Back
       </Button>
-      <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
+
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <h1>New Logs</h1>
+
         <div className="grid grid-cols-2 gap-4 p-4">
-          <div className="col-span">
+          {/* Left Column */}
+          <div>
             <Stack spacing={2} sx={{ width: 300 }}>
               <input
                 accept="image/jpeg"
                 type="file"
                 name="file"
-                onChange={(e) => {
-                  console.log(e.target.files);
-
-                  setFile(e.target.files?.[0]);
-                }}
+                onChange={(e) => setFile(e.target.files?.[0])}
               />
               <PrimaryTextInputWithLabel
                 label="House Name"
@@ -231,44 +171,85 @@ export default function HouseLogs() {
               </PrimaryButton>
             </Stack>
           </div>
-          <div className="col-span">
+
+          {/* Right Column */}
+          <div>
+            <h3 className="text-lg font-bold mb-2">Details</h3>
             <Stack spacing={2} sx={{ width: 300 }}>
-              <PrimaryTextInputWithLabel
-                label="Info 1"
-                name="text1Key"
-                placeholder=""
-                type="text"
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Value"
-                name="text1Value"
-                placeholder=""
-                type="text"
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Info 2"
-                name="text2Key"
-                placeholder=""
-                type="text"
-                errors={errors}
-                register={register}
-              />
-              <PrimaryTextInputWithLabel
-                label="Value"
-                name="text2Value"
-                placeholder=""
-                type="text"
-                errors={errors}
-                register={register}
-              />
+              {detailsList.length > 0 ? (
+                detailsList.map((detail) => (
+                  <div
+                    key={detail.id}
+                    className="flex flex-col p-4 border border-gray-200 rounded-lg bg-gray-50"
+                  >
+                    <span className="text-gray-600 text-sm font-medium uppercase">
+                      {detail.key}
+                    </span>
+                    <span className="text-gray-900 font-semibold truncate">
+                      {detail.value}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <span>No details available</span>
+              )}
             </Stack>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setModalOpen(true)}
+              className="mt-4"
+            >
+              Add Detail
+            </Button>
           </div>
         </div>
       </form>
+
+      {/* Add Detail Modal */}
+      <Modal open={isModalOpen} onClose={() => setModalOpen(false)}>
+        <Box
+          className="bg-white p-6 rounded-md"
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            boxShadow: 24,
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Add New Detail
+          </Typography>
+          <form onSubmit={handleModalSubmit(onAddDetail)} className="space-y-4">
+            <PrimaryTextInputWithLabel
+              label="Name"
+              name="key"
+              placeholder="Enter Name"
+              type="text"
+              required
+              errors={modalErrors}
+              register={modalRegister}
+            />
+            <PrimaryTextInputWithLabel
+              label="Value"
+              name="value"
+              placeholder="Enter Value"
+              type="text"
+              required
+              errors={modalErrors}
+              register={modalRegister}
+            />
+            <Stack direction="row" spacing={2}>
+              <Button variant="outlined" onClick={() => setModalOpen(false)}>
+                Cancel
+              </Button>
+              <PrimaryButton type="submit">Save</PrimaryButton>
+            </Stack>
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
 }

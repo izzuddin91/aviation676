@@ -16,13 +16,14 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import {
   deleteProfitLossBreakdown,
-  getHouseDetails,
+  getHouse,
   getHouseLogsOnDateRange,
   getProfitLossBreakdowns,
 } from "../../service/firebase.service";
 import moment from "moment";
 import BarChart from "@/app/component/bar-chart";
 import PhotoIcon from "@mui/icons-material/Photo";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ModeEdit from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { confirmAlert, successAlert } from "../../service/alert.service";
@@ -48,7 +49,7 @@ export default function HouseLogs() {
   var [monthProfit, updateMonthProfit] = useState([0.0]);
 
   async function getData() {
-    getHouseDetails(params["houseId"].toString()).then((val) => {
+    getHouse(params["houseId"].toString()).then((val) => {
       updatehouseDetail(val);
     });
     var accumulateAmount = 0.0;
@@ -189,7 +190,6 @@ export default function HouseLogs() {
     // console.log(file['adminCharge'].toString())
     // console.log(file['profitAfterAdminCharge'].toString())
     const inputs = [{ 
-      // No: 'a1', 
       Description1: 'Revenue', 
       Price1: 'RM' + file['revenue'].toString(),
       Description2: 'Total Expenses', 
@@ -199,6 +199,7 @@ export default function HouseLogs() {
       Description4: 'Admin 20 % Charge', 
       Price4: 'RM' + file['adminCharge'].toString(),
       Description5: 'Profit After 20 % Charge', 
+      Description6: file['notes'].replace(/\/\//g, '\n'), // Replace '//' with new lines
       Price5: 'RM' + file['profitAfterAdminCharge'].toString(),
       Date: moment(file["date"].toDate()).format("DD-MM-YYYY")
     }];
@@ -280,7 +281,7 @@ export default function HouseLogs() {
         <h1 style={{ textAlign: "center" }}>
           House: {(houseDetail as any)["houseName"]}{" "}
         </h1>
-        <BarChart data={data2} />
+        {/* <BarChart data={data2} /> */}
       </div>
       <table className="w-full">
         <thead className="bg-gray-50 border-b-2 border-gray-200">
@@ -301,7 +302,7 @@ export default function HouseLogs() {
               Notes
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
-              File
+              PDF
             </th>
             <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
               Edit
@@ -375,7 +376,7 @@ export default function HouseLogs() {
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                   <Button
-                    endIcon={<PhotoIcon />}
+                    endIcon={<PictureAsPdfIcon style={{ color: 'red' }} />}
                     onClick={() => {
                       handleClickOpen(row);
                     }}

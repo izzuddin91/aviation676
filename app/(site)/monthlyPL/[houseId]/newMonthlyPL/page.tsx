@@ -18,7 +18,7 @@ import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 
 import {
-  getHouseDetails,
+  getHouse,
   getHouseLogsOnDateRange,
 } from "../../../service/firebase.service";
 import {
@@ -78,7 +78,7 @@ export default function HouseLogs() {
 
 
   async function getData() {
-    getHouseDetails(params["houseId"].toString()).then((val) => {
+    getHouse(params["houseId"].toString()).then((val) => {
       setValue("revenue", val["revenue"]);
       setValue("cleaning", val["cleaning"]);
       setValue("electricBill", val["electricBill"]);

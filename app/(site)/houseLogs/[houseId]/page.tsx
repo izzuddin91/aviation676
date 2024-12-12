@@ -27,7 +27,7 @@ import Dialog from "@mui/material/Dialog";
 import moment from "moment";
 import {
   deleteHouseLog,
-  getHouseDetails,
+  getHouse,
   getHouseLogsOnDateRange,
 } from "../../service/firebase.service";
 import { confirmAlert } from "../../service/alert.service";
@@ -84,7 +84,7 @@ export default function HouseLogs() {
         updateTotalAmount(val ?? []);
       }
     );
-    getHouseDetails(houseId.toString()).then((val) => {
+    getHouse(houseId.toString()).then((val) => {
       updatehouseDetail(val);
     });
   }, []);
