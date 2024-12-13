@@ -10,6 +10,8 @@ import { useState } from "react";
 import { getDocs, query, where } from "firebase/firestore";
 import { getUserAuth } from "@/app/util/auth.util";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { format } from "date-fns";
+
 
 const todayDate = new Date();
 const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
@@ -489,3 +491,37 @@ export const addHouseDetail = async (key: string, value: string, houseId: string
     // Return the newly created detail with its generated Firestore ID
     return { id: docRef.id, ...newDetail };
   };
+
+  export const addOrder = async (
+    selectedItems: { id: string; quantity: number }[],
+    items: { id: string; title: string; price: number }[],
+    totalPrice: number,
+    notes: string,
+    selectedDate: Date | null
+  ): Promise<void> => {
+    try {
+      // Map selectedItems to include product details
+      const orderItems = selectedItems.map((item) => {
+        const product = items.find((i) => i.id === item.id);
+        return {
+          title: product?.title || "Unknown Item",
+          quantity: item.quantity,
+          price: product?.price || 0,
+        };
+      });
+  
+      // Add order to Firestore
+      await firebase.firestore().collection('order').add({
+        items: orderItems,
+        totalPrice,
+        notes,
+        selectedDate: selectedDate ? format(selectedDate, "yyyy-MM-dd") : null,
+        timestamp: new Date(),
+      })
+    } catch (error) {
+      console.error("Error adding order to Firestore:", error);
+      throw new Error("Failed to place the order.");
+    }
+  };
+
+

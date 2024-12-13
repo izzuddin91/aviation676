@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAddOnList } from "../../service/firebase.service"; // Firebase service
+import { addOrder, getAddOnList } from "../../service/firebase.service"; // Firebase service
 import { getFirestore, collection, addDoc } from "firebase/firestore"; // Firestore
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -70,24 +70,10 @@ export default function AncillaryRevenue() {
 
   const handleConfirm = async () => {
     try {
-      await addDoc(collection(db, "order"), {
-        items: selectedItems.map((item) => {
-          const product = items.find((i) => i.id === item.id);
-          return {
-            title: product?.title,
-            quantity: item.quantity,
-            price: product?.price,
-          };
-        }),
-        totalPrice,
-        notes,
-        selectedDate: selectedDate ? format(selectedDate, "yyyy-MM-dd") : null,
-        timestamp: new Date(),
-      });
+      await addOrder(selectedItems, items, totalPrice, notes, selectedDate);
       alert("Order placed successfully!");
       setIsModalOpen(false);
     } catch (error) {
-      console.error("Error placing order:", error);
       alert("Failed to place the order.");
     }
   };
