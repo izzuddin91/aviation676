@@ -6,9 +6,6 @@ import { getFirestore, collection, addDoc } from "firebase/firestore"; // Firest
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Modal from "react-modal"; // Install via npm install react-modal
-import { format } from "date-fns";
-
-const db = getFirestore(); // Initialize Firestore
 
 type Item = {
   id: string;
@@ -24,6 +21,7 @@ type SelectedItem = {
 };
 
 export default function AncillaryRevenue() {
+  const deliveryCharge = 30; // Fixed delivery charge
   const [items, setItems] = useState<Item[]>([]);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -111,7 +109,6 @@ export default function AncillaryRevenue() {
                   <option value={0}>0</option>
                   <option value={1}>1</option>
                   <option value={2}>2</option>
-                  <option value={3}>3</option>
                 </select>
               </div>
             </div>
@@ -131,7 +128,7 @@ export default function AncillaryRevenue() {
           className="border rounded-lg p-2 w-full"
           placeholderText="Select a date"
         />
-                <textarea
+        <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           className="border rounded-lg p-2"
@@ -147,7 +144,6 @@ export default function AncillaryRevenue() {
         Proceed to Confirm
       </button>
 
-      {/* Confirmation Modal */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
@@ -168,10 +164,20 @@ export default function AncillaryRevenue() {
               </div>
             );
           })}
+
+          {/* Delivery Charge */}
+          <div className="flex justify-between mt-2">
+            <span>Delivery Charge:</span>
+            <span>RM{deliveryCharge}</span>
+          </div>
+
+          {/* Total Price */}
           <div className="flex justify-between font-bold text-lg mt-2">
             <span>Total Price:</span>
-            <span>RM{totalPrice}</span>
+            <span>RM{totalPrice + deliveryCharge}</span>
           </div>
+
+          {/* Selected Date and Notes */}
           <div>
             <p className="font-semibold">
               Date: {selectedDate?.toDateString()}
@@ -181,6 +187,8 @@ export default function AncillaryRevenue() {
             </p>
           </div>
         </div>
+
+        {/* Action Buttons */}
         <div className="flex justify-end space-x-2 mt-4">
           <button
             onClick={() => setIsModalOpen(false)}

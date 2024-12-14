@@ -65,7 +65,8 @@ export default function VehicleLogs() {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    const uid = getUserAuth()
+    // const uid = getUserAuth()
+    const uid = "bA3XYEhRLxPbAj7DeJpQOvHNXYA3";
     console.log(value!.format("DD/MM/YYYY"));
     const date = value!.format("YYYY-MM-DD");
     var submitData = {

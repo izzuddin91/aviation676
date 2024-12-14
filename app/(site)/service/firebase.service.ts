@@ -159,7 +159,8 @@ export const deleteProfitLossBreakdown = async (id: string): Promise<any> => {
 
 
 export const getVehicles = async (): Promise<any> => {
-    const uid = getUserAuth()
+    // const uid = getUserAuth()
+    const uid = "bA3XYEhRLxPbAj7DeJpQOvHNXYA3"
     const carPartsCollection = await firebase.firestore().collection("cars").where("uid", "==", uid).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
     var list: any = [{}]
@@ -243,7 +244,8 @@ export const createNewVehicle = async (data: any, file?: File): Promise<any> => 
 }
 
 export const getCarPartsList = async (vehicleId: string): Promise<any> => {
-    const uid = getUserAuth()
+    // const uid = getUserAuth()
+    const uid = "bA3XYEhRLxPbAj7DeJpQOvHNXYA3"
     // console.log(uid)
     const carPartsCollection = await firebase.firestore().collection("carParts").where("uid", "==", uid).where("vehicleId", "==", vehicleId).orderBy('date', 'desc')
     const carParts = await getDocs(carPartsCollection)
