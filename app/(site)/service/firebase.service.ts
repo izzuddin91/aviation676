@@ -268,7 +268,7 @@ export const getHouseList = async (role: string): Promise<any> => {
       // Regular user: Get houses matching their UID
       housesQuery = query(
         collection(firebase.firestore(), "houses"),
-        where("user_id", "==", uid)
+        where("userId", "==", uid)
       );
     }
   

@@ -51,9 +51,6 @@ const Navbar = () => {
           </a>
         </li>
         <li style={styles.navItem}>
-          <a href="#about" style={styles.navLink}>
-            Welcome{adminName ? `, ${adminName}` : ""}
-          </a>
         </li>
         <li
           style={styles.navItem}
