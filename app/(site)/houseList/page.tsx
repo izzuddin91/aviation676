@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getHouseList } from "../service/firebase.service";
@@ -36,33 +35,37 @@ export default function Home() {
   }
 
   return (
-    <div className="p-8 space-y-5">
-      <h1 className="text-xl mb-2">Your Properties</h1>
+    <div className="p-4 sm:p-6 space-y-5 max-w-full overflow-hidden">
+      <h1 className="text-lg sm:text-xl font-semibold mb-2">Your Properties</h1>
       {houses ? (
         houses.map((row: any) => {
           const link = "/houseLogs/" + row["houseId"];
           return (
             <div
               key={row["houseId"]}
-              className="flex flex-row items-center rounded-lg shadow-lg p-4 space-x-4 bg-white"
+              className="flex flex-col md:flex-row items-center rounded-lg shadow-lg p-4 bg-white w-full max-w-full overflow-hidden"
             >
               {/* Image */}
               <img
                 alt={row.houseName}
-                className="rounded-lg object-cover w-40 h-28"
+                className="rounded-lg object-cover w-full sm:w-48 h-40 md:h-32"
                 src={row["house_image"]}
               />
+
               {/* Details */}
-              <div className="flex-1">
-                <h1 className="text-lg font-semibold text-black">
+              <div className="flex-1 mt-4 md:mt-0 text-center md:text-left md:pl-4 w-full">
+                <h1 className="text-md sm:text-lg font-semibold text-black">
                   {row.houseName}
                 </h1>
                 <p className="text-gray-500 text-sm">{row.location}</p>
-                <div className="mt-2 flex space-x-3">
+
+                {/* Buttons */}
+                <div className="mt-3 flex justify-center md:justify-start gap-2 w-full">
                   <Button
                     onClick={() => houseDetails(row["houseId"], row["houseName"])}
                     variant="outlined"
                     size="small"
+                    className="w-1/3 md:w-32"
                   >
                     Details
                   </Button>
@@ -70,6 +73,7 @@ export default function Home() {
                     onClick={() => houseLogs(link, row["houseName"])}
                     variant="outlined"
                     size="small"
+                    className="w-1/3 md:w-32"
                   >
                     Logs
                   </Button>
@@ -77,6 +81,7 @@ export default function Home() {
                     onClick={() => monthlyPL("/monthlyPL/" + row["houseId"])}
                     variant="outlined"
                     size="small"
+                    className="w-1/3 md:w-32"
                   >
                     Monthly Logs
                   </Button>

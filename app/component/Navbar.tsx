@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CSSProperties } from "react";
 import { clearAuth, getUserAuth } from "../util/auth.util";
 import { getAdminById } from "../(site)/service/firebase.service";
+import styles from "@/app/Navbar.module.css"; // Import CSS module
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminName, setAdminName] = useState<string | null>(null);
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // State for dropdown visibility
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Check authentication on mount
   useEffect(() => {
     const checkUserAuth = async () => {
       try {
@@ -17,10 +19,8 @@ const Navbar = () => {
         if (uid) {
           const admin = await getAdminById(uid);
           setAdminName(admin.name);
-          console.log(`User is authenticated with uid: ${uid}`);
           setIsAuthenticated(true);
         } else {
-          console.log("No user is authenticated.");
           setIsAuthenticated(false);
         }
       } catch (error) {
@@ -31,129 +31,97 @@ const Navbar = () => {
     checkUserAuth();
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
       clearAuth();
       setIsAuthenticated(false);
       setAdminName(null);
-      console.log("User logged out successfully.");
     } catch (error) {
       console.error("Error logging out:", error);
     }
   };
 
   return (
-    <nav style={styles.navbar}>
-      <ul style={styles.navList}>
-        <li style={styles.navItem}>
-          <a href="/" style={styles.navLink}>
-            Home
-          </a>
-        </li>
-        <li style={styles.navItem}>
-        </li>
-        <li
-          style={styles.navItem}
-          onMouseEnter={() => setIsDropdownVisible(true)} // Show dropdown on hover
-          onMouseLeave={() => setIsDropdownVisible(false)} // Hide dropdown on mouse leave
+    <nav className={styles.navbar}>
+      <div className={styles.navContainer}>
+        {/* Logo */}
+        <a href="/" className={styles.navLogo}>
+          I.Z. Properties
+        </a>
+
+        {/* Hamburger Icon */}
+        <div
+          className={styles.hamburger}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isAuthenticated ? (
-            <a onClick={handleLogout} style={styles.navLink}>
-              Logout
+          ☰
+        </div>
+
+        {/* Navigation Links */}
+        <ul
+          className={`${styles.navList} ${
+            isMobileMenuOpen ? styles.mobileOpen : ""
+          }`}
+        >
+          <li>
+            <a href="/" className={styles.navLink}>
+              Home
             </a>
-          ) : (
-            <div style={styles.dropdown}>
-              <span style={styles.navLink}>Login</span>
-              {isDropdownVisible && ( // Conditionally render dropdown
-                <ul style={styles.dropdownMenu}>
-                  <li>
-                    <a
-                      href="/login?role=homeOwner"
-                      style={styles.dropdownLink}
-                    >
-                      Home Owner
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/login?role=admin" style={styles.dropdownLink}>
-                      Admin
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/login?role=partner" style={styles.dropdownLink}>
-                      Partner
-                    </a>
-                  </li>
-                </ul>
-              )}
-            </div>
-          )}
-        </li>
-      </ul>
+          </li>
+          <li>
+            <a href="#about" className={styles.navLink}>
+              Welcome{adminName ? `, ${adminName}` : ""}
+            </a>
+          </li>
+
+          {/* Dropdown Logic */}
+          <li
+            className={styles.navItem}
+            onMouseEnter={() => setIsDropdownVisible(true)}
+            onMouseLeave={() => setIsDropdownVisible(false)}
+          >
+            {isAuthenticated ? (
+              <a onClick={handleLogout} className={styles.navLink}>
+                Logout
+              </a>
+            ) : (
+              <div className={styles.dropdown}>
+                <span className={styles.navLink}>Login</span>
+                {isDropdownVisible && (
+                  <ul className={styles.dropdownMenu}>
+                    <li>
+                      <a
+                        href="/login?role=homeOwner"
+                        className={styles.dropdownLink}
+                      >
+                        Home Owner
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="/login?role=admin"
+                        className={styles.dropdownLink}
+                      >
+                        Admin
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="/login?role=partner"
+                        className={styles.dropdownLink}
+                      >
+                        Partner
+                      </a>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            )}
+          </li>
+        </ul>
+      </div>
     </nav>
   );
-};
-
-const styles: {
-  navbar: CSSProperties;
-  navList: CSSProperties;
-  navItem: CSSProperties;
-  navLink: CSSProperties;
-  dropdown: CSSProperties;
-  dropdownMenu: CSSProperties;
-  dropdownLink: CSSProperties;
-} = {
-  navbar: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    backgroundColor: "rgba(2, 48, 32, 1.0)",
-    color: "white",
-    padding: "10px 20px",
-    zIndex: 1000,
-  },
-  navList: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-  },
-  navItem: {
-    position: "relative",
-  },
-  navLink: {
-    color: "white",
-    textDecoration: "none",
-    padding: "10px 20px",
-    display: "inline-block",
-    cursor: "pointer",
-    border: "none",
-  },
-  dropdown: {
-    position: "relative",
-    display: "inline-block",
-  },
-  dropdownMenu: {
-    position: "absolute",
-    top: "100%",
-    left: 0,
-    backgroundColor: "rgba(2, 48, 32, 1.0)",
-    borderRadius: "4px",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-    listStyle: "none",
-    margin: 0,
-    padding: "10px 0",
-    zIndex: 1001,
-  },
-  dropdownLink: {
-    color: "white",
-    textDecoration: "none",
-    padding: "10px 20px",
-    display: "block",
-  },
 };
 
 export default Navbar;
