@@ -69,6 +69,11 @@ const Navbar = () => {
             </a>
           </li>
           <li>
+          <a href="/" className={styles.navLink}>
+              Statistic Report
+            </a>
+          </li>
+          <li>
             <a href="#about" className={styles.navLink}>
               Welcome{adminName ? `, ${adminName}` : ""}
             </a>

@@ -48,7 +48,7 @@ const HouseGroup: React.FC<HouseGroupProps> = ({ areaTitle, houses }) => {
 const HouseTiles: React.FC = () => {
   const houseGroups = [
     {
-      areaTitle: 'City Center',
+      areaTitle: 'KL Center',
       houses: [
         {
           imageSrc: 'https://cdn.pixabay.com/photo/2016/11/29/03/53/architecture-1867187_1280.jpg',
@@ -65,7 +65,7 @@ const HouseTiles: React.FC = () => {
       ]
     },
     {
-      areaTitle: 'Suburbs',
+      areaTitle: 'Cheras ',
       houses: [
         {
           imageSrc: 'https://cdn.pixabay.com/photo/2016/11/29/03/53/architecture-1867187_1280.jpg',
