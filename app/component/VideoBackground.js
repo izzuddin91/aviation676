@@ -29,7 +29,7 @@ const VideoBackground = () => {
 
             {/* Floating WhatsApp logo */}
 
-      <a href="https://wa.me/+60132711668?text=baju 2 helai size S" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
+      <a href="https://wa.me/+60132711668?text=I would like to know more about I.Z. Properties" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" // Example WhatsApp icon link
           alt="WhatsApp"
