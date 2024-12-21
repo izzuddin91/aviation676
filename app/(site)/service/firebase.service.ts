@@ -11,8 +11,10 @@ import { getDocs, query, where } from "firebase/firestore";
 import { getUserAuth } from "@/app/util/auth.util";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { format } from "date-fns";
-
-
+import 'firebase/firestore';
+import 'firebase/storage';
+import { deleteObject } from "firebase/storage";
+import {  doc, getDoc, deleteDoc } from "firebase/firestore";
 const todayDate = new Date();
 const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
 const month = todayDate.toLocaleString("en-US", { month: "long" });
@@ -464,18 +466,46 @@ export const saveAddOn = async ({
 };
 
 
-  export const deleteAddOn = async (id: string): Promise<any> => {
-    let status = ''
-    await firebase
-    .firestore()
-    .collection("/addOns")
-    .doc(id)
-    .delete()
-    .then((_) => {
-        status = 'success'
-      });
-      return status;
-}
+export const deleteAddOn = async (id: string): Promise<string> => {
+  let status = '';
+
+  try {
+    const db = getFirestore();
+    const storage = getStorage();
+
+    // Get the document reference
+    const docRef = doc(db, "addOns", id);
+    const docSnap = await getDoc(docRef); // Correct use of `await`
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const imageUrl = data?.imageUrl;
+
+      if (imageUrl) {
+        // Decode the file path
+        const filePath = decodeURIComponent(imageUrl.split('/o/')[1]?.split('?')[0]);
+
+        // Create a reference to the file in Firebase Storage
+        const storageRef = ref(storage, filePath);
+
+        // Delete the file from Firebase Storage
+        await deleteObject(storageRef); // Properly awaited
+              // Delete the document from Firestore
+      await deleteDoc(docRef); // Properly awaited
+      }
+
+
+      status = 'success';
+    } else {
+      status = 'document_not_found';
+    }
+  } catch (error) {
+    console.error('Error deleting add-on:', error);
+    status = 'error';
+  }
+
+  return status; // Return the final status
+};
 
 export const getHouseDetails = async (houseId: String): Promise<any> => {
     const snapshot = await firebase.firestore().collection("houseDetails").where("houseId", "==", houseId).get()
