@@ -28,7 +28,7 @@ export default function RootLayout({
       
       <body >
       <Navbar />
-        <div style={{marginTop: '60px', borderBottomWidth: '60px'}}>{children}</div>
+        <div style={{marginTop: '60px'}}>{children}</div>
         
       </body>
     </html>

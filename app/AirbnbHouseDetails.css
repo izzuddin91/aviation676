@@ -1,0 +1,171 @@
+/* Main container */
+.page-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Image and Product Info Container */
+  .image-and-info {
+    display: flex;
+    flex-direction: row; /* Side-by-side layout */
+    gap: 20px;
+    max-width: 1200px; /* Restrict total width */
+    width: 100%;
+    align-items: flex-start; /* Align text to the top of the image */
+  }
+  
+  /* Image slider styling */
+  .image-slider {
+    position: relative;
+    width: 60%; /* Occupies 60% of the available space */
+    max-width: 600px; /* Prevents exceeding original size */
+    overflow: hidden;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .arrow-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.5);
+    color: black;
+    border: none;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .left-arrow {
+    left: 10px;
+  }
+  
+  .right-arrow {
+    right: 10px;
+  }
+  
+  /* Thumbnail styling */
+  .thumbnail-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .thumbnail {
+    width: 50px;
+    height: 50px;
+    margin: 0 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  
+  .thumbnail:hover,
+  .thumbnail.active {
+    opacity: 1;
+    border: 2px solid #333;
+  }
+  
+  /* Product Info styling */
+  #product-info {
+    flex: 1; /* Occupies the remaining space */
+    text-align: left;
+    padding: 0 20px;
+  }
+  
+  h1.product-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+  
+  .product-description {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  .highlights-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .highlights-box h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-align: left;
+    color: #333;
+  }
+  
+  .highlights-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  .highlight-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .highlight-icon {
+    width: 24px;
+    height: 24px;
+    fill: #0073e6;
+  }
+
+  .airbnb-link-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .airbnb-button {
+    background-color: #ff5a5f; /* Airbnb brand color */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+  }
+  
+  .airbnb-button:hover {
+    background-color: #e44d50;
+  }
+  
+  
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .image-and-info {
+      flex-direction: column; /* Stack elements vertically for mobile */
+    }
+  
+    .image-slider {
+      width: 100%; /* Full width for small screens */
+    }
+  
+    #product-info {
+      width: 100%;
+      margin-top: 20px;
+    }
+  }
+  
+  
