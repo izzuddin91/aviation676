@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import "@/app/AirbnbHouseDetails.css";
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface ProductData {
   title: string;

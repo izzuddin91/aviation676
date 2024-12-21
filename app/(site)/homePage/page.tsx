@@ -5,47 +5,9 @@ import { useEffect, useState } from "react";
 import VideoBackground from "@/app/component/VideoBackground";
 import { getLatestThreeArticle } from "../service/firebase.service";
 
-// Translation data
-const translations = {
-  en: {
-    sectionTitle: "Welcome to Our Services",
-    sectionDescription:
-      "Explore our premium services, from luxurious private jet charters to top-tier Airbnb experiences.",
-    jetTitle: "Private Charter Jet Service",
-    jetDescription:
-      "Offering luxury private jet charter services for business and leisure. Fly anywhere with comfort and personalized service.",
-    airbnbTitle: "Luxurious Airbnb Stays",
-    airbnbDescription:
-      "Enjoy a top-tier Airbnb experience with beautifully managed homes in premium locations. Exceptional service and comfort guaranteed.",
-    hostingTitle: "Airbnb Hosting Services",
-    hostingDescription:
-      "Let us manage your property on Airbnb. We take care of everything, from listing to guest services, so you earn more effortlessly.",
-    contactButton: "Contact Us",
-  },
-  th: {
-    sectionTitle: "ยินดีต้อนรับสู่บริการของเรา",
-    sectionDescription:
-      "สำรวจบริการระดับพรีเมียมของเรา ตั้งแต่การเช่าเหมาลำเครื่องบินเจ็ตสุดหรู ไปจนถึงประสบการณ์ Airbnb ระดับสูงสุด",
-    jetTitle: "บริการเช่าเหมาลำเครื่องบินเจ็ต",
-    jetDescription:
-      "ให้บริการเช่าเหมาลำเครื่องบินเจ็ตหรูสำหรับธุรกิจและการพักผ่อน บินได้ทุกที่ด้วยความสะดวกสบายและการบริการส่วนตัว",
-    airbnbTitle: "ที่พัก Airbnb ระดับหรู",
-    airbnbDescription:
-      "เพลิดเพลินกับประสบการณ์ Airbnb ระดับสูงสุด ด้วยบ้านที่จัดการอย่างดีในทำเลพรีเมียม พร้อมการบริการที่ยอดเยี่ยม",
-    hostingTitle: "บริการจัดการที่พัก Airbnb",
-    hostingDescription:
-      "ให้เราจัดการทรัพย์สินของคุณบน Airbnb เราจัดการทุกอย่าง ตั้งแต่การลงประกาศไปจนถึงการบริการแขก เพื่อให้คุณทำรายได้อย่างง่ายดาย",
-    contactButton: "ติดต่อเรา",
-  },
-};
-
 export default function Articles() {
   const router = useRouter();
-  const [articles, updateArticles]: any = useState([{}]);
-  const [language, setLanguage] = useState<"en" | "th">("en");
-
-  // Translation function
-  const t = (key: string) => translations[language][key as keyof typeof translations.en];
+  const [articles, updateArticles] = useState<Array<Record<string, any>>>([]);
 
   useEffect(() => {
     getData();
@@ -80,42 +42,17 @@ export default function Articles() {
     cardTitle: { fontSize: "1.5em", margin: "15px 0" },
     cardDescription: { fontSize: "1em", padding: "0 15px", marginBottom: "15px" },
     cardLink: { display: "inline-block", margin: "10px 0", color: "#007BFF", textDecoration: "none", fontWeight: "bold" },
-    bottomBar: {
-      position: "fixed" as const,
-      bottom: 0,
-      left: 0,
-      width: "100%",
-      backgroundColor: "#023020",
-      color: "#fff",
-      textAlign: "center" as const,
-      padding: "10px 0",
-      boxShadow: "0 -2px 8px rgba(0, 0, 0, 0.1)",
-    },
-    contactButton: {
-      backgroundColor: "#fff",
-      color: "#023020",
-      border: "none",
-      borderRadius: "5px",
-      padding: "10px 20px",
-      fontSize: "1em",
-      fontWeight: "bold",
-      cursor: "pointer",
-    },
   };
 
   return (
     <div>
-      {/* Language Switcher */}
-      <div style={{ textAlign: "right", padding: "10px" }}>
-        <button onClick={() => setLanguage("en")}>EN</button> |{" "}
-        <button onClick={() => setLanguage("th")}>TH</button>
-      </div>
-
       <VideoBackground />
 
       <div style={styles.paddingContainer}>
-        <h1 style={styles.sectionTitle}>{t("sectionTitle")}</h1>
-        <p style={styles.sectionDescription}>{t("sectionDescription")}</p>
+        <h1 style={styles.sectionTitle}>Welcome to Our Services</h1>
+        <p style={styles.sectionDescription}>
+          Explore our premium services, from luxurious private jet charters to top-tier Airbnb experiences.
+        </p>
       </div>
 
       <hr style={styles.hr} />
@@ -140,8 +77,11 @@ export default function Articles() {
             alt="Charter Jet Service"
             style={styles.cardImage}
           />
-          <h2 style={styles.cardTitle}>{t("jetTitle")}</h2>
-          <p style={styles.cardDescription}>{t("jetDescription")}</p>
+          <h2 style={styles.cardTitle}>Private Charter Jet Service</h2>
+          <p style={styles.cardDescription}>
+            Offering luxury private jet charter services for business and leisure. Fly anywhere with comfort and
+            personalized service.
+          </p>
           <a href="#more" style={styles.cardLink}>
             Read More
           </a>
@@ -153,8 +93,11 @@ export default function Articles() {
             alt="Airbnb Business"
             style={styles.cardImage}
           />
-          <h2 style={styles.cardTitle}>{t("airbnbTitle")}</h2>
-          <p style={styles.cardDescription}>{t("airbnbDescription")}</p>
+          <h2 style={styles.cardTitle}>Luxurious Airbnb Stays</h2>
+          <p style={styles.cardDescription}>
+            Enjoy a top-tier Airbnb experience with beautifully managed homes in premium locations. Exceptional service
+            and comfort guaranteed.
+          </p>
           <a href="/airbnbHouses" style={styles.cardLink}>
             Read More
           </a>
@@ -166,8 +109,11 @@ export default function Articles() {
             alt="Airbnb Hosting Services"
             style={styles.cardImage}
           />
-          <h2 style={styles.cardTitle}>{t("hostingTitle")}</h2>
-          <p style={styles.cardDescription}>{t("hostingDescription")}</p>
+          <h2 style={styles.cardTitle}>Airbnb Hosting Services</h2>
+          <p style={styles.cardDescription}>
+            Let us manage your property on Airbnb. We take care of everything, from listing to guest services, so you
+            earn more effortlessly.
+          </p>
           <a href="/articles" style={styles.cardLink}>
             Read More
           </a>
@@ -175,14 +121,7 @@ export default function Articles() {
       </div>
 
       {/* Bottom Bar */}
-      <div style={styles.bottomBar}>
-        <button
-          style={styles.contactButton}
-          onClick={() => router.push("/contact")}
-        >
-          {t("contactButton")}
-        </button>
-      </div>
+
     </div>
   );
 }

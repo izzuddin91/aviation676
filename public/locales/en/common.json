@@ -1,5 +1,17 @@
 {
-    "title": "Welcome to my website",
-    "description": "This is the English version of the website."
+    "product": {
+      "title": "Modern City-Center Retreat",
+      "description": "Discover the perfect blend of comfort and convenience..."
+    },
+    "loading": "Loading...",
+    "highlights": {
+      "title": "Highlights",
+      "freeShuttleVan": "Free Shuttle Van",
+      "nearTrainStation": "Near Train Station",
+      "secureParking": "Secure Parking"
+    },
+    "buttons": {
+      "airbnbLink": "Airbnb Link"
+    }
   }
   

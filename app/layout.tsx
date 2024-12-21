@@ -1,7 +1,11 @@
+"use client"
+
 import "./globals.css";
 import { Lato, Poppins } from "next/font/google";
 import Navbar from "./component/Navbar";
-import { getUserAuth } from "./util/auth.util";
+
+import { useRouter } from "next/navigation"; // Import useRouter
+import BottomBar from "./component/bottomBar";
 
 const lato = Lato({
   weight: ["400", "100", "300", "700", "900"],
@@ -19,17 +23,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter(); // Initialize useRouter here
+
   return (
     <html lang="en" className={`${lato.className} ${poppins.className}`}>
       <head>
-        <title>House&Car Maintenances</title>
+        <title>House & Car Maintenances</title>
         <meta name="theme-color" content="#000" />
       </head>
-      
-      <body >
-      <Navbar />
-        <div style={{marginTop: '60px'}}>{children}</div>
-        
+      <body>
+        <Navbar />
+        <div style={{ marginTop: "60px", paddingBottom: "80px" }}>{children}</div> 
+        <BottomBar onClick={() => router.push("/contact")} /> {/* Use router */}
       </body>
     </html>
   );
