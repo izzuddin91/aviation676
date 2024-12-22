@@ -567,3 +567,17 @@ export const addHouseDetail = async (key: string, value: string, houseId: string
   };
 
 
+  export const deleteParticularHouseDetail = async (id: string): Promise<any> => {
+    let status = ''
+    await firebase
+    .firestore()
+    .collection("/houseDetails")
+    .doc(id)
+    .delete()
+    .then((_) => {
+        status = 'success'
+      });
+      return status;
+}
+
+

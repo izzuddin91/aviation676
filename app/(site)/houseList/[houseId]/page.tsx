@@ -10,8 +10,18 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Stack, Modal, Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { ref, uploadBytesResumable, getDownloadURL, getStorage } from "firebase/storage";
-import { addHouseDetail, getHouse, getHouseDetails } from "../../service/firebase.service";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  getStorage,
+} from "firebase/storage";
+import {
+  addHouseDetail,
+  deleteParticularHouseDetail,
+  getHouse,
+  getHouseDetails,
+} from "../../service/firebase.service";
 
 type FormData = {
   houseName: string;
@@ -75,10 +85,14 @@ export default function HouseLogs() {
   const onAddDetail: SubmitHandler<DetailFormData> = async (data) => {
     try {
       const houseIdFiltered = params["houseId"].toString().split("-")[0];
-  
+
       // Call the Firebase service to add a new detail
-      const newDetail = await addHouseDetail(data.key, data.value, houseIdFiltered);
-  
+      const newDetail = await addHouseDetail(
+        data.key,
+        data.value,
+        houseIdFiltered
+      );
+
       // Update the state with the new detail
       setDetailsList((prev) => [...prev, newDetail]);
       resetModalForm();
@@ -94,7 +108,10 @@ export default function HouseLogs() {
 
     if (file) {
       const storage = getStorage(firebase.app());
-      const storageref = ref(storage, `/uploads/${data.houseName}_${houseId}.jpg`);
+      const storageref = ref(
+        storage,
+        `/uploads/${data.houseName}_${houseId}.jpg`
+      );
       const uploadTask = uploadBytesResumable(storageref, file);
 
       uploadTask.on(
@@ -105,15 +122,37 @@ export default function HouseLogs() {
           const url = await getDownloadURL(uploadTask.snapshot.ref);
           submitData["house_image"] = url;
 
-          await firebase.firestore().collection("/houses").doc(houseId).set(submitData);
+          await firebase
+            .firestore()
+            .collection("/houses")
+            .doc(houseId)
+            .set(submitData);
           alert("Data saved successfully!");
         }
       );
     } else {
-      await firebase.firestore().collection("/houses").doc(houseId).set(submitData);
+      await firebase
+        .firestore()
+        .collection("/houses")
+        .doc(houseId)
+        .set(submitData);
       alert("Data saved successfully!");
     }
   };
+
+  function handleDelete(id: any): void {
+    deleteParticularHouseDetail(id)
+      .then(() => {
+        // Update the state to remove the deleted detail
+        setDetailsList((prevDetails) => prevDetails.filter((detail) => detail.id !== id));
+        alert("Detail deleted successfully!");
+      })
+      .catch((error) => {
+        console.error("Error deleting detail:", error);
+        alert("Failed to delete detail.");
+      });
+  }
+  
 
   return (
     <div className="p-2 space-y-10">
@@ -180,20 +219,32 @@ export default function HouseLogs() {
                 detailsList.map((detail) => (
                   <div
                     key={detail.id}
-                    className="flex flex-col p-4 border border-gray-200 rounded-lg bg-gray-50"
+                    className="flex flex-row items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50"
                   >
-                    <span className="text-gray-600 text-sm font-medium uppercase">
-                      {detail.key}
-                    </span>
-                    <span className="text-gray-900 font-semibold truncate">
-                      {detail.value}
-                    </span>
+                    {/* Detail Information */}
+                    <div className="flex flex-col">
+                      <span className="text-gray-600 text-sm font-medium uppercase">
+                        {detail.key}
+                      </span>
+                      <span className="text-gray-900 font-semibold truncate">
+                        {detail.value}
+                      </span>
+                    </div>
+
+                    {/* Delete Button */}
+                    <button type="button"
+                      className="bg-red-500 text-white font-semibold py-1 px-3 rounded hover:bg-red-600"
+                      onClick={() => handleDelete(detail.id)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 ))
               ) : (
                 <span>No details available</span>
               )}
             </Stack>
+
             <Button
               variant="contained"
               color="primary"
