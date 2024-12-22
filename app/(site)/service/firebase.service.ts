@@ -556,4 +556,14 @@ export const addHouseDetail = async (key: string, value: string, houseId: string
     }
   };
 
+  export const addMeetingReservation = async (name: string, phone: string, date: string): Promise<any> => {
+    const newDetail = { name, phone, date };
+  
+    // Add the new detail to the Firestore collection
+    const docRef = await firebase.firestore().collection("meetingReservation").add(newDetail);
+  
+    // Return the newly created detail with its generated Firestore ID
+    return { id: docRef.id, ...newDetail };
+  };
+
 

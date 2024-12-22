@@ -32,7 +32,7 @@ export default function BottomBar({ onClick }: BottomBarProps) {
   return (
     <div style={styles.bottomBar}>
       <button style={styles.contactButton} onClick={onClick}>
-        Contact Us
+        Make an appointment
       </button>
     </div>
   );
