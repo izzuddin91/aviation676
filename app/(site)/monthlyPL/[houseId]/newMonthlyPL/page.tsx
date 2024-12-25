@@ -38,7 +38,7 @@ type FormData = {
   wifi: number;
   otherExpenses: number;
   totalExpenses: number;
-  profitBeforeAdminCharge: number
+  profitBeforeAdminCharge: number;
   adminCharge: number;
   profitAfterAdminCharge: number;
   notes: string;
@@ -57,42 +57,59 @@ const formSchema = yup
   .required();
 
 export default function HouseLogs() {
-  var [houseDetail, updatehouseDetail] = useState({});
+  const params = useParams();
+  const router = useRouter();
+  // State hooks
+  const [houseDetail, updatehouseDetail] = useState({});
   const [file, setFile] = useState<File>();
+
+  const [message, setMessage] = useState("");
   const todayDate = new Date();
   const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
   const month = todayDate.toLocaleString("en-US", { month: "long" });
-
+  const month2 = todayDate.toLocaleString("en-US", { month: "2-digit" });
   const year = todayDate.getFullYear();
   const [value, setDateValue] = React.useState<Dayjs | null>(
     dayjs(`${year}-${month}-${day}`)
   );
-  const router = useRouter();
-  const params = useParams();
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    defaultValues: {
+      revenue: 0.0,
+      cleaning: 0.0,
+      electricBill: 0.0,
+      waterBill: 0.0,
+      wifi: 0.0,
+      otherExpenses: 0.0,
+      totalExpenses: 0.0,
+      profitBeforeAdminCharge: 0.0,
+      adminCharge: 0.0,
+      profitAfterAdminCharge: 0.0,
+      notes: "",
+      houseName: "",
+      address: "",
+    },
+  });
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const month2 = todayDate.toLocaleString("en-US", { month: "2-digit" });
-
+  // Watch for changes in these fields
+  const revenue = watch("revenue", 0);
+  const cleaning = watch("cleaning", 0);
+  const electricBill = watch("electricBill", 0);
+  const waterBill = watch("waterBill", 0);
+  const wifi = watch("wifi", 0);
+  const otherExpenses = watch("otherExpenses", 0);
 
   async function getData() {
     getHouse(params["houseId"].toString()).then((val) => {
-      setValue("revenue", val["revenue"]);
-      setValue("cleaning", val["cleaning"]);
-      setValue("electricBill", val["electricBill"]);
-      setValue("waterBill", val["waterBill"]);
       setValue("wifi", val["wifi"]);
-      setValue("otherExpenses", val["otherExpenses"]);
-      setValue("totalExpenses", val["totalExpenses"]);
-      setValue("profitBeforeAdminCharge", val["profitBeforeAdminCharge"]);
-      setValue("adminCharge", val["adminCharge"]);
-      setValue("profitAfterAdminCharge", val["profitAfterAdminCharge"]);
-      setValue("notes", val["notes"]);
-      setValue("id", params["houseId"].toString());
-      setValue("houseId", val["houseId"].toString());
     });
+
     var accumulateAmount = 0.0;
     // get the amount for this month, get the total expenses and populate the text field
     getHouseLogsOnDateRange(
@@ -111,25 +128,43 @@ export default function HouseLogs() {
     });
   }
 
-  function setForm() {
-    const data2 = new FormData();
-  }
+  useEffect(() => {
+    getData();
+    // Convert undefined or null to 0
+    const cleanValue = (val: any) => (val ? Number(val) : 0);
 
-  const [message, setMessage] = useState("");
-  const {
-    control,
-    register,
-    handleSubmit,
+    const totalExpenses =
+      cleanValue(cleaning) +
+      cleanValue(electricBill) +
+      cleanValue(waterBill) +
+      cleanValue(wifi) +
+      cleanValue(otherExpenses);
+
+    setValue("totalExpenses", totalExpenses);
+
+    const profitBeforeAdminCharge = cleanValue(revenue) - totalExpenses;
+    setValue("profitBeforeAdminCharge", profitBeforeAdminCharge);
+
+    const adminCharge = profitBeforeAdminCharge * 0.2;
+    setValue("adminCharge", adminCharge);
+
+    const profitAfterAdminCharge = profitBeforeAdminCharge - adminCharge;
+    setValue("profitAfterAdminCharge", profitAfterAdminCharge);
+  }, [
+    revenue,
+    cleaning,
+    electricBill,
+    waterBill,
+    wifi,
+    otherExpenses,
     setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    // resolver: yupResolver(formSchema),
-  });
+  ]);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(value!.format("DD/MM/YYYY"));
+
     const date = value!.format("YYYY-MM-DD");
 
+    
     var submitData = {
       date: new Date(date),
       revenue: Number(data.revenue),
@@ -143,11 +178,12 @@ export default function HouseLogs() {
       adminCharge: Number(data.adminCharge),
       profitAfterAdminCharge: Number(data.profitAfterAdminCharge),
       notes: data.notes,
-      id: data.id,
-      houseId: data.houseId,
+      houseId: params["houseId"],
       filename: '',
       filenameForDelete: ''
     };
+
+
 
 
     if (file) {
@@ -159,7 +195,7 @@ export default function HouseLogs() {
           params["houseId"] +
           `_${year}-${month}-${day}.pdf`;
         const storageref = ref(storage, filenameForDelete);
-        console.log(storageref);
+
         const uploadTask = uploadBytesResumable(storageref, val);
         uploadTask.on(
           "state_changed",
@@ -216,9 +252,9 @@ export default function HouseLogs() {
   return (
     <div className="p-2 space-y-10">
       <Button variant="outlined" onClick={() => router.back()}>
-        Back
-      </Button>
-      <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
+          Back
+        </Button>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <h1>New Monthly Revenue</h1>
         <div className="grid grid-cols-2 gap-4 p-4">
           <div className="col-span">
@@ -237,11 +273,7 @@ export default function HouseLogs() {
                 accept="application/pdf"
                 type="file"
                 name="file"
-                onChange={(e) => {
-                  console.log(e.target.files);
-
-                  setFile(e.target.files?.[0]);
-                }}
+                onChange={(e) => setFile(e.target.files?.[0])}
               />
               <PrimaryTextInputWithLabel
                 label="Revenue"
@@ -306,8 +338,7 @@ export default function HouseLogs() {
                 name="totalExpenses"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
               <PrimaryTextInputWithLabel
@@ -315,8 +346,7 @@ export default function HouseLogs() {
                 name="profitBeforeAdminCharge"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
               <PrimaryTextInputWithLabel
@@ -324,8 +354,7 @@ export default function HouseLogs() {
                 name="adminCharge"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
               <PrimaryTextInputWithLabel
@@ -333,19 +362,30 @@ export default function HouseLogs() {
                 name="profitAfterAdminCharge"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
-              <PrimaryTextInputWithLabel
-                label="Notes"
-                name="notes"
-                placeholder=""
-                type="string"
-                required
-                errors={errors}
-                register={register}
-              />
+              <textarea
+                // name="notes"
+                placeholder="insert '//' at the end of each line"
+                rows={4}
+                className="border rounded px-3 py-2 w-full"
+                {...register("notes")}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); // Prevent form submission
+                    const target = e.target as HTMLTextAreaElement;
+                    const start = target.selectionStart;
+                    const end = target.selectionEnd;
+                    const value = target.value;
+
+                    // Insert a newline at the cursor position
+                    target.value =
+                      value.slice(0, start) + "\n" + value.slice(end);
+                    target.setSelectionRange(start + 1, start + 1);
+                  }
+                }}
+              ></textarea>
               <PrimaryButton
                 type="submit"
                 className="mt-3"
@@ -355,9 +395,6 @@ export default function HouseLogs() {
                 Enter
               </PrimaryButton>
             </Stack>
-          </div>
-          <div className="col-span">
-            <Stack spacing={2} sx={{ width: 300 }}></Stack>
           </div>
         </div>
       </form>

@@ -1,8 +1,10 @@
 "use client";
 
+import firebase from "../../../../clientApp";
 import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import * as yup from "yup";
 import { PrimaryTextInputWithLabel } from "../../../../component/input/PrimaryTextInputWithLabel";
 import { PrimaryButton } from "../../../../component/button/PrimaryButton";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,10 +16,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
+
 import {
+  getHouse,
+  getHouseLogsOnDateRange,
   getProfitLossBreakdown,
   updateProfitLossBreakdown,
 } from "../../../service/firebase.service";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { successAlert } from "@/app/(site)/service/alert.service";
 
 type FormData = {
@@ -30,7 +41,7 @@ type FormData = {
   wifi: number;
   otherExpenses: number;
   totalExpenses: number;
-  profitBeforeAdminCharge: number
+  profitBeforeAdminCharge: number;
   adminCharge: number;
   profitAfterAdminCharge: number;
   notes: string;
@@ -38,60 +49,116 @@ type FormData = {
   address: string;
 };
 
+const formSchema = yup
+  .object({
+    // logsTitle: yup.string().required("please key in title"),
+    houseName: yup.string().required("please key in description"),
+    text2Key: yup.string().default(" "),
+    text2Value: yup.string().required(" "),
+    installment: yup.number().required("need to add installment"),
+  })
+  .required();
+
 export default function HouseLogs() {
-  const [file, setFile] = useState<File>();
-  const todayDate = new Date();
-  const day = todayDate.toLocaleString("en-US", { day: "2-digit" });
-  const month = todayDate.toLocaleString("en-US", { month: "long" });
-
-  const year = todayDate.getFullYear();
-  const [value, setDateValue] = React.useState<Dayjs | null>(
-    dayjs(`${year}-${month}-${day}`)
-  );
-
-  const router = useRouter();
+  const [notes, setNotes] = useState<string>(""); // State for notes
   const params = useParams();
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  async function getData() {
-    // this houseId is not actually the houseId, it's their own id. 
-    getProfitLossBreakdown(params["houseId"].toString()).then((val) => {
-      setValue("revenue", val["revenue"]);
-      setValue("cleaning", val["cleaning"]);
-      setValue("electricBill", val["electricBill"]);
-      setValue("waterBill", val["waterBill"]);
-      setValue("wifi", val["wifi"]);
-      setValue("otherExpenses", val["otherExpenses"]);
-      setValue("totalExpenses", val["totalExpenses"]);
-      setValue("profitBeforeAdminCharge", val["profitBeforeAdminCharge"]);
-      setValue("adminCharge", val["adminCharge"]);
-      setValue("profitAfterAdminCharge", val["profitAfterAdminCharge"]);
-      setValue("notes", val["notes"]);
-      setValue("id", params["houseId"].toString());
-      setValue("houseId", val["houseId"].toString());
-
-      const returnDate = new Date(val["date"].seconds*1000);
-      const day = returnDate.toLocaleString("en-US", { day: "2-digit" });
-      const month = returnDate.toLocaleString("en-US", { month: "long" });
-      const year = returnDate.getFullYear();
-
-      setDateValue(
-        dayjs(`${year}-${month}-${day}`)
-      )
-
-    });
-  }
+  const router = useRouter();
+  // State hooks
+  const [loading, setLoading] = useState(false);
+  const [houseDetail, updatehouseDetail] = useState({});
+  const [file, setFile] = useState<File>();
+  const [value, setDateValue] = useState<Dayjs | null>(dayjs());
+  const [message, setMessage] = useState("");
 
   const {
+    control,
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
+    // resolver: yupResolver(formSchema),
   });
+
+  // Watch for changes in these fields
+  const revenue = watch("revenue", 0);
+  const cleaning = watch("cleaning", 0);
+  const electricBill = watch("electricBill", 0);
+  const waterBill = watch("waterBill", 0);
+  const wifi = watch("wifi", 0);
+  const otherExpenses = watch("otherExpenses", 0);
+
+  async function getData() {
+    // this houseId is not actually the houseId, it's their own id.
+
+    if (loading) {
+      // only call this function on first load.
+    } else {
+      getProfitLossBreakdown(params["houseId"].toString()).then((val) => {
+        setValue("revenue", val["revenue"]);
+        setValue("cleaning", val["cleaning"]);
+        setValue("electricBill", val["electricBill"]);
+        setValue("waterBill", val["waterBill"]);
+        setValue("wifi", val["wifi"]);
+        setValue("otherExpenses", val["otherExpenses"]);
+        setValue("totalExpenses", val["totalExpenses"]);
+        setValue("profitBeforeAdminCharge", val["profitBeforeAdminCharge"]);
+        setValue("adminCharge", val["adminCharge"]);
+        setValue("profitAfterAdminCharge", val["profitAfterAdminCharge"]);
+        setValue("notes", val["notes"]);
+        setValue("id", params["houseId"].toString());
+        setValue("houseId", val["houseId"].toString());
+
+        const returnDate = new Date(val["date"].seconds * 1000);
+        const day = returnDate.toLocaleString("en-US", { day: "2-digit" });
+        const month = returnDate.toLocaleString("en-US", { month: "long" });
+        const year = returnDate.getFullYear();
+
+        setDateValue(dayjs(`${year}-${month}-${day}`));
+
+        // set notes so it will break line here
+        var returnNotes = val["notes"];
+
+        // Preprocess: Replace '//' with '//\n'
+        const processedNotes = returnNotes.replace(/\/\/\s?/g, "//\n");
+        setNotes(processedNotes); // Set the processed text
+        setLoading(true);
+      });
+    }
+  }
+
+  useEffect(() => {
+    getData();
+    // Convert undefined or null to 0
+    const cleanValue = (val: any) => (val ? Number(val) : 0);
+
+    const totalExpenses =
+      cleanValue(cleaning) +
+      cleanValue(electricBill) +
+      cleanValue(waterBill) +
+      cleanValue(wifi) +
+      cleanValue(otherExpenses);
+
+    setValue("totalExpenses", totalExpenses);
+
+    const profitBeforeAdminCharge = cleanValue(revenue) - totalExpenses;
+    setValue("profitBeforeAdminCharge", profitBeforeAdminCharge);
+
+    const adminCharge = profitBeforeAdminCharge * 0.2;
+    setValue("adminCharge", adminCharge);
+
+    const profitAfterAdminCharge = profitBeforeAdminCharge - adminCharge;
+    setValue("profitAfterAdminCharge", profitAfterAdminCharge);
+  }, [
+    revenue,
+    cleaning,
+    electricBill,
+    waterBill,
+    wifi,
+    otherExpenses,
+    setValue,
+  ]);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const date = value!.format("YYYY-MM-DD");
@@ -124,8 +191,8 @@ export default function HouseLogs() {
       <Button variant="outlined" onClick={() => router.back()}>
         Back
       </Button>
-      <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
-        <h1>Edit Monthly Revenue</h1>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <h1>New Monthly Revenue</h1>
         <div className="grid grid-cols-2 gap-4 p-4">
           <div className="col-span">
             <Stack spacing={2} sx={{ width: 300 }}>
@@ -143,9 +210,7 @@ export default function HouseLogs() {
                 accept="application/pdf"
                 type="file"
                 name="file"
-                onChange={(e) => {
-                  setFile(e.target.files?.[0]);
-                }}
+                onChange={(e) => setFile(e.target.files?.[0])}
               />
               <PrimaryTextInputWithLabel
                 label="Revenue"
@@ -210,8 +275,7 @@ export default function HouseLogs() {
                 name="totalExpenses"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
               <PrimaryTextInputWithLabel
@@ -219,8 +283,7 @@ export default function HouseLogs() {
                 name="profitBeforeAdminCharge"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
               <PrimaryTextInputWithLabel
@@ -228,8 +291,7 @@ export default function HouseLogs() {
                 name="adminCharge"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
               <PrimaryTextInputWithLabel
@@ -237,19 +299,17 @@ export default function HouseLogs() {
                 name="profitAfterAdminCharge"
                 placeholder=""
                 type="decimal"
-                required
-                errors={errors}
+                disabled
                 register={register}
               />
-              <PrimaryTextInputWithLabel
-                label="Notes"
-                name="notes"
-                placeholder=""
-                type="string"
-                required
-                errors={errors}
-                register={register}
-              />
+              <textarea
+                placeholder="Text with // will break into a new line"
+                rows={4}
+                className="border rounded px-3 py-2 w-full"
+                value={notes} // Set preprocessed value
+                onChange={(e) => setNotes(e.target.value)} // Allow edits
+              ></textarea>
+
               <PrimaryButton
                 type="submit"
                 className="mt-3"
@@ -260,11 +320,9 @@ export default function HouseLogs() {
               </PrimaryButton>
             </Stack>
           </div>
-          <div className="col-span">
-            <Stack spacing={2} sx={{ width: 300 }}></Stack>
-          </div>
         </div>
       </form>
     </div>
   );
 }
+
