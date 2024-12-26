@@ -57,6 +57,7 @@ const formSchema = yup
   .required();
 
 export default function HouseLogs() {
+  const [loading, setLoading] = useState(false);
   const params = useParams();
   const router = useRouter();
   // State hooks
@@ -106,49 +107,60 @@ export default function HouseLogs() {
   const otherExpenses = watch("otherExpenses", 0);
 
   async function getData() {
-    getHouse(params["houseId"].toString()).then((val) => {
-      setValue("wifi", val["wifi"]);
-    });
+    if (loading) {
+    } else {
+      console.log("asd");
+      getHouse(params["houseId"].toString()).then((val) => {
+        setValue("wifi", val["wifi"]);
+      });
 
-    var accumulateAmount = 0.0;
-    // get the amount for this month, get the total expenses and populate the text field
-    getHouseLogsOnDateRange(
-      params["houseId"].toString(),
-      Number(month2),
-      year
-    ).then((val) => {
-      // add date in the label array for graph
+      var accumulateAmount = 0.0;
+      // get the amount for this month, get the total expenses and populate the text field
+      getHouseLogsOnDateRange(
+        params["houseId"].toString(),
+        Number(month2),
+        year
+      ).then((val) => {
+        // add date in the label array for graph
 
-      for (var i = 0; i < val.length; i++) {
-        accumulateAmount += val[i]["total"];
-      }
+        for (var i = 0; i < val.length; i++) {
+          accumulateAmount += val[i]["total"];
+        }
 
-      accumulateAmount = Math.round(accumulateAmount * 100) / 100;
-      setValue("otherExpenses", accumulateAmount);
-    });
+        accumulateAmount = Math.round(accumulateAmount * 100) / 100;
+        setValue("otherExpenses", accumulateAmount);
+      });
+      setLoading(true);
+    }
   }
 
   useEffect(() => {
     getData();
     // Convert undefined or null to 0
     const cleanValue = (val: any) => (val ? Number(val) : 0);
-
-    const totalExpenses =
-      cleanValue(cleaning) +
-      cleanValue(electricBill) +
-      cleanValue(waterBill) +
-      cleanValue(wifi) +
-      cleanValue(otherExpenses);
-
+  
+    const totalExpenses = Number(
+      (
+        cleanValue(cleaning) +
+        cleanValue(electricBill) +
+        cleanValue(waterBill) +
+        cleanValue(wifi) +
+        cleanValue(otherExpenses)
+      ).toFixed(2)
+    );
     setValue("totalExpenses", totalExpenses);
-
-    const profitBeforeAdminCharge = cleanValue(revenue) - totalExpenses;
+  
+    const profitBeforeAdminCharge = Number(
+      (cleanValue(revenue) - totalExpenses).toFixed(2)
+    );
     setValue("profitBeforeAdminCharge", profitBeforeAdminCharge);
-
-    const adminCharge = profitBeforeAdminCharge * 0.2;
+  
+    const adminCharge = Number((profitBeforeAdminCharge * 0.2).toFixed(2));
     setValue("adminCharge", adminCharge);
-
-    const profitAfterAdminCharge = profitBeforeAdminCharge - adminCharge;
+  
+    const profitAfterAdminCharge = Number(
+      (profitBeforeAdminCharge - adminCharge).toFixed(2)
+    );
     setValue("profitAfterAdminCharge", profitAfterAdminCharge);
   }, [
     revenue,
@@ -159,12 +171,11 @@ export default function HouseLogs() {
     otherExpenses,
     setValue,
   ]);
+  
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-
     const date = value!.format("YYYY-MM-DD");
 
-    
     var submitData = {
       date: new Date(date),
       revenue: Number(data.revenue),
@@ -179,12 +190,9 @@ export default function HouseLogs() {
       profitAfterAdminCharge: Number(data.profitAfterAdminCharge),
       notes: data.notes,
       houseId: params["houseId"],
-      filename: '',
-      filenameForDelete: ''
+      filename: "",
+      filenameForDelete: "",
     };
-
-
-
 
     if (file) {
       file?.arrayBuffer().then((val) => {
@@ -252,8 +260,8 @@ export default function HouseLogs() {
   return (
     <div className="p-2 space-y-10">
       <Button variant="outlined" onClick={() => router.back()}>
-          Back
-        </Button>
+        Back
+      </Button>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <h1>New Monthly Revenue</h1>
         <div className="grid grid-cols-2 gap-4 p-4">

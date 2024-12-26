@@ -128,37 +128,47 @@ export default function HouseLogs() {
     }
   }
 
-  useEffect(() => {
-    getData();
-    // Convert undefined or null to 0
-    const cleanValue = (val: any) => (val ? Number(val) : 0);
+// Utility function to round up to 2 decimal places
+const roundUpToTwoDecimals = (num: number): number => {
+  return Math.ceil(num * 100) / 100;
+};
 
-    const totalExpenses =
-      cleanValue(cleaning) +
+useEffect(() => {
+  getData();
+  // Convert undefined or null to 0
+  const cleanValue = (val: any) => (val ? Number(val) : 0);
+
+  const totalExpenses = roundUpToTwoDecimals(
+    cleanValue(cleaning) +
       cleanValue(electricBill) +
       cleanValue(waterBill) +
       cleanValue(wifi) +
-      cleanValue(otherExpenses);
+      cleanValue(otherExpenses)
+  );
+  setValue("totalExpenses", totalExpenses);
 
-    setValue("totalExpenses", totalExpenses);
+  const profitBeforeAdminCharge = roundUpToTwoDecimals(
+    cleanValue(revenue) - totalExpenses
+  );
+  setValue("profitBeforeAdminCharge", profitBeforeAdminCharge);
 
-    const profitBeforeAdminCharge = cleanValue(revenue) - totalExpenses;
-    setValue("profitBeforeAdminCharge", profitBeforeAdminCharge);
+  const adminCharge = roundUpToTwoDecimals(profitBeforeAdminCharge * 0.2);
+  setValue("adminCharge", adminCharge);
 
-    const adminCharge = profitBeforeAdminCharge * 0.2;
-    setValue("adminCharge", adminCharge);
+  const profitAfterAdminCharge = roundUpToTwoDecimals(
+    profitBeforeAdminCharge - adminCharge
+  );
+  setValue("profitAfterAdminCharge", profitAfterAdminCharge);
+}, [
+  revenue,
+  cleaning,
+  electricBill,
+  waterBill,
+  wifi,
+  otherExpenses,
+  setValue,
+]);
 
-    const profitAfterAdminCharge = profitBeforeAdminCharge - adminCharge;
-    setValue("profitAfterAdminCharge", profitAfterAdminCharge);
-  }, [
-    revenue,
-    cleaning,
-    electricBill,
-    waterBill,
-    wifi,
-    otherExpenses,
-    setValue,
-  ]);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const date = value!.format("YYYY-MM-DD");
