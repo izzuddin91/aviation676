@@ -259,31 +259,42 @@ export const getCarPartsList = async (vehicleId: string): Promise<any> => {
 }
 
 
-export const getHouseList = async (role: string): Promise<any> => {
-    const uid = await getUserAuth(); // Get user ID
-    let housesQuery;
-  
-    if (role === "admin") {
-      // Admin: Get all houses
-      housesQuery = collection(firebase.firestore(), "houses");
-    } else {
-      // Regular user: Get houses matching their UID
-      housesQuery = query(
-        collection(firebase.firestore(), "houses"),
-        where("userId", "==", uid)
-      );
-    }
-  
-    const housesSnapshot = await getDocs(housesQuery); // Fetch the data
-    const list: any[] = housesSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-  
-    return list; // Return as an array
-  };
+export const getHouseList = async (role: string = "", uid: string | null = null): Promise<any[]> => {
+  // Get user ID if not provided
+  console.log("test")
+  if (!uid) {
+    uid = await getUserAuth(); // Get user ID if available
+  }
+
+  let housesQuery;
+
+  if (role === "admin" || (role == "" && uid == null)) {
+    // Admin: Get all houses
+    housesQuery = collection(firebase.firestore(), "houses");
+  } else {
+    // Regular user or no role: Get houses matching their UID
+    housesQuery = query(
+      collection(firebase.firestore(), "houses"),
+      where("userId", "==", uid)
+    );
+  }
+
+  // Fetch the data
+  const housesSnapshot = await getDocs(housesQuery);
+
+  // Map the docs to an array of house data
+  const list: any[] = housesSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    houseName: doc.data().houseName, // Replace with correct field from your Firestore document
+    house_image: doc.data().house_image, // Replace with correct field from your Firestore document
+    description: doc.data().description, // Adjust to your actual fields
+  }));
+
+  return list; // Return as an array
+};
 
 export const getHouse = async (houseId: String): Promise<any> => {
+    console.log("houseId")
     const housesCollection = await firebase.firestore().collection("houses").doc(houseId.toString()).get()
     var returnData = housesCollection.data()
     return returnData
