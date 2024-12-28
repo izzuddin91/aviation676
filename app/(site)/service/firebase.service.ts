@@ -261,7 +261,6 @@ export const getCarPartsList = async (vehicleId: string): Promise<any> => {
 
 export const getHouseList = async (role: string = "", uid: string | null = null): Promise<any[]> => {
   // Get user ID if not provided
-  console.log("test")
   if (!uid) {
     uid = await getUserAuth(); // Get user ID if available
   }
@@ -294,7 +293,6 @@ export const getHouseList = async (role: string = "", uid: string | null = null)
 };
 
 export const getHouse = async (houseId: String): Promise<any> => {
-    console.log("houseId")
     const housesCollection = await firebase.firestore().collection("houses").doc(houseId.toString()).get()
     var returnData = housesCollection.data()
     return returnData
