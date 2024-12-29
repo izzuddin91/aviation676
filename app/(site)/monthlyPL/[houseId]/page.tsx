@@ -47,6 +47,7 @@ export default function HouseLogs() {
   }, []);
 
   async function fetchData() {
+    console.log(params)
     const houseData = await getHouse(params["houseId"].toString());
     setHouseDetail(houseData as House);
 

@@ -82,9 +82,9 @@ const AdminDashboard = () => {
   ) : (
     <div className="mt-4">
       {addOns.length > 0 ? (
-        addOns.map((addOn) => (
+        addOns.map((addOn, index) => (
           <div
-            key={addOn.id}
+            key={addOn.id || index}
             className="flex flex-row items-center border-b py-4 space-x-4"
           >
             {/* Thumbnail */}
@@ -142,11 +142,11 @@ const AdminDashboard = () => {
     Create House
   </Button>
         {houses.length > 0 ? (
-          houses.map((row: any) => {
+          houses.map((row: any, index: any) => {
             const link = "/houseLogs/" + row["houseId"];
             return (
               <div
-                key={row["houseId"]}
+                key={row["houseId"] || index}
                 className="border-b py-4 flex items-center gap-4"
               >
                 {/* Image */}
@@ -187,7 +187,7 @@ const AdminDashboard = () => {
                       Logs
                     </Button>
                     <Button
-                      onClick={() => router.push(`/monthlyPL/${row.houseId}`)}
+                      onClick={() => router.push(`/monthlyPL/${row.id}`)}
                       variant="outlined"
                       size="small"
                     >
