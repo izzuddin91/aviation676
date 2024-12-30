@@ -70,6 +70,7 @@ export default function HouseLogs() {
   const params = useParams();
 
   useEffect(() => {
+    console.log(params)
     // get the year, month and house id
     const date = new Date();
     const year = date.getFullYear();

@@ -143,10 +143,10 @@ const AdminDashboard = () => {
   </Button>
         {houses.length > 0 ? (
           houses.map((row: any, index: any) => {
-            const link = "/houseLogs/" + row["houseId"];
+            const link = "/houseLogs/" + row["id"];
             return (
               <div
-                key={row["houseId"] || index}
+                key={row["id"] || index}
                 className="border-b py-4 flex items-center gap-4"
               >
                 {/* Image */}
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
                     <Button
                       onClick={() =>
                         router.push(
-                          `/houseList/${row.houseId}-${row.houseName}`
+                          `/houseList/${row.id}-${row.houseName}`
                         )
                       }
                       variant="outlined"

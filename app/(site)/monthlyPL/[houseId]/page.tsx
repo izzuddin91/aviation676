@@ -25,7 +25,13 @@ import {
   getProfitLossBreakdowns,
 } from "../../service/firebase.service";
 
-type House = { houseName: string; address: string; houseId: string; house_image: string; wifi: string};
+type House = {
+  houseName: string;
+  address: string;
+  houseId: string;
+  house_image: string;
+  wifi: string;
+};
 
 export default function HouseLogs() {
   const [profitLoss, setProfitLoss] = useState<any[]>([]);
@@ -47,7 +53,7 @@ export default function HouseLogs() {
   }, []);
 
   async function fetchData() {
-    console.log(params)
+    console.log(params);
     const houseData = await getHouse(params["houseId"].toString());
     setHouseDetail(houseData as House);
 
@@ -108,15 +114,22 @@ export default function HouseLogs() {
         Description4: "Admin 20% Charge",
         Price4: "RM" + file["adminCharge"].toString(),
         Description5: "Profit After Charge",
-        Description6: file['notes'].replace(/\/\//g, '\n'), // Replace '//' with new lines
-        Price5: 'RM' + file['profitAfterAdminCharge'].toString(),
+        Description6: file["notes"].replace(/\/\//g, "\n"), // Replace '//' with new lines
+        Price5: "RM" + file["profitAfterAdminCharge"].toString(),
         Date: moment(file["date"].toDate()).format("DD-MM-YYYY"),
       },
     ];
 
     generate({ template, inputs }).then((pdf) => {
-      const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-      window.open(URL.createObjectURL(blob));
+      // Convert pdf.buffer to a Uint8Array
+      const uint8Array = new Uint8Array(pdf.buffer);
+
+      // Create the Blob from the Uint8Array
+      const blob = new Blob([uint8Array], { type: "application/pdf" });
+
+      // Open the generated Blob in a new browser tab
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
     });
   };
 
@@ -185,9 +198,15 @@ export default function HouseLogs() {
         <tbody>
           {profitLoss.map((row, i) => (
             <tr key={i} className="bg-white border-b">
-              <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">{i + 1}</td>
-              <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">{row["profitBeforeAdminCharge"]}</td>
-              <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">{row["revenue"]}</td>
+              <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
+                {i + 1}
+              </td>
+              <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
+                {row["profitBeforeAdminCharge"]}
+              </td>
+              <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
+                {row["revenue"]}
+              </td>
               <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
                 {row["date"]
                   ? moment(row["date"].toDate()).format("DD-MM-YYYY")
@@ -234,11 +253,9 @@ export default function HouseLogs() {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Details</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {descStringArray.map((line, i) => (
-              <div key={i}>{line}</div>
-            ))}
-          </DialogContentText>
+          {descStringArray.map((line, i) => (
+            <div key={i}>{line}</div>
+          ))}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Dismiss</Button>
