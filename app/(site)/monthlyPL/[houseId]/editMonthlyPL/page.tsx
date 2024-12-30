@@ -171,6 +171,7 @@ useEffect(() => {
 
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+
     const date = value!.format("YYYY-MM-DD");
     var submitData = {
       date: new Date(date),
@@ -184,10 +185,11 @@ useEffect(() => {
       profitBeforeAdminCharge: data.profitBeforeAdminCharge,
       adminCharge: data.adminCharge,
       profitAfterAdminCharge: data.profitAfterAdminCharge,
-      notes: data.notes,
+      notes: notes,
       id: data.id,
       houseId: data.houseId
     };
+    console.log(submitData)
     
     await updateProfitLossBreakdown(data.id, submitData).then((val) => {
       if (val == 'success'){
