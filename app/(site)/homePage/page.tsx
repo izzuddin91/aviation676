@@ -27,8 +27,18 @@ export default function Articles() {
     sectionTitle: { textAlign: "center" as const, fontSize: "2em", margin: "20px 0 10px", color: "#333" },
     sectionDescription: { textAlign: "center" as const, fontSize: "1.2em", color: "#666", margin: "0 20px 20px" },
     hr: { border: "none", borderTop: "1px solid #ddd", margin: "30px auto", width: "80%" },
-    videoContainer: { display: "flex", justifyContent: "center" as const, margin: "20px 0" },
-    iframe: { border: "none", borderRadius: "10px", width: "560px", height: "315px" },
+    videoContainer: {
+      display: "flex",
+      justifyContent: "center" as const,
+      gap: "20px", // Add space between the videos
+      margin: "20px 0",
+    },
+    iframe: {
+      border: "none",
+      borderRadius: "10px",
+      width: "560px",
+      height: "315px",
+    },
     paddingContainer: { padding: "0 20px" },
     card: {
       backgroundColor: "#fff",
@@ -60,7 +70,14 @@ export default function Articles() {
       <div style={styles.videoContainer}>
         <iframe
           src="https://www.youtube.com/embed/dkFlA_KfDAI"
-          title="YouTube Video"
+          title="YouTube Video 1"
+          style={styles.iframe}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+        <iframe
+          src="https://www.youtube.com/embed/PuiInuk2RbQ" // Replace with your second video ID
+          title="YouTube Video 2"
           style={styles.iframe}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

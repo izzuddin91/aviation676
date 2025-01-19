@@ -110,7 +110,6 @@ export const getProfitLossBreakdowns = async (houseId: string): Promise<any> => 
        
         list[i]["id"] = doc.id
     });
-    console.log(list)
     return list
 }
 
@@ -595,5 +594,28 @@ export const addHouseDetail = async (key: string, value: string, houseId: string
       });
       return status;
 }
+
+export const getMontlyOccupantList = async (profitLossBreakdownId: string): Promise<any> => {
+console.log("test")
+console.log(profitLossBreakdownId)
+  const monthlyOccupantsQuery = await firebase.firestore().collection("monthlyOccupants").where("profitLossBreakdownId", "==", profitLossBreakdownId).orderBy('date', 'desc')
+  const monthlyOccupants = await getDocs(monthlyOccupantsQuery)
+  var list: any = [{}]
+  monthlyOccupants.docs.map((doc, i) => {
+      // console.log(doc.data())
+      list[i] = doc.data()
+  });
+  return list
+}
+
+export const addMonthlyOccupant = async (date: Date, name: string, occupy: number, rentalAmount: number, profitLossBreakdownId: string): Promise<any> => {
+  const newDetail = { date, name, occupy, rentalAmount, profitLossBreakdownId };
+
+  // Add the new detail to the Firestore collection
+  const docRef = await firebase.firestore().collection("monthlyOccupants").add(newDetail);
+
+  // Return the newly created detail with its generated Firestore ID
+  return { id: docRef.id, ...newDetail };
+};
 
 

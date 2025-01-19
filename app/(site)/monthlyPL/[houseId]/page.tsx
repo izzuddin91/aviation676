@@ -187,6 +187,9 @@ export default function HouseLogs() {
               PDF
             </th>
             <th className="w-24 p-3 text-xs sm:text-sm font-semibold tracking-wide text-left">
+              Occupant
+            </th>
+            <th className="w-24 p-3 text-xs sm:text-sm font-semibold tracking-wide text-left">
               Edit
             </th>
             <th className="w-24 p-3 text-xs sm:text-sm font-semibold tracking-wide text-left">
@@ -236,6 +239,12 @@ export default function HouseLogs() {
                 <Button
                   endIcon={<ModeEdit />}
                   onClick={() => router.push(`${row["id"]}/editMonthlyPL`)}
+                />
+              </td>
+              <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
+                <Button
+                  endIcon={<ModeEdit />}
+                  onClick={() => router.push(`${row["id"]}/monthlyOccupant`)}
                 />
               </td>
               <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
