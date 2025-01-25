@@ -88,10 +88,10 @@ const JoinOurClass: React.FC = () => {
               <option value="" disabled>
                 Choose a date
               </option>
-              <option value="2024-12-25">Sat December 28, 2024</option>
-              <option value="2024-12-26">Sun December 29, 2024</option>
-              <option value="2024-12-27">Sat January 4, 2025</option>
-              <option value="2024-12-27">Sun January 5, 2025</option>
+              <option value="2024-12-25"> February 1, 2025</option>
+              <option value="2024-12-26"> February 2, 2025</option>
+              <option value="2024-12-27">February 8, 2025</option>
+              <option value="2024-12-27"> February 9, 2025</option>
             </select>
           </div>
 
