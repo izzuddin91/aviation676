@@ -7,8 +7,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
+  TextField,
 } from "@mui/material";
 import {
   getMontlyOccupantList,
@@ -19,7 +19,6 @@ import moment from "moment";
 export default function TablePage() {
   const params = useParams();
   const id = params.id;
-  const [open, setOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newRecord, setNewRecord] = useState({
@@ -33,12 +32,12 @@ export default function TablePage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (params["houseId"]) { // Ensure houseId is valid before fetching
+      if (params["houseId"]) {
         try {
           const result = await getMontlyOccupantList(params["houseId"].toString());
           if (result.length > 0) {
             setData(result);
-            calculateTotals(result); // Calculate totals after data is fetched
+            calculateTotals(result);
           }
         } catch (error) {
           console.error("Error fetching data: ", error);
@@ -49,7 +48,6 @@ export default function TablePage() {
     fetchData();
   }, [params["houseId"]]);
 
-  // Function to calculate total occupy and rental
   const calculateTotals = (occupants: any[]) => {
     let totalOccupyCount = 0;
     let totalRental = 0.0;
@@ -86,7 +84,7 @@ export default function TablePage() {
         params["houseId"].toString()
       );
       setData([...data, result]);
-      calculateTotals([...data, result]); // Recalculate totals after adding new record
+      calculateTotals([...data, result]);
       setShowModal(false);
     } catch (error) {
       console.error("Error adding new record: ", error);
@@ -94,118 +92,87 @@ export default function TablePage() {
   };
 
   return (
-    <div>
-      <h1>Rental Information</h1>
-      <button
-        onClick={() => setShowModal(true)}
-        style={{ marginBottom: "20px" }}
-      >
+    <div className="p-4 space-y-8">
+      <h1 className="text-2xl font-semibold">Rental Information</h1>
+      <Button variant="contained" color="primary" onClick={() => setShowModal(true)}>
         Add New Record
-      </button>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f4f4f4", textAlign: "left" }}>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>Date</th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>Name</th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-              Occupy
-            </th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-              Rental
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, index) => (
-            <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                {row["date"]
-                  ? row["date"].toDate
-                    ? moment(row["date"].toDate()).format("DD-MM-YYYY") // Firestore Timestamp
-                    : moment(row["date"]).format("DD-MM-YYYY") // Assume string or Date object
-                  : ""}
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                {row.name || ""}
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                {row.occupy || 0}
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                {row.rentalAmount !== undefined && row.rentalAmount !== null
-                  ? row.rentalAmount.toFixed(2)
-                  : "0.00"}
-              </td>
+      </Button>
+      <div className="overflow-x-auto rounded-lg shadow-md mt-4">
+        <table className="w-full border-collapse bg-white rounded-lg">
+          <thead className="bg-gray-100 border-b-2 border-gray-200">
+            <tr>
+              <th className="p-4 text-sm font-semibold tracking-wide text-left">Date</th>
+              <th className="p-4 text-sm font-semibold tracking-wide text-left">Name</th>
+              <th className="p-4 text-sm font-semibold tracking-wide text-left">Occupy</th>
+              <th className="p-4 text-sm font-semibold tracking-wide text-left">Rental</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div style={{ marginTop: "20px" }}>
+          </thead>
+          <tbody>
+            {data.map((row, index) => (
+              <tr key={index} className="border-b hover:bg-gray-50">
+                <td className="p-4 text-sm text-gray-700">
+                  {row["date"]
+                    ? row["date"].toDate
+                      ? moment(row["date"].toDate()).format("DD-MM-YYYY")
+                      : moment(row["date"]).format("DD-MM-YYYY")
+                    : ""}
+                </td>
+                <td className="p-4 text-sm text-gray-700">{row.name || ""}</td>
+                <td className="p-4 text-sm text-gray-700">{row.occupy || 0}</td>
+                <td className="p-4 text-sm text-gray-700">RM {row.rentalAmount?.toFixed(2) || "0.00"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4 text-gray-700">
         <strong>Total Occupy: </strong> {totalOccupy} <br />
         <strong>Total Rental Amount: </strong> RM {totalRentalAmount.toFixed(2)}
       </div>
 
-      {showModal && (
-        <Dialog open={showModal}>
-          <DialogTitle>Add new occupant</DialogTitle>
-          <DialogContent>
-            <div>
-              <form>
-                <div style={{ marginBottom: "10px" }}>
-                  <label>Date:</label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={newRecord.date}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <label>Name:</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={newRecord.name}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <label>Occupy:</label>
-                  <input
-                    type="number"
-                    name="occupy"
-                    value={newRecord.occupy}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <label>Rental:</label>
-                  <input
-                    type="number"
-                    name="rentalAmount"
-                    step="0.01"
-                    value={newRecord.rentalAmount}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </form>
-            </div>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={addNewRecord}>Add</Button>
-            <Button onClick={() => setShowModal(false)}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
-      )}
-
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Details</DialogTitle>
+      <Dialog open={showModal} onClose={() => setShowModal(false)}>
+        <DialogTitle>Add new occupant</DialogTitle>
         <DialogContent>
-          <DialogContentText>Additional details go here.</DialogContentText>
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Date"
+            type="date"
+            name="date"
+            value={newRecord.date}
+            onChange={handleInputChange}
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Name"
+            name="name"
+            value={newRecord.name}
+            onChange={handleInputChange}
+          />
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Occupy"
+            type="number"
+            name="occupy"
+            value={newRecord.occupy}
+            onChange={handleInputChange}
+          />
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Rental Amount"
+            type="number"
+            name="rentalAmount"
+            value={newRecord.rentalAmount}
+            onChange={handleInputChange}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Dismiss</Button>
+          <Button onClick={addNewRecord}>Add</Button>
+          <Button onClick={() => setShowModal(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </div>
