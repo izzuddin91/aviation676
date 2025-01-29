@@ -238,13 +238,13 @@ export default function HouseLogs() {
               <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
                 <Button
                   endIcon={<ModeEdit />}
-                  onClick={() => router.push(`${row["id"]}/editMonthlyPL`)}
+                  onClick={() => router.push(`${row["id"]}/monthlyOccupant`)}
                 />
               </td>
               <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
                 <Button
                   endIcon={<ModeEdit />}
-                  onClick={() => router.push(`${row["id"]}/monthlyOccupant`)}
+                  onClick={() => router.push(`${row["id"]}/editMonthlyPL`)}
                 />
               </td>
               <td className="p-3 text-xs sm:text-sm text-gray-700 whitespace-nowrap">
