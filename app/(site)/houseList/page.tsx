@@ -39,10 +39,10 @@ export default function Home() {
       <h1 className="text-lg sm:text-xl font-semibold mb-2">Your Properties</h1>
       {houses ? (
         houses.map((row: any) => {
-          const link = "/houseLogs/" + row["houseId"];
+          const link = "/houseLogs/" + row["id"];
           return (
             <div
-              key={row["houseId"]}
+              key={row["id"]}
               className="flex flex-col md:flex-row items-center rounded-lg shadow-lg p-4 bg-white w-full max-w-full overflow-hidden"
             >
               {/* Image */}
@@ -62,7 +62,7 @@ export default function Home() {
                 {/* Buttons */}
                 <div className="mt-3 flex justify-center md:justify-start gap-2 w-full">
                   <Button
-                    onClick={() => houseDetails(row["houseId"], row["houseName"])}
+                    onClick={() => houseDetails(row["id"], row["houseName"])}
                     variant="outlined"
                     size="small"
                     className="w-1/3 md:w-32"
@@ -78,7 +78,7 @@ export default function Home() {
                     Logs
                   </Button>
                   <Button
-                    onClick={() => monthlyPL("/monthlyPL/" + row["houseId"])}
+                    onClick={() => monthlyPL("/monthlyPL/" + row["id"])}
                     variant="outlined"
                     size="small"
                     className="w-1/3 md:w-32"
