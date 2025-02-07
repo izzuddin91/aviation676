@@ -36,7 +36,7 @@ const JoinOurClass: React.FC = () => {
           Hi, my name is Izzuddin. I have been a superhost in Airbnb for 4 years. If you like to start in Airbnb, to know the in and out of this business, which property to focus and what to look for, you can book for an hour zoom session here. (Only for KL area, and based solely on my 4 years of knowledge)
         </p>
         <p className="mb-6 text-gray-700">
-          <strong>There will be a RM30 charge for a session. Please make a booking first, so we could finalize the session before you make the transfer.</strong>
+          <strong>There will be a RM50 charge for a session. Please make a booking first, so we could finalize the session before you make the transfer.</strong>
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,10 +88,10 @@ const JoinOurClass: React.FC = () => {
               <option value="" disabled>
                 Choose a date
               </option>
-              <option value="2024-12-25"> February 1, 2025</option>
-              <option value="2024-12-26"> February 2, 2025</option>
-              <option value="2024-12-27">February 8, 2025</option>
-              <option value="2024-12-27"> February 9, 2025</option>
+              <option value="2024-12-25"> February 15, 2025</option>
+              <option value="2024-12-26"> February 16, 2025</option>
+              <option value="2024-12-27">February 22, 2025</option>
+              <option value="2024-12-27"> February 23, 2025</option>
             </select>
           </div>
 
