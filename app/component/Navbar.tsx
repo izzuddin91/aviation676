@@ -46,7 +46,7 @@ const Navbar = () => {
       <div className={styles.navContainer}>
         {/* Logo */}
         <a href="/" className={styles.navLogo}>
-          I.Z. Properties
+          Aviation 676
         </a>
 
         {/* Hamburger Icon */}
@@ -65,17 +65,17 @@ const Navbar = () => {
         >
           <li>
             <a href="/" className={styles.navLink}>
-              Home
+              
             </a>
           </li>
           <li>
           <a href="/" className={styles.navLink}>
-              Statistic Report
+              
             </a>
           </li>
           <li>
             <a href="#about" className={styles.navLink}>
-              Welcome{adminName ? `, ${adminName}` : ""}
+              Buy our merchandise!{adminName ? `, ${adminName}` : ""}
             </a>
           </li>
 

@@ -59,9 +59,9 @@ export default function Articles() {
       <VideoBackground />
 
       <div style={styles.paddingContainer}>
-        <h1 style={styles.sectionTitle}>Welcome to Our Services</h1>
+        <h1 style={styles.sectionTitle}>Do you love general aviation ?</h1>
         <p style={styles.sectionDescription}>
-          Explore our premium services, from luxurious private jet charters to top-tier Airbnb experiences.
+          For those who fancy being a pilot and likes anything aviation related !
         </p>
       </div>
 
@@ -69,14 +69,14 @@ export default function Articles() {
 
       <div style={styles.videoContainer}>
         <iframe
-          src="https://www.youtube.com/embed/dkFlA_KfDAI"
+          src="https://www.youtube.com/embed/ZAIVB4vSnZE"
           title="YouTube Video 1"
           style={styles.iframe}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-        ></iframe>
+        ></iframe>  
         <iframe
-          src="https://www.youtube.com/embed/PuiInuk2RbQ" // Replace with your second video ID
+          src="https://www.youtube.com/embed/8vyQwK_4e6A" // Replace with your second video ID
           title="YouTube Video 2"
           style={styles.iframe}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -94,10 +94,9 @@ export default function Articles() {
             alt="Charter Jet Service"
             style={styles.cardImage}
           />
-          <h2 style={styles.cardTitle}>Private Charter Jet Service</h2>
+          <h2 style={styles.cardTitle}>Johor Flight</h2>
           <p style={styles.cardDescription}>
-            Offering luxury private jet charter services for business and leisure. Fly anywhere with comfort and
-            personalized service.
+            How I execute touch and go at Senai Airport.
           </p>
           <a href="#more" style={styles.cardLink}>
             Read More
@@ -106,14 +105,13 @@ export default function Articles() {
 
         <div style={styles.card}>
           <img
-            src="https://postandporch.com/cdn/shop/articles/AdobeStock_209124760.jpg?v=1662575433&width=1100"
+            src="https://www.twincitiesflight.com/wp-content/uploads/2024/07/N65453.jpg"
             alt="Airbnb Business"
             style={styles.cardImage}
           />
-          <h2 style={styles.cardTitle}>Luxurious Airbnb Stays</h2>
+          <h2 style={styles.cardTitle}>City Flight</h2>
           <p style={styles.cardDescription}>
-            Enjoy a top-tier Airbnb experience with beautifully managed homes in premium locations. Exceptional service
-            and comfort guaranteed.
+            Follow me as I guide you through the flight around city center.
           </p>
           <a href="/airbnbHouses" style={styles.cardLink}>
             Read More
@@ -122,14 +120,13 @@ export default function Articles() {
 
         <div style={styles.card}>
           <img
-            src="https://www.simons-voss.com/_Resources/Persistent/e/5/b/5/e5b530f3b694693558f73ee296961add7ebc27f5/schluesseluebergabe-wohnung.jpg"
+            src="https://thisisflight.net/wp-content/uploads/2021/03/MG_0441-scaled.jpg"
             alt="Airbnb Hosting Services"
             style={styles.cardImage}
           />
-          <h2 style={styles.cardTitle}>Airbnb Hosting Services</h2>
+          <h2 style={styles.cardTitle}>Lima Airshow</h2>
           <p style={styles.cardDescription}>
-            Let us manage your property on Airbnb. We take care of everything, from listing to guest services, so you
-            earn more effortlessly.
+            This time around we will show you the inside of the airshow in Langkawi
           </p>
           <a href="/articles" style={styles.cardLink}>
             Read More

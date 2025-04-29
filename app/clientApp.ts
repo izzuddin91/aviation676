@@ -12,14 +12,25 @@ const clientCredentials = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 }
 
-const firebaseConfig = {
-    apiKey: "AIzaSyD6vOvwPqrhP27jLuxsFCWuDAHD4Hsl6ec",
-    authDomain: "housecarmaintenance.firebaseapp.com",
-    projectId: "housecarmaintenance",
-    storageBucket: "housecarmaintenance.appspot.com",
-    messagingSenderId: "97441375090",
-    appId: "1:97441375090:web:7c80a4856e1fcb4fdc33eb"
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgw6TM6M2GipXssrw0JgL7m9vMazhcILo",
+    authDomain: "aviation676-939b4.firebaseapp.com",
+    projectId: "aviation676-939b4",
+    storageBucket: "aviation676-939b4.firebasestorage.app",
+    messagingSenderId: "626577752671",
+    appId: "1:626577752671:web:b284c1293014944292d1ea",
+    measurementId: "G-ELFH4EEG04"
   };
+
+//   const firebaseConfig = {
+//     apiKey: "AIzaSyCgw6TM6M2GipXssrw0JgL7m9vMazhcILo",
+//     authDomain: "aviation676-939b4.firebaseapp.com",
+//     projectId: "aviation676-939b4",
+//     storageBucket: "aviation676-939b4.firebasestorage.app",
+//     messagingSenderId: "626577752671",
+//     appId: "1:626577752671:web:b284c1293014944292d1ea",
+//     measurementId: "G-ELFH4EEG04"
+//   };
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)

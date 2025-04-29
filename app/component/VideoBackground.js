@@ -23,7 +23,7 @@ const VideoBackground = () => {
           Your browser does not support the video tag.
         </video>
         <div style={styles.content}>
-        <h1 style={{ color: 'white', fontSize: '40px' }}>Welcome to I.Z Properties</h1>
+        <h1 style={{ color: 'white', fontSize: '40px' }}>Welcome to Aviation 676</h1>
         </div>
       </div>
 
