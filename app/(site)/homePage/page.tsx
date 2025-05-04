@@ -174,7 +174,7 @@ export default function Articles() {
           <p style={styles.cardDescription}>
             Follow me as I guide you through the flight around city center.
           </p>
-          <a href="/airbnbHouses" style={styles.cardLink}>
+          <a href="/articles/1" style={styles.cardLink}>
             Read More
           </a>
         </div>
