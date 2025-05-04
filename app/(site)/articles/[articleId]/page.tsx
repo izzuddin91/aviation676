@@ -1,25 +1,27 @@
 "use client";
 
+import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
 import "firebase/compat/firestore";
 import { getArticleDetails } from "../../service/firebase.service";
 import { useParams } from "next/navigation";
 
 export default function Article() {
-  const params = useParams();
   const [isClient, setIsClient] = useState(false);
+  const params = useParams();
+  // Sample content for demonstration
   const [article, updateArticle] = useState({
     title: "",
     para1: "",
     para2: "",
     para3: "",
-    image1: "",
-    image2: "",
-    tiktok_url: "",
+    mainImageLink: "",
+    secondImageLink: "",
+    youtubeLink: "",
   });
 
   useEffect(() => {
-    setIsClient(true); // Ensures rendering only happens on the client
+    setIsClient(true);
     getData();
   }, []);
 
@@ -29,63 +31,63 @@ export default function Article() {
     });
   }
 
+  function getYouTubeVideoId(url: string): string {
+    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/;
+    const match = url.match(regExp);
+    return match ? match[1] : "";
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Article Header */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-3xl lg:text-4xl font-bold text-center mb-6 font-poppins">
-          {article.title}
-        </h1>
-        <p className="text-lg leading-relaxed text-gray-700 mb-6 font-roboto">
-          {article.para1}
-        </p>
-      </div>
+    <div className="max-w-4xl mx-auto p-4 space-y-10">
+      {/* Title */}
+      <h1 className="text-4xl font-bold text-center font-poppins">
+        {article.title}
+      </h1>
 
-      {/* TikTok Embed Section */}
-      {isClient && article.tiktok_url && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">Watch on TikTok</h2>
-          <div className="flex justify-center">
-            <blockquote
-              className="tiktok-embed"
-              cite={article.tiktok_url}
-              data-video-id={article.tiktok_url.split("/").pop()}
-              style={{
-                maxWidth: "600px",
-                margin: "0 auto",
-                padding: "0",
-              }}
-            >
-              <section></section>
-            </blockquote>
-            <script
-              async
-              src="https://www.tiktok.com/embed.js"
-            ></script>
-          </div>
-        </div>
-      )}
+      {/* Paragraph 1 with wrapped image (like a book layout) */}
+      <div className="text-lg text-gray-700 leading-relaxed font-roboto">
+  <p className="text-justify">
+    <img
+      src={article.mainImageLink}
+      alt="Main Article"
+      className="float-left mr-6 mb-4 w-72 h-auto rounded-lg shadow-md"
+    />
+    {article.para1}
+  </p>
+</div>
 
-      {/* Article Content */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <p className="text-lg leading-relaxed text-gray-700 mb-6 font-roboto">
-          {article.para2}
-        </p>
-        <img
-          src={article.image1}
-          alt="Article Image 1"
-          className="object-cover rounded-lg shadow-md mb-6"
-          style={{ height: "400px", width: "100%" }}
-        />
-        <p className="text-lg leading-relaxed text-gray-700 mb-6 font-roboto">
-          {article.para3}
-        </p>
-        <img
-          src={article.image2}
-          alt="Article Image 2"
-          className="object-cover rounded-lg shadow-md"
-          style={{ height: "400px", width: "100%" }}
-        />
+
+      {/* YouTube Thumbnail */}
+      {isClient && article.youtubeLink && (
+  <div className="w-full max-w-3xl mx-auto">
+    <div className="aspect-w-16 aspect-h-9">
+      <iframe
+        src={`https://www.youtube.com/embed/${getYouTubeVideoId(article.youtubeLink)}`}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="w-full h-full rounded-lg shadow-lg"
+      ></iframe>
+    </div>
+  </div>
+)}
+
+
+
+      {/* Paragraphs 2 and 3 */}
+      <div className="text-lg text-gray-700 space-y-6 font-roboto">
+        <p>{article.para2}</p>
+
+        {article.secondImageLink && (
+          <img
+            src={article.secondImageLink}
+            alt="Supporting Image"
+            className="w-full h-80 object-cover rounded-lg shadow-md"
+          />
+        )}
+
+        <p>{article.para3}</p>
       </div>
     </div>
   );

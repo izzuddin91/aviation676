@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${lato.className} ${poppins.className}`}>
       <head>
-        <title>House & Car Maintenances</title>
+        <title>Aviation 676</title>
         <meta name="theme-color" content="#000" />
       </head>
       <body>

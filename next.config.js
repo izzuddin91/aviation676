@@ -2,6 +2,7 @@
 const nextConfig = {
   images: {
     domains: [
+      "i9.ytimg.com",
       "i.pinimg.com",
       "firebasestorage.googleapis.com",
       "www.twincitiesflight.com",

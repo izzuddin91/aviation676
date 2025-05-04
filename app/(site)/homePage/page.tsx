@@ -147,7 +147,7 @@ export default function Articles() {
       <div className="cardsContainer" style={styles.paddingContainer}>
         <div style={styles.card}>
           <Image
-            src="https://i.pinimg.com/originals/36/e6/a2/36e6a2c6682fda658e49483b2dbd7eed.jpg"
+            src="https://i9.ytimg.com/vi_webp/UVfFUpljPbs/maxresdefault.webp?v=665fb706&sqp=CKT83MAG&rs=AOn4CLBr5KpoSKbtmcMQchw6y55fcaNGYQ"
             alt="Charter Jet Service"
             width={400}
             height={250} // Adjust to fit your layout
@@ -157,7 +157,7 @@ export default function Articles() {
           <p style={styles.cardDescription}>
             How I execute touch and go at Senai Airport.
           </p>
-          <a href="#more" style={styles.cardLink}>
+          <a href="/articles/CR0BafXyabvNYdO15AKH" style={styles.cardLink}>
             Read More
           </a>
         </div>
@@ -174,7 +174,7 @@ export default function Articles() {
           <p style={styles.cardDescription}>
             Follow me as I guide you through the flight around city center.
           </p>
-          <a href="/articles/1" style={styles.cardLink}>
+          <a href="/articles/CR0BafXyabvNYdO15AKH" style={styles.cardLink}>
             Read More
           </a>
         </div>
