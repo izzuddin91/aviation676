@@ -147,7 +147,7 @@ export default function Articles() {
       <div className="cardsContainer" style={styles.paddingContainer}>
         <div style={styles.card}>
           <Image
-            src="https://i9.ytimg.com/vi_webp/UVfFUpljPbs/maxresdefault.webp?v=665fb706&sqp=CKT83MAG&rs=AOn4CLBr5KpoSKbtmcMQchw6y55fcaNGYQ"
+            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/thumbnail_johor_flight.png?alt=media&token=718271ca-c0b8-4118-920a-b90d49a2256d"
             alt="Charter Jet Service"
             width={400}
             height={250} // Adjust to fit your layout

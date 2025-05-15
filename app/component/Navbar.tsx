@@ -44,9 +44,14 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navContainer}>
-        {/* Logo */}
+        {/* Logo Image */}
         <a href="/" className={styles.navLogo}>
-          Aviation 676
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/A676Logo.png?alt=media&token=4567ccf1-dd00-42c5-871e-8a08c8c80854" // Make sure to place the logo.png in the public folder
+            alt="Aviation 676"
+            className={styles.logoImage}
+            style={{width: "110px"}}
+          />
         </a>
 
         {/* Hamburger Icon */}
@@ -65,21 +70,22 @@ const Navbar = () => {
         >
           <li>
             <a href="/" className={styles.navLink}>
-              
-            </a>
-          </li>
-          <li>
-          <a href="/" className={styles.navLink}>
-              
+              Home
             </a>
           </li>
           <li>
             <a href="#about" className={styles.navLink}>
-              Buy our merchandise!{adminName ? `, ${adminName}` : ""}
+              About Us
+            </a>
+          </li>
+          <li>
+            <a href="/merchandise" className={styles.navLink}>
+              Buy Merchandise
+              {adminName ? `, ${adminName}` : ""}
             </a>
           </li>
 
-          {/* Dropdown Logic */}
+          {/* Dropdown for Authentication */}
           <li
             className={styles.navItem}
             onMouseEnter={() => setIsDropdownVisible(true)}
@@ -124,6 +130,11 @@ const Navbar = () => {
             )}
           </li>
         </ul>
+
+        {/* Dark Mode Toggle */}
+        <div className={styles.darkModeToggle}>
+          <button className={styles.toggleButton}>🌙</button>
+        </div>
       </div>
     </nav>
   );
