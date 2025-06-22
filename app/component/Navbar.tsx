@@ -79,7 +79,7 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href="/merchandise" className={styles.navLink}>
+            <a href="/merchandises" className={styles.navLink}>
               Buy Merchandise
               {adminName ? `, ${adminName}` : ""}
             </a>

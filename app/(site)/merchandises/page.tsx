@@ -1,9 +1,17 @@
 // pages/merchandise.tsx
+"use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import styles from "@/app/merchandise.module.css"; // Add custom styles
 
-const Merchandise = () => {
+const Merchandises: React.FC = () => {
+  const router = useRouter();
+  const handleProductClick = (merchandiseId: string) => {
+    console.log(merchandiseId)
+    router.push(`/merchandises/${merchandiseId}`);
+  };
+
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.pageTitle}>Merchandise</h1>
@@ -22,12 +30,17 @@ const Merchandise = () => {
         <div className={styles.productDetails}>
           <h2 className={styles.productTitle}>Aviation 676 T-Shirt</h2>
           <p className={styles.productDescription}>
-            A premium cotton T-shirt with a bold logo, perfect for aviation enthusiasts. Lightweight and comfortable, it is the ideal addition to your wardrobe.
+            A premium cotton T-shirt with a bold logo, perfect for aviation
+            enthusiasts. Lightweight and comfortable, it is the ideal addition
+            to your wardrobe.
           </p>
           <p className={styles.productPrice}>$29.99</p>
 
           {/* Buy Now Button */}
-          <button className={styles.buyNowButton}>
+          <button
+            onClick={() => handleProductClick("l9irymcJ3nPUj4Myc2Xn")}
+            className={styles.buyNowButton}
+          >
             Buy Now
           </button>
         </div>
@@ -36,4 +49,4 @@ const Merchandise = () => {
   );
 };
 
-export default Merchandise;
+export default Merchandises;

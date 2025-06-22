@@ -4,7 +4,7 @@
 import Image from "next/image";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import firebase from "../../clientApp";
+import { firebase, db } from "../../clientApp";
 import "firebase/compat/firestore";
 import { useState } from "react";
 import { getDocs, query, where } from "firebase/firestore";

@@ -1,3 +1,6 @@
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -60,7 +63,6 @@ body {
     text-xs font-bold
     transition-all invisible origin-left;
   }
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap');
 
 /* Apply Roboto as the default font for the whole site */
 body, p, span, li, a, button, input, textarea {
