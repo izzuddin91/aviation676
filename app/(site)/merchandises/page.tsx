@@ -14,13 +14,13 @@ const Merchandises: React.FC = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <h1 className={styles.pageTitle}>Merchandise</h1>
+      <h1 className={styles.pageTitle}>Item to sell</h1>
       <div className={styles.productCard}>
         {/* T-shirt Image */}
         <div className={styles.productImage}>
           <Image
-            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/cessna172%20shirt.webp?alt=media&token=b76a5ff1-4ba6-486b-b7a0-085dd80961d0" // Make sure to place the image in the public folder
-            alt="Aviation 676 T-shirt"
+            src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2FdcHeadset_1.jpeg?alt=media&token=705fdde9-3291-4591-b6ba-64a02f9e1a0e" // Make sure to place the image in the public folder
+            alt="David Clark Headset"
             width={300}
             height={400}
           />
@@ -28,20 +28,18 @@ const Merchandises: React.FC = () => {
 
         {/* T-shirt Details */}
         <div className={styles.productDetails}>
-          <h2 className={styles.productTitle}>Aviation 676 T-Shirt</h2>
+          <h2 className={styles.productTitle}>David Clark Headset</h2>
           <p className={styles.productDescription}>
-            A premium cotton T-shirt with a bold logo, perfect for aviation
-            enthusiasts. Lightweight and comfortable, it is the ideal addition
-            to your wardrobe.
+            Recently used by a fellow student pilot who have already graduated. Model H10-13.4
           </p>
-          <p className={styles.productPrice}>$29.99</p>
+          <p className={styles.productPrice}>RM1000</p>
 
           {/* Buy Now Button */}
           <button
             onClick={() => handleProductClick("l9irymcJ3nPUj4Myc2Xn")}
             className={styles.buyNowButton}
           >
-            Buy Now
+            Details
           </button>
         </div>
       </div>

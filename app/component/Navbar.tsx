@@ -80,7 +80,7 @@ const Navbar = () => {
           </li>
           <li>
             <a href="/merchandises" className={styles.navLink}>
-              Buy Merchandise
+              To Sell
               {adminName ? `, ${adminName}` : ""}
             </a>
           </li>
