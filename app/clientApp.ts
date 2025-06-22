@@ -22,3 +22,4 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 
 export { firebase, db };
+export default firebase; // ✅ allows import firebase from "..."
