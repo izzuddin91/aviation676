@@ -84,57 +84,8 @@ const Navbar = () => {
               {adminName ? `, ${adminName}` : ""}
             </a>
           </li>
-
-          {/* Dropdown for Authentication */}
-          <li
-            className={styles.navItem}
-            onMouseEnter={() => setIsDropdownVisible(true)}
-            onMouseLeave={() => setIsDropdownVisible(false)}
-          >
-            {isAuthenticated ? (
-              <a onClick={handleLogout} className={styles.navLink}>
-                Logout
-              </a>
-            ) : (
-              <div className={styles.dropdown}>
-                <span className={styles.navLink}>Login</span>
-                {isDropdownVisible && (
-                  <ul className={styles.dropdownMenu}>
-                    <li>
-                      <a
-                        href="/login?role=homeOwner"
-                        className={styles.dropdownLink}
-                      >
-                        Home Owner
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/login?role=admin"
-                        className={styles.dropdownLink}
-                      >
-                        Admin
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/login?role=partner"
-                        className={styles.dropdownLink}
-                      >
-                        Partner
-                      </a>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            )}
-          </li>
         </ul>
 
-        {/* Dark Mode Toggle */}
-        <div className={styles.darkModeToggle}>
-          <button className={styles.toggleButton}>🌙</button>
-        </div>
       </div>
     </nav>
   );

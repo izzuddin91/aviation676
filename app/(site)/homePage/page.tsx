@@ -126,14 +126,14 @@ export default function Articles() {
 
       <div style={styles.videoContainer}>
         <iframe
-          src="https://www.youtube.com/embed/ZAIVB4vSnZE"
+          src="https://www.youtube.com/embed/pWb7E6IXB4Q" 
           title="YouTube Video 1"
           style={styles.iframe}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
         <iframe
-          src="https://www.youtube.com/embed/8vyQwK_4e6A" // Replace with your second video ID
+          src="https://www.youtube.com/embed/ZAIVB4vSnZE" // Replace with your second video ID
           title="YouTube Video 2"
           style={styles.iframe}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -164,17 +164,17 @@ export default function Articles() {
 
         <div style={styles.card}>
           <Image
-            src="https://www.twincitiesflight.com/wp-content/uploads/2024/07/N65453.jpg"
+            src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3"
             alt="Airbnb Business"
             width={400}
             height={250} // Adjust to fit your layout
             style={styles.cardImage}
           />
-          <h2 style={styles.cardTitle}>City Flight</h2>
+          <h2 style={styles.cardTitle}>First Podcast !</h2>
           <p style={styles.cardDescription}>
-            Follow me as I guide you through the flight around city center.
+            Watch our first ever podcast on general aviation. 
           </p>
-          <a href="/articles/CR0BafXyabvNYdO15AKH" style={styles.cardLink}>
+          <a href="/articles/OHekw7WGGLXsAm3Pqa2P" style={styles.cardLink}>
             Read More
           </a>
         </div>
