@@ -50,7 +50,7 @@ const Navbar = () => {
             src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/A676Logo.png?alt=media&token=4567ccf1-dd00-42c5-871e-8a08c8c80854" // Make sure to place the logo.png in the public folder
             alt="Aviation 676"
             className={styles.logoImage}
-            style={{width: "110px"}}
+            style={{ width: "110px" }}
           />
         </a>
 
@@ -74,6 +74,11 @@ const Navbar = () => {
             </a>
           </li>
           <li>
+            <a href="/stories" className={styles.navLink}>
+              Stories
+            </a>
+          </li>
+          <li>
             <a href="#about" className={styles.navLink}>
               About Us
             </a>
@@ -85,7 +90,6 @@ const Navbar = () => {
             </a>
           </li>
         </ul>
-
       </div>
     </nav>
   );
