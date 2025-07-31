@@ -14,6 +14,7 @@ interface StoryCardProps {
 const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  
   const prevPhoto = () => {
     setCurrentIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
   };
