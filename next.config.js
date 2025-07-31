@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    webpack: (config, { isServer }) => {
+    // Fix "undici" in firebase compat modules
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        undici: false,
+      }
+    }
+    return config
+  },
   images: {
     domains: [
       "i9.ytimg.com",
