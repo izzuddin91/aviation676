@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { clearAuth, getUserAuth } from "../util/auth.util";
-import { getAdminById } from "../(site)/service/firebase.service";
+// import { clearAuth, getUserAuth } from "../util/auth.util";
+// import { getAdminById } from "../(site)/service/firebase.service";
 import styles from "@/app/Navbar.module.css"; // Import CSS module
 
 const Navbar = () => {
@@ -13,27 +13,27 @@ const Navbar = () => {
 
   // Check authentication on mount
   useEffect(() => {
-    const checkUserAuth = async () => {
-      try {
-        const uid = await getUserAuth();
-        if (uid) {
-          const admin = await getAdminById(uid);
-          setAdminName(admin.name);
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error("Error checking user authentication:", error);
-      }
-    };
+    // const checkUserAuth = async () => {
+    //   try {
+    //     const uid = await getUserAuth();
+    //     if (uid) {
+    //       const admin = await getAdminById(uid);
+    //       setAdminName(admin.name);
+    //       setIsAuthenticated(true);
+    //     } else {
+    //       setIsAuthenticated(false);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error checking user authentication:", error);
+    //   }
+    // };
 
-    checkUserAuth();
+    // checkUserAuth();
   }, []);
 
   const handleLogout = () => {
     try {
-      clearAuth();
+      // clearAuth();
       setIsAuthenticated(false);
       setAdminName(null);
     } catch (error) {

@@ -1,6 +1,5 @@
 "use client";
 
-import "firebase/compat/firestore";
 import { useParams } from "next/navigation";
 import React from "react";
 

@@ -1,8 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import "firebase/compat/firestore";
-import "firebase/compat/auth";
+
 import {
   Box,
   Button,

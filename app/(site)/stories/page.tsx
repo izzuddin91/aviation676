@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { getLatestThreeArticle } from "../service/firebase.service";
+// import { getLatestThreeArticle } from "../service/firebase.service";
 
 interface StoryCardProps {
   photos: string[];
@@ -69,21 +69,21 @@ const StoriesPage = () => {
 
 useEffect(() => {
   const fetchData = async () => {
-    const articles = await getLatestThreeArticle();
-    const mappedStories = articles.map((article: any) => {
-      const descriptionWords = article.para1?.split(" ").slice(0, 50).join(" ") || "";
-      const tagsArray = article.tags
-        ? article.tags.split(",").map((tag: string) => tag.trim())
-        : [];
+    // const articles = await getLatestThreeArticle();
+    // const mappedStories = articles.map((article: any) => {
+    //   const descriptionWords = article.para1?.split(" ").slice(0, 50).join(" ") || "";
+    //   const tagsArray = article.tags
+    //     ? article.tags.split(",").map((tag: string) => tag.trim())
+    //     : [];
 
-      return {
-        photos: [article.mainImageLink, article.secondImageLink].filter(Boolean),
-        title: article.title || "Untitled Story",
-        tags: tagsArray,
-        description: descriptionWords,
-      };
-    });
-    setStories(mappedStories);
+    //   return {
+    //     photos: [article.mainImageLink, article.secondImageLink].filter(Boolean),
+    //     title: article.title || "Untitled Story",
+    //     tags: tagsArray,
+    //     description: descriptionWords,
+    //   };
+    // });
+    // setStories(mappedStories);
   };
 
   fetchData();

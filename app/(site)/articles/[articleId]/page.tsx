@@ -1,11 +1,20 @@
 "use client";
 
-import "firebase/compat/firestore";
 import { useEffect, useState } from "react";
-import "firebase/compat/firestore";
 import { getArticleDetails } from "../../service/firebase.service";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+
+interface Article {
+  id?: string;
+  title: string;
+  para1: string;
+  para2: string;
+  para3: string;
+  mainImageLink: string;
+  secondImageLink: string;
+  youtubeLink: string;
+  photos?: string[]; // gallery images
+}
 
 export default function Article() {
   const router = useRouter();
@@ -16,8 +25,8 @@ export default function Article() {
 
   const [isClient, setIsClient] = useState(false);
   const params = useParams();
-  // Sample content for demonstration
-  const [article, updateArticle] = useState({
+  const [article, updateArticle] = useState<Article>({
+    id: "",
     title: "",
     para1: "",
     para2: "",
@@ -25,7 +34,10 @@ export default function Article() {
     mainImageLink: "",
     secondImageLink: "",
     youtubeLink: "",
+    photos: [],
   });
+
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -33,9 +45,28 @@ export default function Article() {
   }, []);
 
   async function getData() {
-    getArticleDetails(params["articleId"].toString()).then((val: any) => {
-      updateArticle(val);
-    });
+    const val = await getArticleDetails(params["articleId"].toString());
+
+    if (val) {
+      const mapped: Article = {
+        id: val.id ?? "",
+        title: val.title ?? "",
+        para1: val.para1 ?? "",
+        para2: val.para2 ?? "",
+        para3: val.para3 ?? "",
+        mainImageLink: val.mainImageLink ?? "",
+        secondImageLink: val.secondImageLink ?? "",
+        youtubeLink: val.youtubeLink ?? "",
+        photos: val.photos ?? [
+          // 👇 sample photos
+          "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3",
+          "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3",
+          "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3"
+        ],
+      };
+
+      updateArticle(mapped);
+    }
   }
 
   function getYouTubeVideoId(url: string): string {
@@ -53,24 +84,27 @@ export default function Article() {
       >
         ← Back
       </button>
+
       {/* Title */}
       <h1 className="text-4xl font-bold text-center font-poppins">
         {article.title}
       </h1>
 
-      {/* Paragraph 1 with wrapped image (like a book layout) */}
+      {/* Paragraph 1 with wrapped image */}
       <div className="text-lg text-gray-700 leading-relaxed font-roboto">
         <p className="text-justify">
-          <img
-            src={article.mainImageLink}
-            alt="Main Article"
-            className="float-left mr-6 mb-4 w-72 h-auto rounded-lg shadow-md"
-          />
+          {article.mainImageLink && (
+            <img
+              src={article.mainImageLink}
+              alt="Main Article"
+              className="float-left mr-6 mb-4 w-72 h-auto rounded-lg shadow-md"
+            />
+          )}
           {article.para1}
         </p>
       </div>
 
-      {/* YouTube Thumbnail */}
+      {/* YouTube Video */}
       {isClient && article.youtubeLink && (
         <div className="w-full max-w-3xl mx-auto">
           <div className="aspect-w-16 aspect-h-9">
@@ -102,6 +136,40 @@ export default function Article() {
 
         <p>{article.para3}</p>
       </div>
+
+      {/* 👇 Photo Gallery */}
+      {article.photos && article.photos.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold font-poppins">
+            Photo Gallery
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {article.photos.map((photo, idx) => (
+              <img
+                key={idx}
+                src={photo}
+                alt={`Gallery ${idx + 1}`}
+                className="w-full h-40 object-cover rounded-lg shadow-md cursor-pointer hover:opacity-80 transition"
+                onClick={() => setSelectedPhoto(photo)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 👇 Popup Modal for large image */}
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <img
+            src={selectedPhoto}
+            alt="Large view"
+            className="max-w-3xl max-h-[80vh] rounded-lg shadow-xl"
+          />
+        </div>
+      )}
     </div>
   );
 }

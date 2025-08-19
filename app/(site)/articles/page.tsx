@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getLatestThreeArticle } from "../service/firebase.service";
+// import { getLatestThreeArticle } from "../service/firebase.service";
 import { LoadingIndicator } from "@/app/component/indicator/Loading";
 
 type Article = {
@@ -24,20 +24,20 @@ export default function Articles() {
 
   async function fetchArticles() {
     try {
-      const articlesData = await getLatestThreeArticle();
+      // const articlesData = await getLatestThreeArticle();
 
-      // Resolve TikTok thumbnails for each article
-      const articlesWithThumbnails = await Promise.all(
-        (articlesData || []).map(async (article: Article) => {
-          if (article.tiktok_url) {
-            const thumbnail = await fetchTikTokThumbnail(article.tiktok_url);
-            return { ...article, thumbnail };
-          }
-          return article;
-        })
-      );
+      // // Resolve TikTok thumbnails for each article
+      // const articlesWithThumbnails = await Promise.all(
+      //   (articlesData || []).map(async (article: Article) => {
+      //     if (article.tiktok_url) {
+      //       const thumbnail = await fetchTikTokThumbnail(article.tiktok_url);
+      //       return { ...article, thumbnail };
+      //     }
+      //     return article;
+      //   })
+      // );
 
-      setArticles(articlesWithThumbnails);
+      // setArticles(articlesWithThumbnails);
     } catch (error) {
       console.error("Error fetching articles:", error);
     } finally {
