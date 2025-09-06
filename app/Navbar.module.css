@@ -1,13 +1,15 @@
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(2, 48, 32, 1.0);
-    color: white;
-    z-index: 1000;
-    padding: 10px 0;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* 🌈 Vibrant gradient */
+  background: linear-gradient(90deg, #0f2027, #2c5364, #00b09b);
+  color: white;
+  z-index: 1000;
+  padding: 10px 0;
+  transition: background 0.3s ease-in-out;
+}
   
   .navContainer {
     display: flex;
@@ -38,10 +40,12 @@
     display: block;
   }
   
+/* Hover effect for links */
 .navLink:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  border-radius: 6px;
 }
+
 
   .hamburger {
     display: none;
@@ -78,18 +82,19 @@
     display: inline-block;
   }
   
-  .dropdownMenu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: rgba(2, 48, 32, 1.0);
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    list-style: none;
-    margin: 0;
-    padding: 10px 0;
-    z-index: 1001;
-  }
+/* Dropdown menu with gradient */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: linear-gradient(180deg, #2c5364, #0f2027);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  z-index: 1001;
+}
   
   .dropdownLink {
     color: white;
