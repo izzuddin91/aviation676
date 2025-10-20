@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { getLatestThreeArticle } from "../service/firebase.service";
+import { getAllArticles } from "../service/firebase.service";
 
 interface StoryCardProps {
   photos: string[];
@@ -25,14 +25,14 @@ const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description 
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
       whileHover={{ scale: 1.02 }}
-      className="flex border border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-lg hover:shadow-2xl bg-white"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="rounded-2xl overflow-hidden shadow-lg bg-white border border-gray-200 flex flex-col"
     >
       {/* Image Section */}
-      <div className="w-1/3 bg-gray-100 relative">
+      <div className="relative w-full h-56 bg-gray-100">
         <img
           src={photos[currentIndex]}
           alt="Story Photo"
@@ -44,22 +44,22 @@ const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description 
               onClick={prevPhoto}
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow-md"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={18} />
             </button>
             <button
               onClick={nextPhoto}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow-md"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={18} />
             </button>
           </>
         )}
       </div>
 
       {/* Text Section */}
-      <div className="w-2/3 p-5 flex flex-col justify-between">
+      <div className="p-5 flex flex-col justify-between flex-grow">
         <div>
-          <div className="font-bold text-xl mb-2">{title}</div>
+          <h2 className="font-bold text-lg mb-2 line-clamp-2">{title}</h2>
           <div className="flex flex-wrap gap-2 mb-3">
             {tags.map((tag, i) => (
               <span
@@ -70,12 +70,12 @@ const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description 
               </span>
             ))}
           </div>
-          <div className="mb-4 text-sm text-gray-700 leading-relaxed">
+          <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
             {description}...
-          </div>
+          </p>
         </div>
-        <div className="flex justify-end">
-          <button className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-5 py-2 rounded-full shadow-md hover:opacity-90 transition">
+        <div className="flex justify-end mt-4">
+          <button className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-4 py-2 rounded-full shadow-md hover:opacity-90 transition">
             See More
           </button>
         </div>
@@ -86,14 +86,16 @@ const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description 
 
 const StoriesPage = () => {
   const [stories, setStories] = useState<StoryCardProps[]>([]);
+  const [filteredStories, setFilteredStories] = useState<StoryCardProps[]>([]);
+  const [selectedSegment, setSelectedSegment] = useState<"all" | "japan" | "malaysia">("all");
 
   useEffect(() => {
     const fetchData = async () => {
-      const articles = await getLatestThreeArticle();
+      const articles = await getAllArticles();
       const mappedStories = articles.map((article: any) => {
-        const descriptionWords = article.para1?.split(" ").slice(0, 50).join(" ") || "";
+        const descriptionWords = article.para1?.split(" ").slice(0, 40).join(" ") || "";
         const tagsArray = article.tags
-          ? article.tags.split(",").map((tag: string) => tag.trim())
+          ? article.tags.split(",").map((tag: string) => tag.trim().toLowerCase())
           : [];
 
         return {
@@ -104,20 +106,56 @@ const StoriesPage = () => {
         };
       });
       setStories(mappedStories);
+      setFilteredStories(mappedStories);
     };
 
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (selectedSegment === "all") {
+      setFilteredStories(stories);
+    } else {
+      const filtered = stories.filter((story) =>
+        story.tags.some((tag) => tag.includes(selectedSegment))
+      );
+      setFilteredStories(filtered);
+    }
+  }, [selectedSegment, stories]);
+
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-4xl font-extrabold mb-10 text-center bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
+    <div className="max-w-6xl mx-auto p-6">
+      {/* Page Title */}
+      <h1 className="text-4xl font-extrabold mb-6 text-center bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
         Stories
       </h1>
-      {stories.length === 0 ? (
-        <div className="text-gray-500 text-center animate-pulse">Loading stories...</div>
+
+      {/* Segment Selector */}
+      <div className="flex justify-center mb-10 gap-3">
+        {["all", "japan", "malaysia"].map((segment) => (
+          <button
+            key={segment}
+            onClick={() => setSelectedSegment(segment as "all" | "japan" | "malaysia")}
+            className={`px-5 py-2 rounded-full text-sm font-semibold border transition-all ${
+              selectedSegment === segment
+                ? "bg-gradient-to-r from-indigo-500 to-pink-500 text-white border-transparent shadow-md"
+                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            {segment.charAt(0).toUpperCase() + segment.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* Stories Grid */}
+      {filteredStories.length === 0 ? (
+        <div className="text-gray-500 text-center animate-pulse">No stories found...</div>
       ) : (
-        stories.map((story, index) => <StoryCard key={index} {...story} />)
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredStories.map((story, index) => (
+            <StoryCard key={index} {...story} />
+          ))}
+        </div>
       )}
     </div>
   );

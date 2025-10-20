@@ -1,127 +1,106 @@
-import React from 'react';
-import '@/app/VideoBackground.css';
+"use client";
 
-const Navbar = () => {
-  return (
-    <nav style={styles.navbar}>
-      <ul style={styles.navList}>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="/login">Login</a></li>
-      </ul>
-    </nav>
-  );
-};
+import React, { useEffect, useState } from "react";
+import "@/app/VideoBackground.css";
 
-const VideoBackground = () => {
+export default function ImageCarouselBackground() {
+  const images = [
+    "/images/plane1.jpg",
+    "/images/plane2.jpg",
+    "/images/plane3.jpg",
+    "/images/plane4.jpg",
+  ];
+
+  const [current, setCurrent] = useState(0);
+
+  // Auto-slide every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
-    <div>
-      <div className="videoContainer" style={styles.videoContainer}>
-        {/* <Navbar /> */}
-        <video autoPlay muted loop playsInline style={styles.video}>
-          <source src="/videos/sample.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div style={styles.content}>
-        <h1 style={{ color: 'white', fontSize: '40px' }}>Welcome to Aviation 676</h1>
-        </div>
+    <div style={styles.wrapper}>
+      {/* ✅ Background Carousel */}
+      {images.map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          alt={`slide-${index}`}
+          style={{
+            ...styles.image,
+            opacity: current === index ? 1 : 0,
+            transition: "opacity 1.0s ease-in-out",
+          }}
+        />
+      ))}
+
+      {/* ✅ Overlay Content */}
+      <div style={styles.overlay}>
+        <h1 style={styles.title}>Welcome to Aviation 676</h1>
       </div>
 
-            {/* Floating WhatsApp logo */}
-
-      <a href="https://wa.me/+60132711668?text=I would like to know more about I.Z. Properties" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
+      {/* ✅ Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/+60132711668?text=I would like to know more about I.Z. Properties"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={styles.whatsappButton}
+      >
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" // Example WhatsApp icon link
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
           alt="WhatsApp"
-          className="whatsapp-icon"
+          style={styles.whatsappIcon}
         />
       </a>
     </div>
   );
-};
+}
 
 const styles = {
-    navbar: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      backgroundColor: 'rgba(2, 48, 32, 1.0)',
-      color: 'white',
-      padding: '10px',
-      zIndex: 1000,
-    },
-    navList: {
-      display: 'flex',
-      justifyContent: 'space-around',
-      listStyle: 'none',
-      margin: 0,
-      padding: 0,
-    },
-    videoContainer: {
-      height: '100vh',
-      position: 'relative',
-      zIndex: 1,
-    },
-    video: {
-      width: '100%',
-      height: '100vh',
-      objectFit: 'cover',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      zIndex: -1,
-    },
-    content: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100vh',
-      textAlign: 'center',
-    },
-
-    card: {
-      backgroundColor: '#fff',
-      borderRadius: '10px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      overflow: 'hidden',
-      textAlign: 'center',
-      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    },
-    cardImage: {
-      width: '100%',
-      height: '200px',
-      objectFit: 'cover',
-    },
-    cardTitle: {
-      fontSize: '1.5em',
-      margin: '15px 0',
-    },
-    cardDescription: {
-      fontSize: '1em',
-      padding: '0 15px',
-      marginBottom: '15px',
-    },
-    cardLink: {
-      display: 'inline-block',
-      margin: '10px 0',
-      color: '#007BFF',
-      textDecoration: 'none',
-      fontWeight: 'bold',
-    },
-    cardHover: {
-      transform: 'scale(1.05)',
-      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
-    },
-  };
-  
-  
-
-// CSS-in-JS hover effect
-styles.card[':hover'] = styles.cardHover;
-
-export default VideoBackground;
+  wrapper: {
+    position: "relative",
+    width: "100%",
+    height: "calc(100vh - 120px)", // ✅ adjust this height
+    /* 120px = estimated total height of navbar + bottom bar */
+    marginTop: "60px", // ✅ space for navbar (adjust to match your layout)
+    marginBottom: "60px", // ✅ space for bottom bar
+    overflow: "hidden",
+    backgroundColor: "black",
+  },
+  image: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    zIndex: 0,
+  },
+  overlay: {
+    position: "relative",
+    zIndex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    textAlign: "center",
+  },
+  title: {
+    color: "white",
+    fontSize: "40px",
+    fontWeight: "600",
+  },
+  whatsappButton: {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    zIndex: 2,
+  },
+  whatsappIcon: {
+    width: "60px",
+    height: "60px",
+  },
+};
