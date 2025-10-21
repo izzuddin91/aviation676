@@ -1,6 +1,7 @@
 "use client";
+import app from "@/app/clientApp";
 import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, query, orderBy } from "firebase/firestore";
-import { app } from "../../clientApp"; 
+// import { app } from "../../clientApp"; 
 
 const db = getFirestore(app);
 
