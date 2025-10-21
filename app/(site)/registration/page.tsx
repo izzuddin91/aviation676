@@ -28,6 +28,7 @@ export default function RegisterPage() {
     setLoading(true);
     setErrorMsg("");
     setSuccessMsg("");
+    
 
     try {
       // For now, just log data to the console
