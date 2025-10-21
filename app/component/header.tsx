@@ -3,13 +3,13 @@
 import React from "react";
 import { Dropdown, Navbar, Avatar } from "flowbite-react";
 import { getAuth, signOut } from "firebase/auth";
-import { clearAuth, getUserAuth } from "../util/auth.util";
+// import { clearAuth, getUserAuth } from "../util/auth.util";
 
 
 function signOutAndRedirect (){
   // const router = useRouter();
   // console.log('logout')
-  clearAuth()
+  // clearAuth()
   // router.push("/login");
   window.location.reload()
 }

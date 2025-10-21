@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import VideoBackground from "@/app/component/VideoBackground";
 import { getLatestThreeArticle } from "../service/firebase.service";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Articles() {
   const router = useRouter();
@@ -157,9 +158,9 @@ export default function Articles() {
           <p style={styles.cardDescription}>
             How I execute touch and go at Senai Airport.
           </p>
-          <a href="/articles/CR0BafXyabvNYdO15AKH" style={styles.cardLink}>
+          <Link href="/articles/CR0BafXyabvNYdO15AKH" style={styles.cardLink}>
             Read More
-          </a>
+          </Link>
         </div>
 
         <div style={styles.card}>
@@ -174,9 +175,9 @@ export default function Articles() {
           <p style={styles.cardDescription}>
             Watch our first ever podcast on general aviation. 
           </p>
-          <a href="/articles/OHekw7WGGLXsAm3Pqa2P" style={styles.cardLink}>
+          <Link href="/articles/OHekw7WGGLXsAm3Pqa2P" style={styles.cardLink}>
             Read More
-          </a>
+          </Link>
         </div>
 
         <div style={styles.card}>
@@ -192,9 +193,9 @@ export default function Articles() {
             This time around we will show you the inside of the airshow in
             Langkawi
           </p>
-          <a href="/articles" style={styles.cardLink}>
+          <Link href="/articles" style={styles.cardLink}>
             Read More
-          </a>
+          </Link>
         </div>
       </div>
 

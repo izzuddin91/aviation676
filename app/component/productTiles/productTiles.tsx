@@ -1,6 +1,6 @@
 import React from 'react';
 import '@/app/Products.css';
-
+import Link from "next/link";
 
 interface Product {
   title: string;
@@ -31,7 +31,7 @@ const ProductTile: React.FC<ProductTileProps> = ({ product }) => {
       )}
       <img src={product.imageUrl} alt={product.title} className="w-full h-48 object-cover" />
       <div className="p-4">
-        <h3 className="text-sm font-medium text-gray-800" style={{textDecoration: "underline"}}> <a href="/airbnbHouses">{product.title}</a> </h3>
+        <h3 className="text-sm font-medium text-gray-800" style={{textDecoration: "underline"}}> <Link href="/airbnbHouses">{product.title}</Link> </h3>
         <p className="mt-2 text-lg font-bold text-black">RM {product.price.toFixed(2)}</p>
       </div>
     </div>

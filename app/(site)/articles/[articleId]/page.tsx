@@ -44,30 +44,32 @@ export default function Article() {
     getData();
   }, []);
 
-  async function getData() {
-    const val = await getArticleDetails(params["articleId"].toString());
+async function getData() {
+  const articleId = params?.["articleId"];
+  if (!articleId) return; // safely exit if undefined
 
-    if (val) {
-      const mapped: Article = {
-        id: val.id ?? "",
-        title: val.title ?? "",
-        para1: val.para1 ?? "",
-        para2: val.para2 ?? "",
-        para3: val.para3 ?? "",
-        mainImageLink: val.mainImageLink ?? "",
-        secondImageLink: val.secondImageLink ?? "",
-        youtubeLink: val.youtubeLink ?? "",
-        photos: val.photos ?? [
-          // 👇 sample photos
-          "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3",
-          "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3",
-          "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3"
-        ],
-      };
+  const val = await getArticleDetails(articleId.toString());
+  if (val) {
+    const mapped: Article = {
+      id: val.id ?? "",
+      title: val.title ?? "",
+      para1: val.para1 ?? "",
+      para2: val.para2 ?? "",
+      para3: val.para3 ?? "",
+      mainImageLink: val.mainImageLink ?? "",
+      secondImageLink: val.secondImageLink ?? "",
+      youtubeLink: val.youtubeLink ?? "",
+      photos: val.photos ?? [
+        "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3",
+        "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3",
+        "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3"
+      ],
+    };
 
-      updateArticle(mapped);
-    }
+    updateArticle(mapped);
   }
+}
+
 
   function getYouTubeVideoId(url: string): string {
     const regExp =

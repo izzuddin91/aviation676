@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 // import { clearAuth, getUserAuth } from "../util/auth.util";
 // import { getAdminById } from "../(site)/service/firebase.service";
 import styles from "@/app/Navbar.module.css"; // Import CSS module
+import Link from "next/link";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,14 +46,14 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <div className={styles.navContainer}>
         {/* Logo Image */}
-        <a href="/" className={styles.navLogo}>
+        <Link href="/" className={styles.navLogo}>
           <img
             src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/A676Logo.png?alt=media&token=4567ccf1-dd00-42c5-871e-8a08c8c80854" // Make sure to place the logo.png in the public folder
             alt="Aviation 676"
             className={styles.logoImage}
             style={{ width: "110px" }}
           />
-        </a>
+        </Link>
 
         {/* Hamburger Icon */}
         <div
@@ -69,25 +70,25 @@ const Navbar = () => {
           }`}
         >
           <li>
-            <a href="/" className={styles.navLink}>
+            <Link href="/" className={styles.navLink}>
               Home
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/stories" className={styles.navLink}>
+            <Link href="/stories" className={styles.navLink}>
               Stories
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#about" className={styles.navLink}>
+            <Link href="#about" className={styles.navLink}>
               About Us
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/merchandises" className={styles.navLink}>
+            <Link href="/merchandises" className={styles.navLink}>
               To Sell
               {adminName ? `, ${adminName}` : ""}
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
