@@ -1,95 +1,94 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-// import { clearAuth, getUserAuth } from "../util/auth.util";
-// import { getAdminById } from "../(site)/service/firebase.service";
-import styles from "@/app/Navbar.module.css"; // Import CSS module
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import styles from "@/app/Navbar.module.css";
+import { useAuth } from "@/app/context/AuthContext";
+import { logoutAction } from "@/app/actions/session";
+import { Menu, X } from "lucide-react"; // <-- for hamburger icons
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminName, setAdminName] = useState<string | null>(null);
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user, logoutLocal } = useAuth();
+  const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false); // ✅ mobile menu toggle
 
-  // Check authentication on mount
-  useEffect(() => {
-    // const checkUserAuth = async () => {
-    //   try {
-    //     const uid = await getUserAuth();
-    //     if (uid) {
-    //       const admin = await getAdminById(uid);
-    //       setAdminName(admin.name);
-    //       setIsAuthenticated(true);
-    //     } else {
-    //       setIsAuthenticated(false);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error checking user authentication:", error);
-    //   }
-    // };
-
-    // checkUserAuth();
-  }, []);
-
-  const handleLogout = () => {
-    try {
-      // clearAuth();
-      setIsAuthenticated(false);
-      setAdminName(null);
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
+  const handleLogout = async () => {
+    await logoutAction();
+    logoutLocal();
+    router.push("/signin");
   };
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.navContainer}>
-        {/* Logo Image */}
         <Link href="/" className={styles.navLogo}>
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/A676Logo.png?alt=media&token=4567ccf1-dd00-42c5-871e-8a08c8c80854" // Make sure to place the logo.png in the public folder
+            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/A676Logo.png?alt=media&token=4567ccf1-dd00-42c5-871e-8a08c8c80854"
             alt="Aviation 676"
             className={styles.logoImage}
             style={{ width: "110px" }}
           />
         </Link>
 
-        {/* Hamburger Icon */}
-        <div
+        {/* ✅ Hamburger icon for mobile */}
+        <button
           className={styles.hamburger}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
         >
-          ☰
-        </div>
+          {menuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
 
-        {/* Navigation Links */}
+        {/* ✅ Menu list */}
         <ul
-          className={`${styles.navList} ${
-            isMobileMenuOpen ? styles.mobileOpen : ""
-          }`}
+          className={`${styles.navList} ${menuOpen ? styles.mobileOpen : ""}`}
+          onClick={() => setMenuOpen(false)} // close menu on click
         >
           <li>
-            <Link href="/" className={styles.navLink}>
+            <Link href="/" style={{ padding: "10px" }}>
               Home
             </Link>
           </li>
           <li>
-            <Link href="/stories" className={styles.navLink}>
+            <Link href="/stories" style={{ padding: "10px" }}>
               Stories
             </Link>
           </li>
           <li>
-            <Link href="#about" className={styles.navLink}>
-              About Us
+            <Link href="#about" style={{ padding: "10px" }}>
+              Planespotting Competition
             </Link>
           </li>
           <li>
-            <Link href="/merchandises" className={styles.navLink}>
+            <Link href="/merchandises" style={{ padding: "10px" }}>
               To Sell
-              {adminName ? `, ${adminName}` : ""}
             </Link>
           </li>
+
+          {isAuthenticated ? (
+            <li>
+              <button
+                style={{ padding: "10px" }}
+                onClick={handleLogout}
+                className={styles.navButton}
+              >
+                Sign Out {user?.name ? `(${user.name})` : ""}
+              </button>
+            </li>
+          ) : (
+            <li>
+              <Link
+                href="/signin"
+                style={{ padding: "10px" }}
+                className={styles.navButton}
+              >
+                Sign In / Sign Up
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

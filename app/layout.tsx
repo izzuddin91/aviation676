@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import "./globals.css";
 import { Lato, Poppins } from "next/font/google";
 import Navbar from "./component/Navbar";
-
+import { AuthProvider } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation"; // Import useRouter
 import BottomBar from "./component/bottomBar";
 
@@ -32,9 +32,14 @@ export default function RootLayout({
         <meta name="theme-color" content="#000" />
       </head>
       <body>
-        <Navbar />
-        <div style={{ marginTop: "60px", paddingBottom: "80px" }}>{children}</div> 
-        <BottomBar onClick={() => router.push("/contact")} /> {/* Use router */}
+        <AuthProvider>
+          <Navbar />
+          <div style={{ marginTop: "60px", paddingBottom: "80px" }}>
+            {children}
+          </div>
+          <BottomBar onClick={() => router.push("/contact")} />{" "}
+          {/* Use router */}
+        </AuthProvider>
       </body>
     </html>
   );

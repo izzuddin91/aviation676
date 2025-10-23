@@ -44,177 +44,123 @@ export default function Articles() {
       margin: "30px auto",
       width: "80%",
     },
-    videoContainer: {
-      display: "flex",
-      justifyContent: "center" as const,
-      gap: "20px", // Add space between the videos
-      margin: "20px 0",
-    },
-    iframe: {
-      border: "none",
-      borderRadius: "10px",
-      width: "560px",
-      height: "315px",
-    },
     paddingContainer: { padding: "0 20px" },
-    card: {
-      backgroundColor: "#fff",
-      borderRadius: "10px",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      overflow: "hidden",
-      textAlign: "center" as const,
-      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-    },
-    cardImage: { width: "100%", height: "200px", objectFit: "cover" as const },
-    cardTitle: { fontSize: "1.5em", margin: "15px 0" },
-    cardDescription: {
-      fontSize: "1em",
-      padding: "0 15px",
-      marginBottom: "15px",
-    },
-    cardLink: {
-      display: "inline-block",
-      margin: "10px 0",
-      color: "#007BFF",
-      textDecoration: "none",
-      fontWeight: "bold",
-    },
-    aboutMeContainer: {
-      display: "flex",
-      flexWrap: "wrap" as const,
-      alignItems: "flex-start" as const, // Align text to top of image
-      gap: "30px",
-      marginTop: "40px",
-      padding: "0 20px", // Add padding to the left and right side
-    },
-    aboutMeImage: {
-      width: "600px",
-      height: "auto",
-      borderRadius: "10px",
-      objectFit: "cover" as const,
-    },
-    aboutMeText: {
-      flex: 1,
-    },
-    instagramThumbnails: {
-      display: "flex",
-      gap: "10px",
-      marginTop: "20px",
-      flexWrap: "wrap" as const,
-    },
-    instagramIframe: {
-      
-      width: "300px", // Adjusted width to fit properly
-      height: "700px", // Adjusted height for a better display
-      objectFit: "cover" as const,
-      borderRadius: "8px",
-    },
   };
 
   return (
-    <div>
+    <div className="bg-white text-black">
       <VideoBackground />
 
-      <div style={styles.paddingContainer}>
-        <h1 style={styles.sectionTitle}>Do you love general aviation ?</h1>
-        <p style={styles.sectionDescription}>
-          For those who fancy being a pilot and likes anything aviation related
-          !
+      <div className="px-5 md:px-10">
+        <h1 className="text-2xl md:text-3xl text-center font-semibold mt-6 mb-2">
+          Do you love general aviation ?
+        </h1>
+        <p className="text-center text-gray-600 text-base md:text-lg mb-5">
+          For those who fancy being a pilot and likes anything aviation related!
         </p>
       </div>
 
-      <hr style={styles.hr} />
+      <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
-      <div style={styles.videoContainer}>
+      {/* ✅ Responsive video section */}
+      <div className="flex flex-col md:flex-row justify-center gap-6 px-4">
         <iframe
-          src="https://www.youtube.com/embed/pWb7E6IXB4Q" 
+          src="https://www.youtube.com/embed/pWb7E6IXB4Q"
           title="YouTube Video 1"
-          style={styles.iframe}
+          className="w-full md:w-[560px] h-[220px] md:h-[315px] rounded-lg border-none"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
         <iframe
-          src="https://www.youtube.com/embed/ZAIVB4vSnZE" // Replace with your second video ID
+          src="https://www.youtube.com/embed/ZAIVB4vSnZE"
           title="YouTube Video 2"
-          style={styles.iframe}
+          className="w-full md:w-[560px] h-[220px] md:h-[315px] rounded-lg border-none"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
       </div>
 
-      <hr style={styles.hr} />
+      <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
-      {/* Cards */}
-      <div className="cardsContainer" style={styles.paddingContainer}>
-        <div style={styles.card}>
+      {/* ✅ Responsive Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-5 md:px-10">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition">
           <Image
             src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/thumbnail_johor_flight.png?alt=media&token=718271ca-c0b8-4118-920a-b90d49a2256d"
-            alt="Charter Jet Service"
+            alt="Johor Flight"
             width={400}
-            height={250} // Adjust to fit your layout
-            style={styles.cardImage}
+            height={250}
+            className="w-full h-48 object-cover"
           />
-          <h2 style={styles.cardTitle}>Johor Flight</h2>
-          <p style={styles.cardDescription}>
+          <h2 className="text-lg font-semibold mt-3">Johor Flight</h2>
+          <p className="text-sm text-gray-600 px-3 mb-2">
             How I execute touch and go at Senai Airport.
           </p>
-          <Link href="/articles/CR0BafXyabvNYdO15AKH" style={styles.cardLink}>
+          <Link
+            href="/articles/CR0BafXyabvNYdO15AKH"
+            className="text-blue-600 font-bold mb-3 inline-block"
+          >
             Read More
           </Link>
         </div>
 
-        <div style={styles.card}>
+        <div className="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition">
           <Image
             src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3"
-            alt="Airbnb Business"
+            alt="Podcast"
             width={400}
-            height={250} // Adjust to fit your layout
-            style={styles.cardImage}
+            height={250}
+            className="w-full h-48 object-cover"
           />
-          <h2 style={styles.cardTitle}>First Podcast !</h2>
-          <p style={styles.cardDescription}>
-            Watch our first ever podcast on general aviation. 
+          <h2 className="text-lg font-semibold mt-3">First Podcast!</h2>
+          <p className="text-sm text-gray-600 px-3 mb-2">
+            Watch our first ever podcast on general aviation.
           </p>
-          <Link href="/articles/OHekw7WGGLXsAm3Pqa2P" style={styles.cardLink}>
+          <Link
+            href="/articles/OHekw7WGGLXsAm3Pqa2P"
+            className="text-blue-600 font-bold mb-3 inline-block"
+          >
             Read More
           </Link>
         </div>
 
-        <div style={styles.card}>
+        <div className="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition">
           <Image
             src="https://thisisflight.net/wp-content/uploads/2021/03/MG_0441-scaled.jpg"
-            alt="Airbnb Hosting Services"
+            alt="Lima Airshow"
             width={400}
-            height={250} // Adjust to fit your layout
-            style={styles.cardImage}
+            height={250}
+            className="w-full h-48 object-cover"
           />
-          <h2 style={styles.cardTitle}>Lima Airshow</h2>
-          <p style={styles.cardDescription}>
+          <h2 className="text-lg font-semibold mt-3">Lima Airshow</h2>
+          <p className="text-sm text-gray-600 px-3 mb-2">
             This time around we will show you the inside of the airshow in
-            Langkawi
+            Langkawi.
           </p>
-          <Link href="/articles" style={styles.cardLink}>
+          <Link
+            href="/articles"
+            className="text-blue-600 font-bold mb-3 inline-block"
+          >
             Read More
           </Link>
         </div>
       </div>
 
-      <hr style={styles.hr} />
+      <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
-      {/* About Me Section */}
-      <div style={styles.aboutMeContainer}>
+      {/* ✅ About Me Section */}
+      <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
         <Image
           src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/izzuddin_with_cessna172.png?alt=media&token=7e94ff25-7423-45a9-9c2b-c9d4285feef9"
           alt="About Me"
-          width={400}
-          height={250} // Adjust to fit your layout
-          style={styles.aboutMeImage}
+          width={600}
+          height={400}
+          className="rounded-lg w-full lg:w-[600px] object-cover"
         />
-        <div style={styles.aboutMeText}>
-          <h2 style={{ ...styles.sectionTitle, textAlign: "left" }}>
-            About Me
-          </h2>
-          <p style={{ fontSize: "1.1em", color: "#444", lineHeight: "1.6" }}>
+
+        <div className="flex-1">
+          <h2 className="text-2xl font-semibold mb-3">About Me</h2>
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             Hi, I am Izzuddin, a passionate aviation enthusiast who loves flying
             small aircraft and exploring the skies of Malaysia. I created this
             site to share my flying stories, tips for aspiring pilots, and cool
@@ -222,31 +168,26 @@ export default function Articles() {
             curious about the world above, you are in the right place.
           </p>
 
-          {/* Instagram Thumbnails */}
-          <div style={styles.instagramThumbnails}>
-            {/* Instagram iframe thumbnails */}
+          {/* ✅ Responsive Instagram Embeds */}
+          <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
             <iframe
               src="https://www.instagram.com/p/DDMZ7kMP3xP/embed"
-              title="Instagram Post 1"
-              style={styles.instagramIframe}
-              frameBorder="0"
+              title="Instagram 1"
+              className="w-[280px] h-[500px] rounded-lg"
             />
             <iframe
               src="https://www.instagram.com/p/DGZtoAsPUhw/embed"
-              title="Instagram Post 2"
-              style={styles.instagramIframe}
-              frameBorder="0"
+              title="Instagram 2"
+              className="w-[280px] h-[500px] rounded-lg"
             />
             <iframe
               src="https://www.instagram.com/p/C11kbjCvQ7F/embed"
-              title="Instagram Post 3"
-              style={styles.instagramIframe}
-              frameBorder="0"
+              title="Instagram 3"
+              className="w-[280px] h-[500px] rounded-lg"
             />
           </div>
         </div>
       </div>
-      {/* Bottom Bar */}
     </div>
   );
 }

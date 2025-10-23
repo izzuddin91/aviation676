@@ -3,17 +3,20 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation"; // ✅ Added
 import { getAllArticles } from "../service/firebase.service";
 
 interface StoryCardProps {
+  id: string; // ✅ Added
   photos: string[];
   title: string;
   tags: string[];
   description: string;
 }
 
-const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description }) => {
+const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, description }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter(); // ✅ Added
 
   const prevPhoto = () => {
     setCurrentIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
@@ -21,6 +24,11 @@ const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description 
 
   const nextPhoto = () => {
     setCurrentIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleSeeMore = () => {
+    console.log(id)
+    router.push(`/articles/${id}`); // ✅ Redirect to article page
   };
 
   return (
@@ -75,7 +83,10 @@ const StoryCard: React.FC<StoryCardProps> = ({ photos, title, tags, description 
           </p>
         </div>
         <div className="flex justify-end mt-4">
-          <button className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-4 py-2 rounded-full shadow-md hover:opacity-90 transition">
+          <button
+            onClick={handleSeeMore} // ✅ Added click handler
+            className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-4 py-2 rounded-full shadow-md hover:opacity-90 transition"
+          >
             See More
           </button>
         </div>
@@ -99,6 +110,7 @@ const StoriesPage = () => {
           : [];
 
         return {
+          id: article.id, // ✅ Include article ID
           photos: [article.mainImageLink, article.secondImageLink].filter(Boolean),
           title: article.title || "Untitled Story",
           tags: tagsArray,
