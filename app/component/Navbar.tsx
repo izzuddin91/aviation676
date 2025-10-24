@@ -58,7 +58,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="#about" style={{ padding: "10px" }}>
+            <Link href="competition" style={{ padding: "10px" }}>
               Planespotting Competition
             </Link>
           </li>
@@ -70,20 +70,25 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <li>
-              <button
-                style={{ padding: "10px" }}
-                onClick={handleLogout}
+              <Link
+                href="/signin"
+                onClick={async (e) => {
+                  e.preventDefault(); // prevent immediate navigation
+                  await handleLogout(); // clear session
+                  router.push("/signin"); // redirect manually
+                }}
                 className={styles.navButton}
+                style={{ padding: "10px", cursor: "pointer" }}
               >
-                Sign Out {user?.name ? `(${user.name})` : ""}
-              </button>
+                Sign Out {user?.displayName ? `(${user.displayName})` : ""}
+              </Link>
             </li>
           ) : (
             <li>
               <Link
                 href="/signin"
-                style={{ padding: "10px" }}
                 className={styles.navButton}
+                style={{ padding: "10px" }}
               >
                 Sign In / Sign Up
               </Link>

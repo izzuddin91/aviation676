@@ -6,6 +6,7 @@ import { getSessionAction } from "@/app/actions/session";
 interface AuthContextType {
   isAuthenticated: boolean;
   user: any | null;
+  loading: boolean; // ✅ added
   refreshAuth: () => Promise<void>;
   logoutLocal: () => void;
 }
@@ -13,6 +14,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   user: null,
+  loading: true, // ✅ default to true
   refreshAuth: async () => {},
   logoutLocal: () => {},
 });
@@ -20,10 +22,15 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true); // ✅ state to track loading
 
-  // Load session once at mount
+  // Run once when component mounts
   useEffect(() => {
-    refreshAuth();
+    const initAuth = async () => {
+      await refreshAuth();
+      setLoading(false); // ✅ stop loading after refreshAuth finishes
+    };
+    initAuth();
   }, []);
 
   const refreshAuth = async () => {
@@ -49,7 +56,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, refreshAuth, logoutLocal }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, user, loading, refreshAuth, logoutLocal }}
+    >
       {children}
     </AuthContext.Provider>
   );

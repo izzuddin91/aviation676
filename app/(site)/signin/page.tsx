@@ -21,9 +21,9 @@ export default function SignInPage() {
       await loginAction(formData);
       await refreshAuth();
       router.push("/");
-    } catch (err) {
-      console.error(err);
-      setError("Login failed. Please try again.");
+    } catch (err: any) {
+      console.error("Login failed:", err.message);
+      setError("Invalid email or password. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -36,10 +36,11 @@ export default function SignInPage() {
           Welcome Back 👋
         </h2>
         <p className="text-gray-500 text-center mb-8">
-          Sign in to continue to Aviation 676
+          Sign in to continue to <strong>Aviation 676</strong>
         </p>
 
         <form onSubmit={handleLogin} className="space-y-5">
+          {/* Email Field */}
           <div>
             <label
               htmlFor="email"
@@ -57,6 +58,25 @@ export default function SignInPage() {
             />
           </div>
 
+          {/* Password Field */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-600 mb-1"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+            />
+          </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -70,10 +90,12 @@ export default function SignInPage() {
           </button>
         </form>
 
+        {/* Error Message */}
         {error && (
           <p className="text-red-500 text-sm text-center mt-4">{error}</p>
         )}
 
+        {/* Sign Up Link */}
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-500">
             Don’t have an account?{" "}
