@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAuth } from "firebase/auth";
 import app from "@/app/clientApp";
-import { submitPhoto } from "../service/firebase.service";
 import { uploadPhotoAndSubmit } from "../service/firebase.service";
-
-const auth = getAuth(app);
-
-// after successful upload
-const user = auth.currentUser;
 
 export default function SubmitPhotoPage() {
   const { isAuthenticated } = useAuth();
@@ -64,21 +58,27 @@ export default function SubmitPhotoPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    
     e.preventDefault();
     setError(null);
-console.log(user)
+
+    const auth = getAuth(app);
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      setError("Session expired. Please sign in again.");
+      router.push("/signin");
+      return;
+    }
+
     if (!image) {
       setError("Please upload a photo.");
       return;
     }
 
     setLoading(true);
-
     try {
-      await uploadPhotoAndSubmit(image, form, user!.uid);
+      await uploadPhotoAndSubmit(image, form, currentUser.uid);
       alert("Photo submitted successfully! 🎉");
-      // router.push("/competition");
     } catch (err) {
       console.error(err);
       setError("Failed to submit. Please try again.");
