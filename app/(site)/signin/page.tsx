@@ -16,6 +16,7 @@ export default function SignInPage() {
     setError(null);
     setLoading(true);
 
+    console.log("ads")
     try {
       const formData = new FormData(event.currentTarget);
       await loginAction(formData);

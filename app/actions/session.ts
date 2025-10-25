@@ -16,30 +16,49 @@ async function encrypt(payload: any) {
 }
 
 async function decrypt(input: string): Promise<any> {
-  const { payload } = await jwtVerify(input, secretKey, { algorithms: ["HS256"] });
+  const { payload } = await jwtVerify(input, secretKey, {
+    algorithms: ["HS256"],
+  });
   return payload;
 }
 
 export async function loginAction(formData: FormData) {
+  console.log("expires")
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
   try {
+    console.log("expires")
+    // ✅ Persistent Firebase auth
     await setPersistence(auth, browserLocalPersistence);
+
+    // 1️⃣ Firebase sign-in
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
+    // 2️⃣ Prepare user data
     const userData = {
       uid: user.uid,
       email: user.email,
       name: user.displayName || "Aviation Enthusiast",
     };
 
+    // 3️⃣ Get cookie store
+    const cookieStore = cookies();
+
+    // 🔥 Force remove any old session cookie first
+    (await cookieStore).set("session", "", {
+      path: "/",
+      expires: new Date(0),
+    });
+
+    // 4️⃣ Create new long-term session cookie (10 years)
+    const expires = new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000);
+    console.log(expires)
     const session = await encrypt({ user: userData });
 
-    // 🔥 Cookie valid for 10 years
-    const expires = new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000);
-    (await cookies()).set("session", session, {
+    // 5️⃣ Save the new cookie
+    (await cookieStore).set("session", session, {
       path: "/",
       httpOnly: true,
       sameSite: "lax",
@@ -47,7 +66,8 @@ export async function loginAction(formData: FormData) {
       expires,
     });
 
-    // ✅ Return only plain object (serializable)
+    console.log("✅ Session cookie set. Expiry:", expires.toISOString());
+
     return { success: true, user: userData };
   } catch (error: any) {
     console.error("Firebase login failed:", error.message);
@@ -56,15 +76,22 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  (await cookies()).set("session", "", { path: "/", expires: new Date(0) });
+  const cookieStore = cookies();
+  (await cookieStore).set("session", "", {
+    path: "/",
+    expires: new Date(0),
+  });
 }
 
 export async function getSessionAction() {
-  const session = (await cookies()).get("session")?.value;
+  const cookieStore = cookies();
+  const session = (await cookieStore).get("session")?.value;
   if (!session) return null;
+
   try {
     return await decrypt(session);
-  } catch {
+  } catch (error) {
+    console.error("Session decryption failed:", error);
     return null;
   }
 }

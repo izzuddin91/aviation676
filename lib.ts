@@ -26,7 +26,7 @@ export async function login(formData: FormData) {
   const user = { email: formData.get("email"), name: "John" };
 
   // Create the session
-  const expires = new Date(Date.now() + 10 * 1000);
+  const expires = new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000);
   const session = await encrypt({ user, expires });
 
   // Save the session in a cookie
@@ -50,17 +50,29 @@ export async function getSession() {
 
 export async function updateSession(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
-  if (!session) return;
-
-  // Refresh the session so it doesn't expire
-  const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 10 * 1000);
   const res = NextResponse.next();
-  res.cookies.set({
-    name: "session",
-    value: await encrypt(parsed),
-    httpOnly: true,
-    expires: parsed.expires,
-  });
-  return res;
+
+  if (!session) {
+    // No session cookie — nothing to refresh
+    return res;
+  }
+
+  try {
+    // ✅ Verify the token is valid
+    await jwtVerify(session, key, { algorithms: ["HS256"] });
+
+    // ⚠️ Do not reissue or overwrite cookie every request.
+    // Just return the response — session stays as-is.
+    return res;
+  } catch (error) {
+    console.error("Session invalid or expired:", error);
+    // If invalid, clear it
+    res.cookies.set({
+      name: "session",
+      value: "",
+      expires: new Date(0),
+      path: "/",
+    });
+    return res;
+  }
 }
