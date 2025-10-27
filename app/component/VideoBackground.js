@@ -44,7 +44,7 @@ export default function ImageCarouselBackground() {
 
       {/* ✅ Floating WhatsApp Button */}
       <a
-        href="https://wa.me/+60132711668?text=I would like to know more about I.Z. Properties"
+        href="https://wa.me/+60132711668?text=I would like to know more about Aviation 676"
         target="_blank"
         rel="noopener noreferrer"
         style={styles.whatsappButton}

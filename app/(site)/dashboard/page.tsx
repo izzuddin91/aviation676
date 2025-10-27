@@ -34,7 +34,7 @@ export default function Home() {
     <div className="p-5 h-screen bg-gray-100">
       <div className="grid grid-cols-1 gap-4 p-4 pb-10;">
         <div className="col-span text-center">
-        <h3 className='text-2xl font-bold'>I.Z. Properties. All about airbnb / properties</h3>
+        <h3 className='text-2xl font-bold'>Aviation 676</h3>
         </div>
       </div>
       <div className="grid gap-4 p-4;">

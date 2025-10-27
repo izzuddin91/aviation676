@@ -64,7 +64,7 @@ export default function SubmitPhotoPage() {
     const auth = getAuth(app);
     const currentUser = auth.currentUser;
 
-    if (!currentUser) {
+    if (!user) {
       setError("Session expired. Please sign in again.");
       router.push("/signin");
       return;
@@ -77,7 +77,7 @@ export default function SubmitPhotoPage() {
 
     setLoading(true);
     try {
-      await uploadPhotoAndSubmit(image, form, currentUser.uid);
+      await uploadPhotoAndSubmit(image, form, user.uid);
       alert("Photo submitted successfully! 🎉");
     } catch (err) {
       console.error(err);
