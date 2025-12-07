@@ -1,15 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    webpack: (config, { isServer }) => {
+  // 🔥 Disable Turbopack so Webpack config works again
+   turbopack: {},
+
+  webpack: (config, { isServer }) => {
     // Fix "undici" in firebase compat modules
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         undici: false,
-      }
+      };
     }
-    return config
+    return config;
   },
+
   images: {
     domains: [
       "i9.ytimg.com",
@@ -17,14 +21,15 @@ const nextConfig = {
       "firebasestorage.googleapis.com",
       "www.twincitiesflight.com",
       "thisisflight.net",
-      "instagram.fkix2-1.fna.fbcdn.net" // (if using Instagram thumbnails too)
+      "instagram.fkix2-1.fna.fbcdn.net",
     ],
   },
-    experimental: {
-        serverActions: {
-          allowedOrigins: ['my-proxy.com', '*.my-proxy.com'],
-        },
-      },
-}
 
-module.exports = nextConfig
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["my-proxy.com", "*.my-proxy.com"],
+    },
+  },
+};
+
+module.exports = nextConfig;
