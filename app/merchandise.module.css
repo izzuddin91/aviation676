@@ -1,33 +1,45 @@
 /* merchandise.module.css */
+
 .pageContainer {
   padding: 20px;
   text-align: center;
   background-color: #f4f4f4;
 }
 
+/* Page Title */
 .pageTitle {
   font-size: 2rem;
   color: #333;
   margin-bottom: 20px;
 }
 
+/* Product Card */
 .productCard {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 24px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 80%;
-  margin: 0 auto;
+  margin: 0 auto 24px auto;
 }
 
+/* Product Image */
 .productImage {
   flex: 1;
   max-width: 300px;
 }
 
+.productImage img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Product Details */
 .productDetails {
   flex: 1;
   padding: 20px;
@@ -45,14 +57,17 @@
   font-size: 1rem;
   color: #555;
   margin-bottom: 20px;
+  line-height: 1.5;
 }
 
 .productPrice {
   font-size: 1.2rem;
   color: #333;
   margin-bottom: 20px;
+  font-weight: 600;
 }
 
+/* Button */
 .buyNowButton {
   background-color: #02b6b8;
   color: white;
@@ -68,4 +83,52 @@
   background-color: #028f8f;
 }
 
+/* ============================== */
+/* 📱 MOBILE RESPONSIVE STYLES */
+/* ============================== */
+@media (max-width: 768px) {
+  .productCard {
+    flex-direction: column;
+    width: 95%;
+    padding: 16px;
+  }
 
+  .productImage {
+    max-width: 100%;
+  }
+
+  .productDetails {
+    padding: 16px 0;
+    text-align: center;
+  }
+
+  .productTitle {
+    font-size: 1.3rem;
+  }
+
+  .productDescription {
+    font-size: 0.95rem;
+  }
+
+  .productPrice {
+    font-size: 1.1rem;
+  }
+
+  .buyNowButton {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+/* ============================== */
+/* 📱 SMALL PHONES */
+/* ============================== */
+@media (max-width: 480px) {
+  .pageTitle {
+    font-size: 1.6rem;
+  }
+
+  .productCard {
+    padding: 14px;
+  }
+}
