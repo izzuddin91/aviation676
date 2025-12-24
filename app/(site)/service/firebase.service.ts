@@ -151,3 +151,38 @@ export const uploadPhotoAndSubmit = async (
     throw error;
   }
 };
+
+/**
+ * 📦 Fetch product details by ID
+ */
+export const fetchProduct = async (productId: string): Promise<{
+  title: string;
+  price: number;
+  features: string[];
+  images: string[];
+  description: string;
+} | null> => {
+  try {
+    const docRef = doc(db, "products", productId);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      console.error(`Product ${productId} not found`);
+      return null;
+    }
+
+    const data = docSnap.data();
+    const images = [data.image_1, data.image_2, data.image_3, data.image_4].filter(Boolean);
+
+    return {
+      title: data.title,
+      price: data.price,
+      features: data.features || [],
+      images,
+      description: data.description || "",
+    };
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return null;
+  }
+};

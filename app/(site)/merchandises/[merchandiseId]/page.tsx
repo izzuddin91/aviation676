@@ -7,6 +7,7 @@ import { db } from "../../../clientApp";
 import { FaShoppingCart } from "react-icons/fa";
 import "@/app/merchandise.module.css";
 import { useRouter } from "next/navigation"; // add this import at top
+import { fetchProduct } from "../../service/firebase.service";
 
 interface ProductData {
   title: string;
@@ -23,33 +24,17 @@ const ProductPage: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  useEffect(() => {
-    
-    const id = Array.isArray(merchandiseId) ? merchandiseId[0] : merchandiseId;
-    if (!id) return;
+useEffect(() => {
+  const id = Array.isArray(merchandiseId) ? merchandiseId[0] : merchandiseId;
+  if (!id) return;
 
-    const fetchProduct = async () => {
-      const productRef = doc(db, "products", id);
-      const productSnap = await getDoc(productRef);
+  const loadProduct = async () => {
+    const product = await fetchProduct(id);
+    if (product) setProductData(product);
+  };
 
-      if (productSnap.exists()) {
-        const data = productSnap.data();
-        const images = [data.image_1, data.image_2, data.image_3, data.image_4].filter(Boolean);
-
-        setProductData({
-          title: data.title,
-          price: data.price,
-          features: data.features || [],
-          images,
-          description: data.description || "",
-        });
-      } else {
-        console.error("Product not found.");
-      }
-    };
-
-    fetchProduct();
-  }, [merchandiseId]);
+  loadProduct();
+}, [merchandiseId]);
 
   const handleAddToCart = () => {
     const message = `Hello, I would like to order:\n- Product: ${productData?.title || "Unknown"}`;
