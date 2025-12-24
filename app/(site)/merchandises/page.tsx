@@ -132,7 +132,7 @@ const Merchandises: React.FC = () => {
           <p className={styles.productPrice}>RM350</p>
 
           <button
-            onClick={() => handleProductClick("shirt-676-2")}
+            onClick={() => handleProductClick("F7PoBhY2X95zI27lYgqH")}
             className={styles.buyNowButton}
           >
             Details
