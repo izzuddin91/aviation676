@@ -115,7 +115,7 @@ const Merchandises: React.FC = () => {
       <div className={styles.productCard}>
         <div className={styles.productImage}>
           <Image
-            src="https://console.firebase.google.com/project/dfma-etiqa/firestore/databases/-default-/data/~2Fproducts~2FF7PoBhY2X95zI27lYgqH"
+            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/throttle.jpg?alt=media&token=82cec786-1577-452e-b468-891b11eced66"
             alt="Aviation 676 Sim Throttle"
             width={300}
             height={400}
