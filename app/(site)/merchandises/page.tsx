@@ -115,7 +115,7 @@ const Merchandises: React.FC = () => {
       <div className={styles.productCard}>
         <div className={styles.productImage}>
           <Image
-            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/throttle_mixture.png?alt=media&token=788c558c-704a-4958-9796-8544826ae58a"
+            src="https://console.firebase.google.com/project/dfma-etiqa/firestore/databases/-default-/data/~2Fproducts~2FF7PoBhY2X95zI27lYgqH"
             alt="Aviation 676 Sim Throttle"
             width={300}
             height={400}
@@ -127,9 +127,9 @@ const Merchandises: React.FC = () => {
             Aviation 676 Sim Throttle
           </h2>
           <p className={styles.productDescription}>
-          A (kind of) realistic Cessna 172 throttle and mixture for flight simulators. Perfect for student who want a sense of realism when practicing touch and go on the simulator.
+          A realistic Cessna 172 throttle and mixture for flight simulators. Perfect for student who want a sense of realism when practicing touch and go on the simulator.
           </p>
-          <p className={styles.productPrice}>RM350</p>
+          <p className={styles.productPrice}>RM300</p>
 
           <button
             onClick={() => handleProductClick("F7PoBhY2X95zI27lYgqH")}
