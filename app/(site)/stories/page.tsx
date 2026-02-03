@@ -98,7 +98,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
 const StoriesPage = () => {
   const [stories, setStories] = useState<StoryCardProps[]>([]);
   const [filteredStories, setFilteredStories] = useState<StoryCardProps[]>([]);
-  const [selectedSegment, setSelectedSegment] = useState<"all" | "japan" | "malaysia">("all");
+  const [selectedSegment, setSelectedSegment] = useState<"all" | "podcast">("all");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,10 +144,10 @@ const StoriesPage = () => {
 
       {/* Segment Selector */}
       <div className="flex justify-center mb-10 gap-3">
-        {["all", "japan", "malaysia"].map((segment) => (
+        {["all", "podcast"].map((segment) => (
           <button
             key={segment}
-            onClick={() => setSelectedSegment(segment as "all" | "japan" | "malaysia")}
+            onClick={() => setSelectedSegment(segment as "all" | "podcast")}
             className={`px-5 py-2 rounded-full text-sm font-semibold border transition-all ${
               selectedSegment === segment
                 ? "bg-gradient-to-r from-indigo-500 to-pink-500 text-white border-transparent shadow-md"
