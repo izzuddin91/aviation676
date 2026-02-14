@@ -46,38 +46,72 @@ export default function AdminArticlesPage() {
     );
   }
 
-  return (
-    <div style={styles.container}>
+return (
+  <div style={styles.container}>
+    <div style={styles.headerRow}>
       <h1 style={styles.heading}>📰 Manage Articles</h1>
 
-      {articles.length === 0 ? (
-        <p style={styles.noData}>No articles found.</p>
-      ) : (
-        <div style={styles.grid}>
-          {articles.map((article) => (
-            <div
-              key={article.id}
-              style={styles.card}
-              onClick={() => handleView(article.id)}
-            >
-              <img
-                src={article.mainImageLink || "https://via.placeholder.com/600x300.png?text=No+Image"}
-                alt={article.title}
-                style={styles.image}
-              />
-              <div style={styles.info}>
-                <h2 style={styles.title}>{article.title || "Untitled"}</h2>
-                <p style={styles.tags}>{article.tags || "No tags"}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <button
+        style={styles.createButton}
+        onClick={() => router.push("/admin/articles/create")}
+      >
+        ➕ Create Article
+      </button>
     </div>
-  );
+
+    {articles.length === 0 ? (
+      <p style={styles.noData}>No articles found.</p>
+    ) : (
+      <div style={styles.grid}>
+        {articles.map((article) => (
+          <div
+            key={article.id}
+            style={styles.card}
+            onClick={() => handleView(article.id)}
+          >
+            <img
+              src={
+                article.mainImageLink ||
+                "https://via.placeholder.com/600x300.png?text=No+Image"
+              }
+              alt={article.title}
+              style={styles.image}
+            />
+            <div style={styles.info}>
+              <h2 style={styles.title}>{article.title || "Untitled"}</h2>
+              <p style={styles.tags}>{article.tags || "No tags"}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
 }
 
 const styles = {
+headerRow: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "30px",
+},
+
+createButton: {
+  backgroundColor: "#2563eb",
+  color: "#fff",
+  border: "none",
+  padding: "10px 16px",
+  borderRadius: "8px",
+  fontSize: "14px",
+  fontWeight: "600",
+  cursor: "pointer",
+  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+  transition: "all 0.2s ease",
+},
+
+
   container: {
     maxWidth: "1000px",
     margin: "40px auto",

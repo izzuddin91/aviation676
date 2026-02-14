@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation"; // ✅ Added
+import { useRouter } from "next/navigation";
 import { getAllArticles } from "../service/firebase.service";
 
 interface StoryCardProps {
-  id: string; // ✅ Added
+  id: string;
   photos: string[];
   title: string;
   tags: string[];
@@ -16,7 +16,7 @@ interface StoryCardProps {
 
 const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, description }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const router = useRouter(); // ✅ Added
+  const router = useRouter();
 
   const prevPhoto = () => {
     setCurrentIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
@@ -27,8 +27,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
   };
 
   const handleSeeMore = () => {
-    console.log(id)
-    router.push(`/articles/${id}`); // ✅ Redirect to article page
+    router.push(`/articles/${id}`);
   };
 
   return (
@@ -84,7 +83,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
         </div>
         <div className="flex justify-end mt-4">
           <button
-            onClick={handleSeeMore} // ✅ Added click handler
+            onClick={handleSeeMore}
             className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-4 py-2 rounded-full shadow-md hover:opacity-90 transition"
           >
             See More
@@ -95,10 +94,13 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
   );
 };
 
+const STORIES_PER_PAGE = 6;
+
 const StoriesPage = () => {
   const [stories, setStories] = useState<StoryCardProps[]>([]);
   const [filteredStories, setFilteredStories] = useState<StoryCardProps[]>([]);
   const [selectedSegment, setSelectedSegment] = useState<"all" | "podcast">("all");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -110,7 +112,7 @@ const StoriesPage = () => {
           : [];
 
         return {
-          id: article.id, // ✅ Include article ID
+          id: article.id,
           photos: [article.mainImageLink, article.secondImageLink].filter(Boolean),
           title: article.title || "Untitled Story",
           tags: tagsArray,
@@ -133,7 +135,13 @@ const StoriesPage = () => {
       );
       setFilteredStories(filtered);
     }
+    setCurrentPage(1);
   }, [selectedSegment, stories]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredStories.length / STORIES_PER_PAGE);
+  const startIndex = (currentPage - 1) * STORIES_PER_PAGE;
+  const paginatedStories = filteredStories.slice(startIndex, startIndex + STORIES_PER_PAGE);
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -160,13 +168,48 @@ const StoriesPage = () => {
       </div>
 
       {/* Stories Grid */}
-      {filteredStories.length === 0 ? (
+      {paginatedStories.length === 0 ? (
         <div className="text-gray-500 text-center animate-pulse">No stories found...</div>
       ) : (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredStories.map((story, index) => (
-            <StoryCard key={index} {...story} />
+          {paginatedStories.map((story) => (
+            <StoryCard key={story.id} {...story} />
           ))}
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-10 gap-2 items-center">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="px-4 py-2 rounded-full border text-sm disabled:opacity-40"
+          >
+            Prev
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-4 py-2 rounded-full text-sm ${
+                currentPage === i + 1
+                  ? "bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow"
+                  : "border hover:bg-gray-50"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className="px-4 py-2 rounded-full border text-sm disabled:opacity-40"
+          >
+            Next
+          </button>
         </div>
       )}
     </div>

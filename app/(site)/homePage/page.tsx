@@ -149,45 +149,84 @@ export default function Articles() {
       <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
       {/* ✅ About Me Section */}
-      <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
-        <Image
-          src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/izzuddin_with_cessna172.png?alt=media&token=7e94ff25-7423-45a9-9c2b-c9d4285feef9"
-          alt="About Me"
-          width={600}
-          height={400}
-          className="rounded-lg w-full lg:w-[600px] object-cover"
-        />
+    <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
+      {/* Podcast Section */}
+      <div className="flex-1 order-2 lg:order-1 flex flex-col items-center text-center">
+        <div className="bg-white rounded-xl p-6">
+          {/* Title */}
+          <h3 className="text-3xl font-bold mb-2">🎧 Hit Play on Our Podcast</h3>
 
-        <div className="flex-1">
-          <h2 className="text-2xl font-semibold mb-3">About Me</h2>
-          <p className="text-base text-gray-700 leading-relaxed mb-4">
-            Hi, I am Izzuddin, a passionate aviation enthusiast who loves flying
-            small aircraft and exploring the skies of Malaysia. I created this
-            site to share my flying stories, tips for aspiring pilots, and cool
-            general aviation content. Whether you are a fellow aviator or just
-            curious about the world above, you are in the right place.
+          {/* Subtitle */}
+          <p className="mb-4 text-gray-600 text-lg">
+            Available on Apple Podcasts, Spotify, and YouTube.
           </p>
 
-          {/* ✅ Responsive Instagram Embeds */}
-          <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-            <iframe
-              src="https://www.instagram.com/p/DDMZ7kMP3xP/embed"
-              title="Instagram 1"
-              className="w-[280px] h-[500px] rounded-lg"
-            />
-            <iframe
-              src="https://www.instagram.com/p/DGZtoAsPUhw/embed"
-              title="Instagram 2"
-              className="w-[280px] h-[500px] rounded-lg"
-            />
-            <iframe
-              src="https://www.instagram.com/p/C11kbjCvQ7F/embed"
-              title="Instagram 3"
-              className="w-[280px] h-[500px] rounded-lg"
-            />
+          {/* Icons */}
+          <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
+            {/* Apple Podcasts */}
+            <a
+              href="https://podcasts.apple.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-[220px] h-[220px] flex items-center justify-center bg-white"
+            >
+              <Image
+                src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/listen-on-apple-podcast1600.png?alt=media&token=a11f62ba-affa-4cc1-961f-daa871a9ab7b"
+                alt="Apple Podcasts"
+                width={220}
+                height={220}
+                className="object-contain"
+              />
+            </a>
+
+            {/* Spotify Podcasts */}
+            <a
+              href="https://open.spotify.com/show/0QyKacVfHqeH3H1JXo98YZ?si=0b417aaa8f0c4265"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-[220px] h-[220px] flex items-center justify-center bg-white"
+            >
+              <Image
+                src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Screenshot%202026-02-14%20at%205.51.48%20PM.png?alt=media&token=60088721-9894-4e8e-99f5-f07409f27a06"
+                alt="Spotify Podcasts"
+                width={220}
+                height={220}
+                className="object-contain"
+              />
+            </a>
+
+            {/* YouTube Podcasts */}
+            <a
+              href="https://www.youtube.com/@thesocialenterpreneur"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-[220px] h-[220px] flex items-center justify-center bg-white"
+            >
+              <Image
+                src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Youtube-Podcast-Button.png?alt=media&token=77677d33-c817-45c8-b8ba-d2aabf2ebb94"
+                alt="YouTube Podcasts"
+                width={220}
+                height={220}
+                className="object-contain"
+              />
+            </a>
           </div>
         </div>
       </div>
+
+      {/* About Me Image (Standalone, responsive & bigger) */}
+      <div className="order-1 lg:order-2 w-full lg:flex-1">
+        <Image
+          src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/bonanza-main.jpg?alt=media&token=73253ea3-416b-4349-8c47-a42ca1e62e6b"
+          alt="About Me"
+          width={1200}   // original image width
+          height={800}   // original image height
+          className="rounded-lg w-full h-auto object-cover"
+        />
+      </div>
+    </div>
+
+
     </div>
   );
 }

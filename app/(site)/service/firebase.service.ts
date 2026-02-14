@@ -26,6 +26,12 @@ const storage = getStorage(app);
 /**
  * 📰 Get the latest three articles
  */
+export const createArticle = async (data: any) => {
+  const docRef = await addDoc(collection(db, "articles"), data);
+  return docRef.id;
+};
+
+
 export const getLatestThreeArticle = async (): Promise<any[]> => {
   const articlesRef = collection(db, "articles");
   const snapshot = await getDocs(articlesRef);
