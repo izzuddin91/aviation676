@@ -36,14 +36,10 @@ export default function BottomBar({ onClick }: BottomBarProps) {
       <button
         style={styles.contactButton}
         onClick={onClick}
-        onMouseOver={(e) =>
-          (e.currentTarget.style.backgroundColor = "#f0f0f0")
-        }
-        onMouseOut={(e) =>
-          (e.currentTarget.style.backgroundColor = "#fff")
-        }
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f0f0f0")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
       >
-        Make an appointment
+        Make an inquiry
       </button>
     </div>
   );

@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className={styles.navContainer}>
         <Link href="/" className={styles.navLogo}>
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/A676Logo.png?alt=media&token=4567ccf1-dd00-42c5-871e-8a08c8c80854"
+            src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/A676Logo.png?alt=media&token=39e2e4ec-0e60-4bf7-810b-94a33df65077"
             alt="Aviation 676"
             className={styles.logoImage}
             style={{ width: "110px" }}
