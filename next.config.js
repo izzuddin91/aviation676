@@ -22,6 +22,8 @@ const nextConfig = {
       "www.twincitiesflight.com",
       "thisisflight.net",
       "instagram.fkix2-1.fna.fbcdn.net",
+      "flyteam.jp",
+      "aviation676-939b4.firebasestorage.app",
     ],
   },
 

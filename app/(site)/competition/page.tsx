@@ -4,189 +4,125 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/app/context/AuthContext";
-import { useRouter } from "next/navigation";
-import { Timestamp } from "firebase/firestore";
-import app from "@/app/clientApp";
-import { getAllSubmissions } from "../service/competition.service";
+import { getAllPlanes } from "../service/firebase.service";
 
-export interface Submission {
+export interface Plane {
   id: string;
   title: string;
+  images: string[];
   description: string;
-  country: string;
-  planeName: string;
-  imageUrl: string;
-  likes_count: number;
-  userId: string;
-  createdAt: Timestamp;
+  registrationNo?: string;
 }
 
-export default function CompetitionPage() {
-  const router = useRouter();
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
+export default function PlanesPage() {
+  const [planes, setPlanes] = useState<Plane[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
-  // 🔍 Log user info
   useEffect(() => {
     console.log("Authenticated user:", user);
   }, [user]);
 
-  // 🛫 Fetch competition submissions
   useEffect(() => {
-    if (authLoading) return; // wait for auth to finish
+    if (authLoading) return;
 
-    const fetchSubmissions = async () => {
+    const fetchPlanes = async () => {
       try {
-        const data = await getAllSubmissions();
-        setSubmissions(data as Submission[]);
+        const data = await getAllPlanes();
+        setPlanes(data as Plane[]);
       } catch (error) {
-        console.error("Error fetching submissions:", error);
+        console.error("Error fetching planes:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSubmissions();
+    fetchPlanes();
   }, [authLoading]);
 
-  // ✈️ Handle submit button
-  const handleSubmitClick = () => {
-    if (!isAuthenticated) {
-      router.push("/signin");
-    } else {
-      router.push("/competition-submit");
-    }
-  };
-
-  // ⏳ Show loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f2027] text-white text-lg">
-        Loading competition data...
+      <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5] text-gray-700 text-lg">
+        Loading aircraft listings...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0f2027] via-[#2c5364] to-[#00b09b] text-white px-4 py-10 md:px-20">
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          ✈️ Aviation676 Planespotting Competition 2025
+    <div className="min-h-screen bg-[#f4f4f4] px-4 py-10 md:px-12 lg:px-20">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
+          Aircraft Listings
         </h1>
 
-        {user && (
-          <p className="text-gray-300 mb-4">
-            Logged in as: <strong>{user.email}</strong>
-          </p>
-        )}
-
-        <p className="text-lg md:text-xl text-gray-200 mb-6 leading-relaxed">
-          Think you can capture the most stunning aircraft photo? Join our
-          first-ever planespotting competition and stand a chance to win{" "}
-          <strong>RM200 CASH!</strong>
+        <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12 text-lg">
+          Browse premium aircraft available for sale. Designed with a clean
+          broker-style layout similar to professional aviation listing websites.
         </p>
 
-        <p className="text-base md:text-lg text-gray-300 mb-8 leading-relaxed">
-          This competition is open to{" "}
-          <strong>anyone with a passion for aviation</strong> — whether you’re a
-          dedicated planespotter, a commercial pilot, a helicopter crew, or
-          simply someone who loves taking photos of aircraft. Your photo can be{" "}
-          <strong>
-            taken from the ground, from inside an aircraft, or of any aircraft
-            in flight or on the ground
-          </strong>
-          . If it captures the beauty of aviation, it qualifies!
-        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {planes.map((plane) => {
+            const imageSrc =
+              plane.images && plane.images.length > 0
+                ? plane.images[0]
+                : "/placeholder-plane.jpg";
 
-        <div className="flex justify-center mb-10">
-          <Image
-            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/planespotting.png?alt=media&token=911da7a9-df83-406d-825d-a5040a8761fd"
-            alt="Planespotting Banner"
-            width={800}
-            height={450}
-            className="rounded-xl shadow-lg"
-          />
-        </div>
+            return (
+              <Link key={plane.id} href={`/competition/${plane.id}`}>
+                <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 h-full flex flex-col">
+                  {/* Plane Image */}
+                  <div className="relative h-[260px] w-full bg-gray-100">
+                    <Image
+                      src={imageSrc}
+                      alt={plane.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
 
-        <div className="text-left bg-white/10 backdrop-blur-md p-6 rounded-2xl mb-8">
-          <h2 className="text-2xl font-semibold mb-2">📸 How It Works</h2>
-          <ul className="list-disc list-inside text-gray-200 space-y-2">
-            <li>Register or sign in to your Aviation676 account.</li>
-            <li>
-              Upload your best aircraft photo — taken anywhere in Malaysia or
-              abroad.
-            </li>
-            <li>Share your post to get likes. The most-liked photo wins!</li>
-          </ul>
+                  {/* Card Content */}
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-start justify-between mb-3 gap-4">
+                      <div>
+                        <h2 className="text-3xl font-bold text-gray-900">
+                          {plane.title || "N421JL"}
+                        </h2>
+                        <p className="text-lg font-medium text-gray-700 mt-1">
+                          {plane.registrationNo || "Registration unavailable"}
+                        </p>
+                      </div>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-2">🎁 Prizes</h2>
-          <ul className="list-disc list-inside text-gray-200 space-y-2">
-            <li>🏆 Winner: RM200 cash + Aviation676 feature article</li>
-          </ul>
+                      <div className="text-right">
+                        <p className="text-sm font-bold tracking-wide text-sky-500 uppercase">
+                          Available
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900 mt-2">
+                          ASK FOR PRICE
+                        </p>
+                      </div>
+                    </div>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-2">
-            📅 Competition Dates
-          </h2>
-          <p className="text-gray-200">
-            Submission open: <strong>24 Oct – 31 Dec 2025</strong>
-            <br />
-            Winner announcement: <strong>1 Jan 2026</strong>
-          </p>
-        </div>
+                    <p className="text-gray-600 leading-relaxed text-sm md:text-base mb-6 flex-1">
+                      Exceptional aircraft featuring upgraded avionics, reliable
+                      engines, and excellent cross-country performance. Ideal
+                      for owners seeking capability, comfort, and dependable
+                      craftsmanship.
+                    </p>
 
-        <button
-          onClick={handleSubmitClick}
-          className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3 rounded-full transition-transform duration-300 hover:scale-105"
-        >
-          Submit Your Photo
-        </button>
+                    <div className="flex items-center justify-between">
+                      <button className="border border-gray-800 rounded-full px-6 py-3 font-semibold text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300">
+                        CLICK FOR DETAILS
+                      </button>
 
-        {!isAuthenticated && (
-          <p className="text-gray-300 mt-4">
-            🔒 You need to{" "}
-            <Link href="/signin" className="underline text-white">
-              sign in
-            </Link>{" "}
-            to submit.
-          </p>
-        )}
-
-        {/* ⭐ Leaderboard Preview Section */}
-        <div className="mt-16 text-left bg-white/10 backdrop-blur-md p-6 rounded-2xl">
-          <h2 className="text-2xl font-semibold mb-2">
-            ⭐ Leaderboard Preview
-          </h2>
-          <p className="text-gray-300 mb-4">
-            Top 3 liked photos (updated weekly)
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {submissions.slice(0, 3).map((submission) => (
-              <div key={submission.id} className="bg-white/10 p-3 rounded-lg">
-                <Image
-                  src={submission.imageUrl}
-                  alt={submission.title}
-                  width={300}
-                  height={200}
-                  className="rounded-lg mb-2 object-cover"
-                />
-                <p className="text-sm text-gray-300">
-                  @{submission.title || "anonymous"} – {submission.likes_count}{" "}
-                  likes
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-center mt-6">
-            <Link
-              href="/competition-gallery"
-              className="text-yellow-400 hover:underline font-semibold"
-            >
-              See More →
-            </Link>
-          </div>
+                      <span className="text-sm font-semibold text-gray-500">
+                        Listed April 2026
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

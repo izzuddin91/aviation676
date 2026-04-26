@@ -59,12 +59,17 @@ const Navbar = () => {
           </li>
           <li>
             <Link href="competition" style={{ padding: "10px" }}>
-              Planespotting Competition
+              Inventory
+            </Link>
+          </li>
+          <li>
+            <Link href="/drone" style={{ padding: "10px" }}>
+              Drone Services
             </Link>
           </li>
           <li>
             <Link href="/merchandises" style={{ padding: "10px" }}>
-              To Sell
+              Equipment
             </Link>
           </li>
 

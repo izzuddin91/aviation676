@@ -148,6 +148,52 @@ export default function Articles() {
 
       <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
+      {/* ✅ Drone Services Promotion Section */}
+      <div className="mb-12 px-5 md:px-10">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-lg p-8 text-white">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1">
+              <h3 className="text-3xl md:text-4xl font-bold mb-4">
+                🚁 Professional Drone Services
+              </h3>
+              <p className="text-lg mb-6 text-blue-100">
+                Capture stunning aerial perspectives with our professional drone services. 
+                Perfect for photography, videography, surveying, and inspections.
+              </p>
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="flex items-center">
+                  <span className="text-green-300 mr-2">✓</span>
+                  <span>Aerial Photography</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-green-300 mr-2">✓</span>
+                  <span>Professional Videography</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-green-300 mr-2">✓</span>
+                  <span>Land Surveying & Mapping</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-green-300 mr-2">✓</span>
+                  <span>Inspection Services</span>
+                </div>
+              </div>
+              <Link
+                href="/drone"
+                className="inline-block bg-white text-blue-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-300"
+              >
+                Explore Our Services
+              </Link>
+            </div>
+            <div className="flex-1 text-5xl text-center">
+              🎥📸🗺️
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
+
       {/* ✅ About Me Section */}
     <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
       {/* Podcast Section */}

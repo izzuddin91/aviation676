@@ -47,7 +47,7 @@ export const getLatestThreeArticle = async (): Promise<any[]> => {
  */
 export const getArticleDetails = async (
   articleId: string
-): Promise<{ id: string; [key: string]: any } | null> => {
+): Promise<{ id: string;[key: string]: any } | null> => {
   const docRef = doc(db, "articles", articleId);
   const docSnap = await getDoc(docRef);
 
@@ -191,4 +191,100 @@ export const fetchProduct = async (productId: string): Promise<{
     console.error("Error fetching product:", error);
     return null;
   }
+};
+
+export const submitJoyrideRequest = async (data: {
+  name: string;
+  email: string;
+  preferredDate: string;
+  flightType: string;
+  notes?: string;
+}) => {
+  try {
+    const docRef = await addDoc(collection(db, "joyride_requests"), {
+      ...data,
+      status: "pending", // 🔥 useful for tracking later
+      createdAt: serverTimestamp(),
+    });
+
+    console.log(`✅ Joyride request submitted: ${docRef.id}`);
+    return docRef.id;
+  } catch (error) {
+    console.error("❌ Error submitting joyride request:", error);
+    throw error;
+  }
+};
+
+/**
+ * 🚁 Submit a new drone service request
+ */
+export const submitDroneRequest = async (data: {
+  name: string;
+  email: string;
+  phone?: string;
+  serviceType: string;
+  preferredDate: string;
+  location?: string;
+  description?: string;
+  budget?: string;
+}) => {
+  try {
+    const docRef = await addDoc(collection(db, "drone_requests"), {
+      ...data,
+      status: "pending",
+      createdAt: serverTimestamp(),
+    });
+
+    console.log(`✅ Drone service request submitted: ${docRef.id}`);
+    return docRef.id;
+  } catch (error) {
+    console.error("❌ Error submitting drone service request:", error);
+    throw error;
+  }
+};
+
+/**
+ * ✈️ Get all planes
+ */
+export const getAllPlanes = async (): Promise<any[]> => {
+  const planesRef = collection(db, "planes");
+  const snapshot = await getDocs(planesRef);
+  const planes = snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      title: data.title,
+      description: data.description || data["description "] || "", // Handle field name with space
+      images: data.images || data["images "] || [], // Handle field name with space
+      registrationNo: data.registrationNo || data["registrationNo "] || "", // Handle field name with space
+      ...data, // Include any other fields
+    };
+  });
+  console.log("All planes from Firestore:", planes);
+  return planes;
+};
+
+/**
+ * ✈️ Get plane details by ID
+ */
+export const getPlaneDetails = async (
+  planeId: string
+): Promise<{ id: string;[key: string]: any } | null> => {
+  const docRef = doc(db, "planes", planeId);
+  const docSnap = await getDoc(docRef);
+  console.log("Plane details from Firestore:", docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null);
+
+  if (!docSnap.exists()) {
+    return null;
+  }
+
+  const data = docSnap.data();
+  return {
+    id: docSnap.id,
+    title: data.title,
+    description: data.description || data["description "] || "",
+    images: data.images || data["images "] || [],
+    registrationNo: data.registrationNo || data["registrationNo "] || "",
+    ...data,
+  };
 };

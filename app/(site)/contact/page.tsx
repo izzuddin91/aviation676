@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { submitJoyrideRequest } from "../service/firebase.service";
 
 export default function JoyrideForm() {
   const [formData, setFormData] = useState({
@@ -16,10 +17,26 @@ export default function JoyrideForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("Joyride request:", formData);
-    alert("Your request has been submitted! We will contact you soon.");
+
+    try {
+      await submitJoyrideRequest(formData);
+
+      alert("Your request has been submitted! We will contact you soon.");
+
+      // optional reset
+      setFormData({
+        name: "",
+        email: "",
+        preferredDate: "",
+        flightType: "",
+        notes: "",
+      });
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
