@@ -72,7 +72,7 @@ export default function Articles() {
           allowFullScreen
         ></iframe>
         <iframe
-          src="https://www.youtube.com/embed/ZAIVB4vSnZE"
+          src="https://www.youtube.com/embed/xBKFt3Uja6A"
           title="YouTube Video 2"
           className="w-full md:w-[560px] h-[220px] md:h-[315px] rounded-lg border-none"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -86,7 +86,7 @@ export default function Articles() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-5 md:px-10">
         <div className="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition">
           <Image
-            src="https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/thumbnail_johor_flight.png?alt=media&token=718271ca-c0b8-4118-920a-b90d49a2256d"
+            src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/johor_flight.webp?alt=media&token=0a73c9c9-d8e0-4e87-9fc4-7e9c1c13a2fe"
             alt="Johor Flight"
             width={400}
             height={250}
@@ -157,8 +157,9 @@ export default function Articles() {
                 🚁 Professional Drone Services
               </h3>
               <p className="text-lg mb-6 text-blue-100">
-                Capture stunning aerial perspectives with our professional drone services. 
-                Perfect for photography, videography, surveying, and inspections.
+                Capture stunning aerial perspectives with our professional drone
+                services. Perfect for photography, videography, surveying, and
+                inspections.
               </p>
               <div className="grid grid-cols-2 gap-3 mb-6">
                 <div className="flex items-center">
@@ -185,9 +186,7 @@ export default function Articles() {
                 Explore Our Services
               </Link>
             </div>
-            <div className="flex-1 text-5xl text-center">
-              🎥📸🗺️
-            </div>
+            <div className="flex-1 text-5xl text-center">🎥📸🗺️</div>
           </div>
         </div>
       </div>
@@ -195,84 +194,84 @@ export default function Articles() {
       <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
       {/* ✅ About Me Section */}
-    <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
-      {/* Podcast Section */}
-      <div className="flex-1 order-2 lg:order-1 flex flex-col items-center text-center">
-        <div className="bg-white rounded-xl p-6">
-          {/* Title */}
-          <h3 className="text-3xl font-bold mb-2">🎧 Hit Play on Our Podcast</h3>
+      <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
+        {/* Podcast Section */}
+        <div className="flex-1 order-2 lg:order-1 flex flex-col items-center text-center">
+          <div className="bg-white rounded-xl p-6">
+            {/* Title */}
+            <h3 className="text-3xl font-bold mb-2">
+              🎧 Hit Play on Our Podcast
+            </h3>
 
-          {/* Subtitle */}
-          <p className="mb-4 text-gray-600 text-lg">
-            Available on Apple Podcasts, Spotify, and YouTube.
-          </p>
+            {/* Subtitle */}
+            <p className="mb-4 text-gray-600 text-lg">
+              Available on Apple Podcasts, Spotify, and YouTube.
+            </p>
 
-          {/* Icons */}
-          <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
-            {/* Apple Podcasts */}
-            <a
-              href="https://podcasts.apple.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-[220px] h-[220px] flex items-center justify-center bg-white"
-            >
-              <Image
-                src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/listen-on-apple-podcast1600.png?alt=media&token=a11f62ba-affa-4cc1-961f-daa871a9ab7b"
-                alt="Apple Podcasts"
-                width={220}
-                height={220}
-                className="object-contain"
-              />
-            </a>
+            {/* Icons */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
+              {/* Apple Podcasts */}
+              <a
+                href="https://podcasts.apple.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-[220px] h-[220px] flex items-center justify-center bg-white"
+              >
+                <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/listen-on-apple-podcast1600.png?alt=media&token=a11f62ba-affa-4cc1-961f-daa871a9ab7b"
+                  alt="Apple Podcasts"
+                  width={220}
+                  height={220}
+                  className="object-contain"
+                />
+              </a>
 
-            {/* Spotify Podcasts */}
-            <a
-              href="https://open.spotify.com/show/0QyKacVfHqeH3H1JXo98YZ?si=0b417aaa8f0c4265"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-[220px] h-[220px] flex items-center justify-center bg-white"
-            >
-              <Image
-                src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Screenshot%202026-02-14%20at%205.51.48%20PM.png?alt=media&token=60088721-9894-4e8e-99f5-f07409f27a06"
-                alt="Spotify Podcasts"
-                width={220}
-                height={220}
-                className="object-contain"
-              />
-            </a>
+              {/* Spotify Podcasts */}
+              <a
+                href="https://open.spotify.com/show/0QyKacVfHqeH3H1JXo98YZ?si=0b417aaa8f0c4265"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-[220px] h-[220px] flex items-center justify-center bg-white"
+              >
+                <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Screenshot%202026-02-14%20at%205.51.48%20PM.png?alt=media&token=60088721-9894-4e8e-99f5-f07409f27a06"
+                  alt="Spotify Podcasts"
+                  width={220}
+                  height={220}
+                  className="object-contain"
+                />
+              </a>
 
-            {/* YouTube Podcasts */}
-            <a
-              href="https://www.youtube.com/@thesocialenterpreneur"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-[220px] h-[220px] flex items-center justify-center bg-white"
-            >
-              <Image
-                src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Youtube-Podcast-Button.png?alt=media&token=77677d33-c817-45c8-b8ba-d2aabf2ebb94"
-                alt="YouTube Podcasts"
-                width={220}
-                height={220}
-                className="object-contain"
-              />
-            </a>
+              {/* YouTube Podcasts */}
+              <a
+                href="https://www.youtube.com/@thesocialenterpreneur"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-[220px] h-[220px] flex items-center justify-center bg-white"
+              >
+                <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Youtube-Podcast-Button.png?alt=media&token=77677d33-c817-45c8-b8ba-d2aabf2ebb94"
+                  alt="YouTube Podcasts"
+                  width={220}
+                  height={220}
+                  className="object-contain"
+                />
+              </a>
+            </div>
           </div>
         </div>
+
+        {/* About Me Image (Standalone, responsive & bigger) */}
+        <div className="order-1 lg:order-2 w-full lg:flex-1">
+          <Image
+            src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/bonanza-main.jpg?alt=media&token=73253ea3-416b-4349-8c47-a42ca1e62e6b"
+            alt="About Me"
+            width={1200} // original image width
+            height={800} // original image height
+            className="rounded-lg w-full h-auto object-cover"
+          />
+        </div>
       </div>
-
-      {/* About Me Image (Standalone, responsive & bigger) */}
-      <div className="order-1 lg:order-2 w-full lg:flex-1">
-        <Image
-          src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/bonanza-main.jpg?alt=media&token=73253ea3-416b-4349-8c47-a42ca1e62e6b"
-          alt="About Me"
-          width={1200}   // original image width
-          height={800}   // original image height
-          className="rounded-lg w-full h-auto object-cover"
-        />
-      </div>
-    </div>
-
-
     </div>
   );
 }
