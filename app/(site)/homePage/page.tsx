@@ -10,6 +10,7 @@ import Link from "next/link";
 export default function Articles() {
   const router = useRouter();
   const [articles, updateArticles] = useState<Array<Record<string, any>>>([]);
+  const recentDroneVideoId = "N29iiYHg71s";
 
   useEffect(() => {
     getData();
@@ -187,6 +188,28 @@ export default function Articles() {
               </Link>
             </div>
             <div className="flex-1 text-5xl text-center">🎥📸🗺️</div>
+          </div>
+        </div>
+      </div>
+
+      <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
+
+      <div className="px-5 md:px-10 mb-12">
+        <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md p-6 md:p-8">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-3">
+            Recent Drone Work
+          </h3>
+          <p className="text-center text-gray-600 mb-6">
+            A quick sample from one of our latest drone projects.
+          </p>
+          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
+            <iframe
+              src={`https://www.youtube.com/embed/${recentDroneVideoId}`}
+              title="Recent Drone Work"
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </div>
