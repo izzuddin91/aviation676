@@ -6,6 +6,8 @@ import Navbar from "./component/Navbar";
 import { AuthProvider } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation"; // Import useRouter
 import BottomBar from "./component/bottomBar";
+import { useEffect } from "react";
+import { trackSessionStart } from "@/app/(site)/service/analytics.service";
 
 const lato = Lato({
   weight: ["400", "100", "300", "700", "900"],
@@ -24,6 +26,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter(); // Initialize useRouter here
+
+  useEffect(() => {
+    // Track session start when app loads
+    trackSessionStart();
+  }, []);
 
   return (
     <html lang="en" className={`${lato.className} ${poppins.className}`}>

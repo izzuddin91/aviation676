@@ -1,12 +1,14 @@
-import React from 'react';
-import '@/app/Products.css';
+import React from "react";
+import "@/app/Products.css";
 import Link from "next/link";
+import { trackProductClick } from "@/app/(site)/service/analytics.service";
 
 interface Product {
   title: string;
   price: number;
   imageUrl: string;
   isSoldOut: boolean;
+  id?: number;
 }
 
 interface ProductTileProps {
@@ -14,14 +16,15 @@ interface ProductTileProps {
 }
 
 const testRedirect = () => {
-    console.log("test")
-}
+  console.log("test");
+};
 
 const ProductTile: React.FC<ProductTileProps> = ({ product }) => {
+  const handleProductClick = () => {
+    // Track the product click
+    trackProductClick(product.id || 0, product.title, product.price);
+  };
 
-
-
-  
   return (
     <div className="relative bg-white border border-gray-300 rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
       {product.isSoldOut && (
@@ -29,10 +32,23 @@ const ProductTile: React.FC<ProductTileProps> = ({ product }) => {
           Sold Out
         </div>
       )}
-      <img src={product.imageUrl} alt={product.title} className="w-full h-48 object-cover" />
+      <img
+        src={product.imageUrl}
+        alt={product.title}
+        className="w-full h-48 object-cover"
+      />
       <div className="p-4">
-        <h3 className="text-sm font-medium text-gray-800" style={{textDecoration: "underline"}}> <Link href="/airbnbHouses">{product.title}</Link> </h3>
-        <p className="mt-2 text-lg font-bold text-black">RM {product.price.toFixed(2)}</p>
+        <h3
+          className="text-sm font-medium text-gray-800"
+          style={{ textDecoration: "underline" }}
+        >
+          <Link href="/airbnbHouses" onClick={handleProductClick}>
+            {product.title}
+          </Link>
+        </h3>
+        <p className="mt-2 text-lg font-bold text-black">
+          RM {product.price.toFixed(2)}
+        </p>
       </div>
     </div>
   );

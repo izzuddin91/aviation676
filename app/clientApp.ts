@@ -2,6 +2,7 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { getAnalytics } from 'firebase/analytics';
 
 
 // Firebase configuration using environment variables
@@ -27,6 +28,18 @@ if (typeof window !== 'undefined') {
 // Initialize Firebase services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Initialize Firebase Analytics (only in browser)
+let analytics: any = null;
+if (typeof window !== 'undefined') {
+  try {
+    analytics = getAnalytics(app);
+  } catch (error) {
+    console.log('Analytics initialization skipped:', error);
+  }
+}
+
+export { analytics };
 
 // Export the app instance if needed
 export default app;
