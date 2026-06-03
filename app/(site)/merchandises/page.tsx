@@ -51,6 +51,15 @@ const Merchandises: React.FC = () => {
       description:
         "A realistic Cessna 172 throttle and mixture for flight simulators. Perfect for student who want a sense of realism when practicing touch and go on the simulator.",
     },
+    {
+      id: "R8oCX9IXbNpl1Hmsmqnh",
+      title: "Aviation Headset Tester",
+      price: "RM250",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/headset_tester_1.png?alt=media&token=1ba901ed-3923-405a-bc04-57757bc2c75d",
+      description:
+        "A compact aviation headset tester designed to help pilots and student pilots quickly check their headset before boarding or when purchasing second-hand equipment. Test microphone and audio functionality with ease to ensure your gear is ready for flight.",
+    },
   ];
 
   return (
