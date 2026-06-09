@@ -60,6 +60,15 @@ const Merchandises: React.FC = () => {
       description:
         "A compact aviation headset tester designed to help pilots and student pilots quickly check their headset before boarding or when purchasing second-hand equipment. Test microphone and audio functionality with ease to ensure your gear is ready for flight.",
     },
+    {
+      id: "3SyrNXq9jqSrBk6Zpvm4",
+      title: "Hondajet diecast 1:106",
+      price: "RM50",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/honda_1.png?alt=media&token=f7ce9505-bc34-4a12-8d7f-078ce3d61edf",
+      description:
+        "Perfect for display at home, in the office, or as a gift for pilots and aviation fans, the HondaJet diecast combines craftsmanship and elegance in a compact collectible piece.",
+    },
   ];
 
   return (

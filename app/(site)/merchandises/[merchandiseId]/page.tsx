@@ -38,7 +38,7 @@ useEffect(() => {
 
   const handleAddToCart = () => {
     const message = `Hello, I would like to order:\n- Product: ${productData?.title || "Unknown"}`;
-    const whatsappLink = `https://wa.me/+60192884021?text=${encodeURIComponent(message)}`;
+    const whatsappLink = `https://wa.me/60132711668?text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, "_blank");
   };
 
