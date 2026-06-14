@@ -228,8 +228,6 @@ export const getAllProducts = async (): Promise<any[]> => {
 export const submitJoyrideRequest = async (data: {
   name: string;
   email: string;
-  preferredDate: string;
-  flightType: string;
   notes?: string;
 }) => {
   try {

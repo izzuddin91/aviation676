@@ -7,8 +7,6 @@ export default function JoyrideForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    preferredDate: "",
-    flightType: "",
     notes: "",
   });
 
@@ -29,8 +27,6 @@ export default function JoyrideForm() {
       setFormData({
         name: "",
         email: "",
-        preferredDate: "",
-        flightType: "",
         notes: "",
       });
     } catch (error) {
@@ -85,45 +81,12 @@ export default function JoyrideForm() {
               required
               className="w-full border rounded-lg p-2 mt-1"
             />
-          </div>
+           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-white">
-              Preferred Date
-            </label>
-            <input
-              type="date"
-              name="preferredDate"
-              value={formData.preferredDate}
-              onChange={handleChange}
-              required
-              className="w-full border rounded-lg p-2 mt-1"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-white">
-              Type of Flight
-            </label>
-            <select
-              name="flightType"
-              value={formData.flightType}
-              onChange={handleChange}
-              required
-              className="w-full border rounded-lg p-2 mt-1"
-            >
-              <option value="">Select a flight</option>
-              <option value="kl-sightseeing">Kuala Lumpur Sightseeing</option>
-              <option value="ipoh">Fly to Ipoh</option>
-              <option value="melaka">Fly to Melaka</option>
-              <option value="pangkor">Fly to Pangkor</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-white">
-              Additional Notes
-            </label>
+           <div>
+             <label className="block text-sm font-medium text-white">
+               Additional Notes
+             </label>
             <textarea
               name="notes"
               value={formData.notes}
@@ -133,12 +96,12 @@ export default function JoyrideForm() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 rounded-lg"
-          >
-            Submit Request
-          </button>
+           <button
+             type="submit"
+             className="w-full bg-black text-white py-2 rounded-lg"
+           >
+             Interested in PPL
+           </button>
         </form>
       </div>
     </div>
