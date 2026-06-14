@@ -2,90 +2,55 @@
 import ProductTile from "@/app/component/productTiles/productTiles";
 import React, { useState, useEffect } from "react";
 import { trackPageView } from "@/app/(site)/service/analytics.service";
+import { getAllProducts } from "@/app/(site)/service/firebase.service";
 
-interface Product {
-  id: number;
+interface ProductItem {
+  id: string;
   title: string;
   price: number;
   imageUrl: string;
   isSoldOut: boolean;
 }
 
-const productsData: Product[] = [
-  {
-    id: 1,
-    title: 'PEAK.KL x PROJEK59 "KLSCM24" Jersey',
-    price: 129,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/78115965.png",
-    isSoldOut: true,
-  },
-  {
-    id: 2,
-    title: 'PEAK.KL x PROJEK59 "KLSCM24" Sleeveless',
-    price: 119,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/78115949.png",
-    isSoldOut: true,
-  },
-  {
-    id: 3,
-    title: 'PEAK.KL x PROJEK59 "KLSCM24" Singlet',
-    price: 99,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/75417538.jpeg",
-    isSoldOut: true,
-  },
-  {
-    id: 4,
-    title: "PEAK.KL OLYMPEAK Tee",
-    price: 159,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/77789858.png",
-    isSoldOut: false,
-  },
-
-  {
-    id: 1,
-    title: 'PEAK.KL x PROJEK59 "KLSCM24" Jersey',
-    price: 129,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/77789899.png",
-    isSoldOut: true,
-  },
-  {
-    id: 2,
-    title: 'PEAK.KL x PROJEK59 "KLSCM24" Sleeveless',
-    price: 119,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/73426388.jpeg",
-    isSoldOut: true,
-  },
-  {
-    id: 3,
-    title: 'PEAK.KL x PROJEK59 "KLSCM24" Singlet',
-    price: 99,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/70720292.jpeg",
-    isSoldOut: true,
-  },
-  {
-    id: 4,
-    title: "PEAK.KL OLYMPEAK Tee",
-    price: 159,
-    imageUrl: "https://cdn.store-assets.com/s/652084/i/70720405.jpeg",
-    isSoldOut: false,
-  },
-];
-
 const ProductList: React.FC = () => {
   const [sortOption, setSortOption] = useState("featured");
-  const [products, setProducts] = useState(productsData);
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Track page view when products page loads
     trackPageView("Products", "/products");
   }, []);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const prods = await getAllProducts();
+        const mapped: ProductItem[] = prods.map((p: any) => ({
+          id: p.id,
+          title: p.title || "Untitled",
+          price: Number(p.price || 0),
+          imageUrl: p.imageUrl || p.image_1 || "/images/placeholder.png",
+          isSoldOut: !!p.isSoldOut,
+        }));
+        setProducts(mapped);
+      } catch (err) {
+        console.error("Failed to load products:", err);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = e.target.value;
     setSortOption(option);
 
-    // Sort products based on selected option
-    const sortedProducts = [...productsData].sort((a, b) => {
+    const sortedProducts = [...products].sort((a: ProductItem, b: ProductItem) => {
       if (option === "priceLowToHigh") return a.price - b.price;
       if (option === "priceHighToLow") return b.price - a.price;
       if (option === "alphabetical") return a.title.localeCompare(b.title);
@@ -94,6 +59,10 @@ const ProductList: React.FC = () => {
 
     setProducts(sortedProducts);
   };
+
+  if (loading) {
+    return <div className="container mx-auto py-8 px-4">Loading products...</div>;
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -121,7 +90,7 @@ const ProductList: React.FC = () => {
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
-          <ProductTile key={product.id} product={product} />
+          <ProductTile key={product.id} product={product as any} />
         ))}
       </div>
     </div>

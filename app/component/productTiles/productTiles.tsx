@@ -3,16 +3,16 @@ import "@/app/Products.css";
 import Link from "next/link";
 import { trackProductClick } from "@/app/(site)/service/analytics.service";
 
-interface Product {
+interface ProductTileModel {
   title: string;
   price: number;
   imageUrl: string;
   isSoldOut: boolean;
-  id?: number;
+  id?: string | number;
 }
 
 interface ProductTileProps {
-  product: Product;
+  product: any; // accept any shape from Firestore to avoid cross-file type conflicts
 }
 
 const testRedirect = () => {
@@ -22,7 +22,7 @@ const testRedirect = () => {
 const ProductTile: React.FC<ProductTileProps> = ({ product }) => {
   const handleProductClick = () => {
     // Track the product click
-    trackProductClick(product.id || 0, product.title, product.price);
+    trackProductClick(Number(product.id) || 0, product.title, product.price);
   };
 
   return (

@@ -193,6 +193,38 @@ export const fetchProduct = async (productId: string): Promise<{
   }
 };
 
+/**
+ * 🛒 Get all products from `products` collection
+ * Maps common image fields (image_1, image_2) into a convenience imageUrl field
+ */
+export const getAllProducts = async (): Promise<any[]> => {
+  try {
+    const productsRef = collection(db, "products");
+    // Optionally sort by createdAt if you store it: const q = query(productsRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(productsRef);
+    return snapshot.docs.map((docSnap) => {
+      const data: any = docSnap.data();
+      const image_1 = data.image_1 || data.image1 || null;
+      const image_2 = data.image_2 || data.image2 || null;
+      const imageUrl = image_1 || image_2 || "";
+
+      return {
+        id: docSnap.id,
+        title: data.title || "",
+        description: data.description || "",
+        price: typeof data.price === "number" ? data.price : Number(data.price || 0),
+        image_1,
+        image_2,
+        imageUrl,
+        ...data,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+};
+
 export const submitJoyrideRequest = async (data: {
   name: string;
   email: string;

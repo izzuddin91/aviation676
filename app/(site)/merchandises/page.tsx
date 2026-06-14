@@ -1,8 +1,9 @@
 // pages/merchandise.tsx
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getAllProducts } from "../service/firebase.service";
 
 export interface Product {
   id: string;
@@ -13,63 +14,49 @@ export interface Product {
 }
 
 const Merchandises: React.FC = () => {
-  // Hardcoded merchandise data (keeping the same data source)
-  const products: Product[] = [
-    {
-      id: "l9irymcJ3nPUj4Myc2Xn",
-      title: "David Clark H10-13.4 Aviation Headset",
-      price: "RM1000",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2FdcHeadset_1.jpeg?alt=media&token=705fdde9-3291-4591-b6ba-64a02f9e1a0e",
-      description:
-        "A trusted classic among student and private pilots. Well-maintained and previously used by a fellow pilot who has completed training. Known for its reliable passive noise reduction and long-lasting cockpit comfort.",
-    },
-    {
-      id: "shirt-676-1",
-      title: "Aviation 676 Tee — Jet Logo Edition",
-      price: "RM50",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/shirt1.png?alt=media&token=8992b5b1-dee4-402a-b612-50b8e8dc32fb",
-      description:
-        "A clean and minimalist aviation-inspired T-shirt featuring the Aviation 676 jet logo. Designed for pilots, flight sim enthusiasts, and anyone who lives for the skies.",
-    },
-    {
-      id: "shirt-676-2",
-      title: "Aviation 676 Tee — Aircraft Blueprint Edition",
-      price: "RM50",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/shirt2.png?alt=media&token=8a3815b8-2194-48e9-bf03-aa6966d6b70b",
-      description:
-        "A technical blueprint-style aircraft illustration made for true aviation enthusiasts. Inspired by classic general aviation design and crafted to be worn both on and off the airfield.",
-    },
-    {
-      id: "VFVkQG8BYqNDc0MnBxht",
-      title: "Aviation 676 Sim Throttle",
-      price: "RM300",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/dfma-etiqa.appspot.com/o/throttle.jpg?alt=media&token=82cec786-1577-452e-b468-891b11eced66",
-      description:
-        "A realistic Cessna 172 throttle and mixture for flight simulators. Perfect for student who want a sense of realism when practicing touch and go on the simulator.",
-    },
-    {
-      id: "R8oCX9IXbNpl1Hmsmqnh",
-      title: "Aviation Headset Tester",
-      price: "RM250",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/headset_tester_1.png?alt=media&token=1ba901ed-3923-405a-bc04-57757bc2c75d",
-      description:
-        "A compact aviation headset tester designed to help pilots and student pilots quickly check their headset before boarding or when purchasing second-hand equipment. Test microphone and audio functionality with ease to ensure your gear is ready for flight.",
-    },
-    {
-      id: "3SyrNXq9jqSrBk6Zpvm4",
-      title: "Hondajet diecast 1:106",
-      price: "RM50",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/honda_1.png?alt=media&token=f7ce9505-bc34-4a12-8d7f-078ce3d61edf",
-      description:
-        "Perfect for display at home, in the office, or as a gift for pilots and aviation fans, the HondaJet diecast combines craftsmanship and elegance in a compact collectible piece.",
-    },
-  ];
+  // Fetch products from Firestore (falls back to empty list while loading)
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const items = await getAllProducts();
+        if (!mounted) return;
+
+        // Map Firestore product shape into the Product interface used by this page
+        const mapped: Product[] = items.map((p: any) => ({
+          id: p.id,
+          title: p.title || "Untitled",
+          price: `RM${p.price || 0}`,
+          image: p.imageUrl || p.image_1 || p.image1 || "",
+          description: p.description || "",
+        }));
+
+        setProducts(mapped);
+      } catch (err) {
+        console.error("Error loading products:", err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    loadProducts();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-gray-600">Loading products...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] px-4 py-10 md:px-12 lg:px-20">
