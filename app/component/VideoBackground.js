@@ -8,7 +8,7 @@ export default function ImageCarouselBackground() {
     "/images/plane1.jpg",
     "/images/plane2.jpg",
     "/images/plane3.jpg",
-    "/images/plane4.jpg",
+    "/images/fut_2026.jpeg",
   ];
 
   const [current, setCurrent] = useState(0);
