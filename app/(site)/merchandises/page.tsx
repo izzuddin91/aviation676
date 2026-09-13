@@ -70,7 +70,7 @@ const Merchandises: React.FC = () => {
           to apparel, find the perfect items for aviation enthusiasts.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
           {products.map((product) => (
             <Link key={product.id} href={`/merchandises/${product.id}`}>
               <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 h-full flex flex-col">
@@ -80,7 +80,8 @@ const Merchandises: React.FC = () => {
                     src={product.image}
                     alt={product.title}
                     fill
-                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                    className="object-contain p-4"
                   />
                 </div>
 

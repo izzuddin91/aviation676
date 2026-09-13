@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import VideoBackground from "@/app/component/VideoBackground";
-import { getLatestThreeArticle } from "../service/firebase.service";
+import { getAllProducts, getLatestThreeArticle } from "../service/firebase.service";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Articles() {
   const router = useRouter();
   const [articles, updateArticles] = useState<Array<Record<string, any>>>([]);
-  const recentDroneVideoId = "N29iiYHg71s";
+  const [products, setProducts] = useState<Array<Record<string, any>>>([]);
 
   useEffect(() => {
     getData();
@@ -19,6 +19,9 @@ export default function Articles() {
   async function getData() {
     getLatestThreeArticle().then((val) => {
       updateArticles(val);
+    });
+    getAllProducts().then((val) => {
+      setProducts(val.slice(0, 4));
     });
   }
 
@@ -149,151 +152,40 @@ export default function Articles() {
 
       <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
-      {/* ✅ Drone Services Promotion Section */}
-      <div className="mb-12 px-5 md:px-10">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-lg p-8 text-white">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="flex-1">
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                🚁 Professional Drone Services
-              </h3>
-              <p className="text-lg mb-6 text-blue-100">
-                Capture stunning aerial perspectives with our professional drone
-                services. Perfect for photography, videography, surveying, and
-                inspections.
-              </p>
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                <div className="flex items-center">
-                  <span className="text-green-300 mr-2">✓</span>
-                  <span>Aerial Photography</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-green-300 mr-2">✓</span>
-                  <span>Professional Videography</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-green-300 mr-2">✓</span>
-                  <span>Land Surveying & Mapping</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-green-300 mr-2">✓</span>
-                  <span>Inspection Services</span>
-                </div>
-              </div>
-              <Link
-                href="/drone"
-                className="inline-block bg-white text-blue-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-300"
-              >
-                Explore Our Services
-              </Link>
-            </div>
-            <div className="flex-1 text-5xl text-center">🎥📸🗺️</div>
-          </div>
-        </div>
-      </div>
-
-      <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
-
-      <div className="px-5 md:px-10 mb-12">
-        <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md p-6 md:p-8">
-          <h3 className="text-2xl md:text-3xl font-bold text-center mb-3">
-            Recent Drone Work
-          </h3>
-          <p className="text-center text-gray-600 mb-6">
-            A quick sample from one of our latest drone projects.
-          </p>
-          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
-            <iframe
-              src={`https://www.youtube.com/embed/${recentDroneVideoId}`}
-              title="Recent Drone Work"
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
-      </div>
-
       <hr className="border-t border-gray-300 my-8 mx-auto w-4/5" />
 
       {/* ✅ About Me Section */}
       <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
-        {/* Podcast Section */}
+        {/* New Products Section */}
         <div className="flex-1 order-2 lg:order-1 flex flex-col items-center text-center">
           <div className="bg-white rounded-xl p-6">
-            {/* Title */}
-            <h3 className="text-3xl font-bold mb-2">
-              🎧 Hit Play on Our Podcast
-            </h3>
-
-            {/* Subtitle */}
-            <p className="mb-4 text-gray-600 text-lg">
-              Available on Apple Podcasts, Spotify, and YouTube.
-            </p>
-
-            {/* Icons */}
-            <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
-              {/* Apple Podcasts */}
-              <a
-                href="https://podcasts.apple.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-[220px] h-[220px] flex items-center justify-center bg-white"
-              >
-                <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/listen-on-apple-podcast1600.png?alt=media&token=a11f62ba-affa-4cc1-961f-daa871a9ab7b"
-                  alt="Apple Podcasts"
-                  width={220}
-                  height={220}
-                  className="object-contain"
-                />
-              </a>
-
-              {/* Spotify Podcasts */}
-              <a
-                href="https://open.spotify.com/show/0QyKacVfHqeH3H1JXo98YZ?si=0b417aaa8f0c4265"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-[220px] h-[220px] flex items-center justify-center bg-white"
-              >
-                <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Screenshot%202026-02-14%20at%205.51.48%20PM.png?alt=media&token=60088721-9894-4e8e-99f5-f07409f27a06"
-                  alt="Spotify Podcasts"
-                  width={220}
-                  height={220}
-                  className="object-contain"
-                />
-              </a>
-
-              {/* YouTube Podcasts */}
-              <a
-                href="https://www.youtube.com/@thesocialenterpreneur"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-[220px] h-[220px] flex items-center justify-center bg-white"
-              >
-                <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/Youtube-Podcast-Button.png?alt=media&token=77677d33-c817-45c8-b8ba-d2aabf2ebb94"
-                  alt="YouTube Podcasts"
-                  width={220}
-                  height={220}
-                  className="object-contain"
-                />
-              </a>
+            <h3 className="text-3xl font-bold mb-5">New Products</h3>
+            <div className="grid grid-cols-4 gap-4">
+              {products.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`/merchandises/${product.id}`}
+                  className="text-left rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition"
+                >
+                  <div className="relative h-40 w-full bg-gray-100">
+                    <Image
+                      src={product.imageUrl || product.image_1 || product.image1 || "/images/placeholder.png"}
+                      alt={product.title || "Product"}
+                      fill
+                      sizes="(max-width: 768px) 25vw, 220px"
+                      className="object-contain p-2"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <h4 className="font-semibold truncate">{product.title || "Untitled"}</h4>
+                    <p className="text-sm text-gray-600">RM{product.price || 0}</p>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* About Me Image (Standalone, responsive & bigger) */}
-        <div className="order-1 lg:order-2 w-full lg:flex-1">
-          <Image
-            src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/bonanza-main.jpg?alt=media&token=73253ea3-416b-4349-8c47-a42ca1e62e6b"
-            alt="About Me"
-            width={1200} // original image width
-            height={800} // original image height
-            className="rounded-lg w-full h-auto object-cover"
-          />
-        </div>
       </div>
     </div>
   );

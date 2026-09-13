@@ -202,7 +202,7 @@ export const getAllProducts = async (): Promise<any[]> => {
     const productsRef = collection(db, "products");
     // Optionally sort by createdAt if you store it: const q = query(productsRef, orderBy('createdAt', 'desc'));
     const snapshot = await getDocs(productsRef);
-    return snapshot.docs.map((docSnap) => {
+    const products = snapshot.docs.map((docSnap) => {
       const data: any = docSnap.data();
       const image_1 = data.image_1 || data.image1 || null;
       const image_2 = data.image_2 || data.image2 || null;
@@ -218,6 +218,12 @@ export const getAllProducts = async (): Promise<any[]> => {
         imageUrl,
         ...data,
       };
+    });
+
+    return products.sort((first, second) => {
+      const firstTime = first.createdAt?.toMillis?.() ?? new Date(first.createdAt || 0).getTime();
+      const secondTime = second.createdAt?.toMillis?.() ?? new Date(second.createdAt || 0).getTime();
+      return secondTime - firstTime;
     });
   } catch (error) {
     console.error("Error fetching products:", error);
