@@ -158,27 +158,27 @@ export default function Articles() {
       <div className="flex flex-col lg:flex-row items-start gap-6 px-5 md:px-10 mb-12">
         {/* New Products Section */}
         <div className="flex-1 order-2 lg:order-1 flex flex-col items-center text-center">
-          <div className="bg-white rounded-xl p-6">
+          <div className="w-full bg-white rounded-xl p-6 md:p-8">
             <h3 className="text-3xl font-bold mb-5">New Products</h3>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-5 md:gap-6">
               {products.map((product) => (
                 <Link
                   key={product.id}
                   href={`/merchandises/${product.id}`}
                   className="text-left rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition"
                 >
-                  <div className="relative h-40 w-full bg-gray-100">
+                  <div className="relative h-52 w-full bg-gray-100">
                     <Image
                       src={product.imageUrl || product.image_1 || product.image1 || "/images/placeholder.png"}
                       alt={product.title || "Product"}
                       fill
                       sizes="(max-width: 768px) 25vw, 220px"
-                      className="object-contain p-2"
+                      className="object-contain p-4"
                     />
                   </div>
-                  <div className="p-3">
-                    <h4 className="font-semibold truncate">{product.title || "Untitled"}</h4>
-                    <p className="text-sm text-gray-600">RM{product.price || 0}</p>
+                  <div className="p-4">
+                    <h4 className="text-base md:text-lg font-semibold truncate">{product.title || "Untitled"}</h4>
+                    <p className="text-base text-gray-600 mt-1">RM{product.price || 0}</p>
                   </div>
                 </Link>
               ))}
