@@ -3,20 +3,38 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { LayoutGrid, List, Star } from "lucide-react";
 import { getAllProducts } from "../service/firebase.service";
+import styles from "./merchandiseCatalog.module.css";
 
 export interface Product {
   id: string;
   title: string;
-  price: string;
+  price: number;
   image: string;
   description: string;
+  rating: number;
+  reviewCount: number;
 }
 
-const Merchandises: React.FC = () => {
+type SortOption = "featured" | "price-asc" | "price-desc" | "title-asc" | "title-desc";
+type ViewMode = "grid" | "list";
+
+const parsePrice = (value: unknown): number => {
+  const priceMatch = String(value ?? "").match(/-?\d[\d,]*(?:\.\d+)?/);
+  const parsed = typeof value === "number"
+    ? value
+    : Number(priceMatch?.[0].replace(/,/g, "") || 0);
+
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const ProductsPage: React.FC = () => {
   // Fetch products from Firestore (falls back to empty list while loading)
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [sortOption, setSortOption] = useState<SortOption>("featured");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   useEffect(() => {
     let mounted = true;
@@ -30,9 +48,11 @@ const Merchandises: React.FC = () => {
         const mapped: Product[] = items.map((p: any) => ({
           id: p.id,
           title: p.title || "Untitled",
-          price: `RM${p.price || 0}`,
+          price: parsePrice(p.price),
           image: p.imageUrl || p.image_1 || p.image1 || "",
           description: p.description || "",
+          rating: Number(p.averageRating ?? p.rating ?? 0),
+          reviewCount: Number(p.reviewCount ?? p.reviewsCount ?? 0),
         }));
 
         setProducts(mapped);
@@ -50,6 +70,14 @@ const Merchandises: React.FC = () => {
     };
   }, []);
 
+  const sortedProducts = [...products].sort((first, second) => {
+    if (sortOption === "price-asc") return first.price - second.price;
+    if (sortOption === "price-desc") return second.price - first.price;
+    if (sortOption === "title-asc") return first.title.localeCompare(second.title);
+    if (sortOption === "title-desc") return second.title.localeCompare(first.title);
+    return 0;
+  });
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -59,75 +87,97 @@ const Merchandises: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] px-4 py-10 md:px-12 lg:px-20">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
-          Aviation Merchandise
-        </h1>
+    <main className={styles.catalogPage}>
+      <div className={styles.catalogInner}>
+        <header className={styles.catalogHeader}>
+          <p className={styles.eyebrow}>AVIATION676 CATALOG</p>
+          <h1>Products</h1>
+          <p>Aircraft equipment, accessories, and essentials.</p>
+        </header>
 
-        <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12 text-lg">
-          Browse our collection of aviation-themed merchandise. From pilot gear
-          to apparel, find the perfect items for aviation enthusiasts.
-        </p>
+        <div className={styles.catalogToolbar}>
+          <p className={styles.resultCount}>{sortedProducts.length} products</p>
+          <div className={styles.catalogControls}>
+            <label htmlFor="product-sort">Sort by</label>
+            <select
+              id="product-sort"
+              value={sortOption}
+              onChange={(event) => setSortOption(event.target.value as SortOption)}
+            >
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="title-asc">Title: A-Z</option>
+              <option value="title-desc">Title: Z-A</option>
+            </select>
+            <div className={styles.viewToggle} role="group" aria-label="Product layout">
+              <button
+                type="button"
+                aria-label="Grid view"
+                title="Grid view"
+                aria-pressed={viewMode === "grid"}
+                onClick={() => setViewMode("grid")}
+              >
+                <LayoutGrid size={18} aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                aria-label="List view"
+                title="List view"
+                aria-pressed={viewMode === "list"}
+                onClick={() => setViewMode("list")}
+              >
+                <List size={18} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          {products.map((product) => (
-            <Link key={product.id} href={`/merchandises/${product.id}`}>
-              <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 h-full flex flex-col">
-                {/* Product Image */}
-                <div className="relative h-[260px] w-full bg-gray-100">
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                    className="object-contain p-4"
-                  />
+        <div className={`${styles.productGrid} ${viewMode === "list" ? styles.listView : ""}`}>
+          {sortedProducts.map((product, index) => {
+            const rating = Number.isFinite(product.rating) ? Math.min(5, Math.max(0, product.rating)) : 0;
+            const filledStars = Math.round(rating);
+
+            return (
+              <Link key={product.id} href={`/merchandises/${product.id}`} className={styles.productCard}>
+                <div className={styles.imageFrame}>
+                  {product.image ? (
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1000px) 50vw, 25vw"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      className={styles.productImage}
+                    />
+                  ) : (
+                    <div className={styles.imagePlaceholder}>Image unavailable</div>
+                  )}
                 </div>
-
-                {/* Card Content */}
-                <div className="p-6 flex flex-col flex-1">
-                  <div className="flex items-start justify-between mb-3 gap-4">
-                    <div>
-                      <h2 className="text-3xl font-bold text-gray-900">
-                        {product.title}
-                      </h2>
-                      <p className="text-lg font-medium text-gray-700 mt-1">
-                        {product.price}
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-sm font-bold tracking-wide text-green-500 uppercase">
-                        In Stock
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900 mt-2">
-                        {product.price.includes("50") ? "Standard" : "Premium"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <p className="text-gray-600 leading-relaxed text-sm md:text-base mb-6 flex-1">
-                    {product.description}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <button className="border border-gray-800 rounded-full px-6 py-3 font-semibold text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300">
-                      VIEW DETAILS
-                    </button>
-
-                    <span className="text-sm font-semibold text-gray-500">
-                      Aviation676
+                <div className={styles.productInfo}>
+                  <h2>{product.title}</h2>
+                  <div className={styles.rating} aria-label={rating ? `${rating.toFixed(1)} out of 5 stars` : "No reviews yet"}>
+                    <span className={styles.stars} aria-hidden="true">
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <Star key={index} size={15} fill={index < filledStars ? "currentColor" : "none"} />
+                      ))}
                     </span>
+                    <span>{product.reviewCount > 0 ? `${rating.toFixed(1)} (${product.reviewCount})` : "No reviews"}</span>
                   </div>
+                  <p className={styles.price}>RM {product.price.toLocaleString("en-MY", { minimumFractionDigits: 2 })}</p>
+                  {product.description && <p className={styles.description}>{product.description}</p>}
+                  <span className={styles.detailsLink}>View product details <span aria-hidden="true">→</span></span>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
+          {sortedProducts.length === 0 && (
+            <p className={styles.emptyState}>No products are available right now.</p>
+          )}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
-export default Merchandises;
+export default ProductsPage;

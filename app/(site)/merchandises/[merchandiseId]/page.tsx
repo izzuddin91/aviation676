@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../clientApp";
+import { useParams, useRouter } from "next/navigation";
 import { FaShoppingCart } from "react-icons/fa";
-import "@/app/merchandise.module.css";
-import { useRouter } from "next/navigation"; // add this import at top
 import { fetchProduct } from "../../service/firebase.service";
+import styles from "./merchandiseDetail.module.css";
 
 interface ProductData {
   title: string;
@@ -17,24 +14,30 @@ interface ProductData {
   description: string;
 }
 
+const placeholderVariants = ["Option A", "Option B", "Option C"];
+
 const ProductPage: React.FC = () => {
-  const router = useRouter(); // initialize router
+  const router = useRouter();
   const { merchandiseId } = useParams();
   const [productData, setProductData] = useState<ProductData | null>(null);
   const [currentImage, setCurrentImage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [quantities, setQuantities] = useState([1, 1, 1]);
+  const [cartSubtotal, setCartSubtotal] = useState(0);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
 
-useEffect(() => {
-  const id = Array.isArray(merchandiseId) ? merchandiseId[0] : merchandiseId;
-  if (!id) return;
+  useEffect(() => {
+    const id = Array.isArray(merchandiseId) ? merchandiseId[0] : merchandiseId;
+    if (!id) return;
 
-  const loadProduct = async () => {
-    const product = await fetchProduct(id);
-    if (product) setProductData(product);
-  };
+    const loadProduct = async () => {
+      const product = await fetchProduct(id);
+      if (product) setProductData(product);
+    };
 
-  loadProduct();
-}, [merchandiseId]);
+    loadProduct();
+  }, [merchandiseId]);
 
   const handleAddToCart = () => {
     const message = `Hello, I would like to order:\n- Product: ${productData?.title || "Unknown"}`;
@@ -42,234 +45,252 @@ useEffect(() => {
     window.open(whatsappLink, "_blank");
   };
 
-  const handleNext = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentImage((prev) => (prev + 1) % (productData?.images?.length || 1));
-      setIsTransitioning(false);
-    }, 500);
+  const handleAddVariantToCart = (index: number) => {
+    const quantity = quantities[index] || 1;
+    setCartSubtotal((subtotal) => subtotal + Number(productData?.price || 0) * quantity);
   };
 
-  const handlePrevious = () => {
+  const handleShare = async () => {
+    if (!productData) return;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: productData.title, url: window.location.href });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        setShareMessage("Link copied");
+      }
+    } catch {
+      setShareMessage("Unable to share right now");
+    }
+  };
+
+  const changeImage = (direction: 1 | -1) => {
+    const imageCount = productData?.images.length || 0;
+    if (imageCount < 2) return;
+
     setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentImage((prev) =>
-        (prev - 1 + (productData?.images?.length || 1)) % (productData?.images?.length || 1)
-      );
+    window.setTimeout(() => {
+      setCurrentImage((current) => (current + direction + imageCount) % imageCount);
       setIsTransitioning(false);
-    }, 500);
+    }, 220);
   };
 
   if (!productData) return <div>Loading...</div>;
 
   return (
-    
-    <div
-      className="page-container"
-      style={{
-        padding: "24px",
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
-            {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        style={{
-          marginBottom: "20px",
-          padding: "8px 16px",
-          fontSize: "16px",
-          backgroundColor: "white",
-          color: "black",
-          border: "1px solid black",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        ← Back
+    <main className={styles.page}>
+      <button className={styles.backButton} onClick={() => router.back()}>
+        <span aria-hidden="true">←</span> Back to products
       </button>
-            <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "40px",
-          flexWrap: "wrap", // allows wrapping on mobile
-        }}
-      >
-        {/* Left: Image Carousel */}
-        {/* ... rest of your carousel code */}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "40px",
-          flexWrap: "wrap", // allows wrapping on mobile
-        }}
-      >
-        {/* Left: Image Carousel */}
-        <div
-          style={{
-            flex: "1 1 400px",
-            minWidth: "300px",
-            position: "relative",
-            textAlign: "center",
-          }}
-        >
-          <img
-            src={productData.images[currentImage]}
-            alt="Product"
-            style={{
-              maxWidth: "100%",
-              maxHeight: "520px",
-              objectFit: "contain",
-              margin: "0 auto",
-              display: "block",
-              opacity: isTransitioning ? 0.5 : 1,
-              transition: "opacity 0.5s ease-in-out",
-              borderRadius: "8px",
-            }}
-          />
-          <button
-            onClick={handlePrevious}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "10px",
-              transform: "translateY(-50%)",
-              fontSize: "24px",
-              background: "rgba(255,255,255,0.7)",
-              border: "none",
-              borderRadius: "50%",
-              padding: "8px",
-              cursor: "pointer",
-            }}
-          >
-            ◀
-          </button>
-          <button
-            onClick={handleNext}
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: "10px",
-              transform: "translateY(-50%)",
-              fontSize: "24px",
-              background: "rgba(255,255,255,0.7)",
-              border: "none",
-              borderRadius: "50%",
-              padding: "8px",
-              cursor: "pointer",
-            }}
-          >
-            ▶
-          </button>
 
-          {/* Thumbnails */}
-          <div
-            style={{
-              marginTop: "10px",
-              display: "flex",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {productData.images.map((img, idx) => (
+      <div className={styles.productGrid}>
+        <section className={styles.gallery} aria-label="Product images">
+          <div className={styles.imageFrame}>
+            {productData.images.length > 0 ? (
               <img
-                key={idx}
-                src={img}
-                alt={`Thumbnail ${idx}`}
-                onClick={() => setCurrentImage(idx)}
-                style={{
-                  width: "70px",
-                  height: "70px",
-                  objectFit: "cover",
-                  margin: "5px",
-                  border: currentImage === idx ? "2px solid black" : "1px solid #ccc",
-                  cursor: "pointer",
-                  borderRadius: "4px",
-                }}
+                className={`${styles.productImage} ${isTransitioning ? styles.fading : ""}`}
+                src={productData.images[currentImage]}
+                alt={`${productData.title}, image ${currentImage + 1}`}
               />
-            ))}
+            ) : (
+              <div className={styles.imagePlaceholder}>Image unavailable</div>
+            )}
+            {productData.images.length > 1 && (
+              <>
+                <button
+                  className={`${styles.carouselButton} ${styles.previous}`}
+                  onClick={() => changeImage(-1)}
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  className={`${styles.carouselButton} ${styles.next}`}
+                  onClick={() => changeImage(1)}
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              </>
+            )}
           </div>
-        </div>
+          {productData.images.length > 1 && (
+            <div className={styles.thumbnails} aria-label="Choose product image">
+              {productData.images.map((image, index) => (
+                <button
+                  className={`${styles.thumbnail} ${currentImage === index ? styles.activeThumbnail : ""}`}
+                  key={`${image}-${index}`}
+                  onClick={() => setCurrentImage(index)}
+                  aria-label={`Show image ${index + 1}`}
+                  aria-pressed={currentImage === index}
+                >
+                  <img src={image} alt="" />
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
 
-        {/* Right: Product Info */}
-<div
-  style={{
-    flex: "1 1 400px",
-    minWidth: "300px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-  }}
->
-  <h1 style={{ fontSize: "28px", marginBottom: "12px" }}>{productData.title}</h1>
-  <p style={{ fontSize: "16px", marginBottom: "12px" }}>{productData.description}</p>
-
-  {/* Price + Add to Cart Inline */}
-{/* Price + Add to Cart Inline */}
-<div
-  style={{
-    display: "flex",
-    alignItems: "stretch", // stretch both items to same height
-    gap: "16px",
-    marginBottom: "20px",
-    flexWrap: "wrap",
-  }}
->
-  {/* Price with black outline */}
-  <span
-    style={{
-      fontSize: "22px",
-      fontWeight: "bold",
-      padding: "0 12px",
-      border: "1px solid black",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "48px", // ensures uniform height
-    }}
-  >
-    RM {productData.price}
-  </span>
-
-  {/* Add to Cart button */}
-  <button
-    onClick={handleAddToCart}
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "0 20px",
-      backgroundColor: "#007BFF",
-      color: "white",
-      fontSize: "16px",
-      fontWeight: "bold",
-      border: "none",
-      borderRadius: "0px", // square corners
-      cursor: "pointer",
-      minHeight: "48px", // same height as price
-    }}
-  >
-    <FaShoppingCart style={{ marginRight: "8px" }} /> Add to Cart
-  </button>
-</div>
-
-
-  {productData.features.length > 0 && (
-    <ul style={{ marginBottom: "20px", paddingLeft: "20px" }}>
-      {productData.features.map((feature, idx) => (
-        <li key={idx} style={{ marginBottom: "6px" }}>
-          {feature}
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
-
+        <section className={styles.summary}>
+          <p className={styles.eyebrow}>AVIATION676 / PRODUCTS</p>
+          <h1 className={styles.title}>{productData.title}</h1>
+          <div className={styles.reviewSummary}>
+            <span className={styles.starRating} aria-label="No customer ratings yet">☆☆☆☆☆</span>
+            <a href="#reviews">0 Reviews</a>
+            <a href="#qa">0 Answered Questions</a>
+          </div>
+          <div className={styles.purchaseRow}>
+            <p className={styles.price}>
+              RM {Number(productData.price).toLocaleString("en-MY", { minimumFractionDigits: 2 })}
+            </p>
+            <button className={styles.orderButton} onClick={handleAddToCart}>
+              <FaShoppingCart aria-hidden="true" />
+              Order via WhatsApp
+            </button>
+          </div>
+          <p className={styles.priceRange}>Option price range: <span>From RM -- to RM --</span></p>
+          <div className={styles.shareRow}>
+            <strong>SHARE</strong>
+            <button type="button" onClick={handleShare}>Share product</button>
+            <button type="button" onClick={() => setIsWishlisted((saved) => !saved)}>
+              {isWishlisted ? "Saved to Wishlist" : "Add to Wishlist"}
+            </button>
+            <span role="status">{shareMessage}</span>
+          </div>
+        </section>
       </div>
-    </div>
+
+      <section className={styles.variants} id="options">
+        <div className={styles.sectionHeading}>
+          <div>
+            <p className={styles.eyebrow}>ORDERING</p>
+            <h2>Available Options</h2>
+          </div>
+          <p className={styles.placeholderNote}>Option details are placeholders and can be replaced with product-specific data.</p>
+        </div>
+        <div className={styles.tableScroller}>
+          <table className={styles.variantTable}>
+            <thead>
+              <tr>
+                <th>Model #</th>
+                <th>Diameter</th>
+                <th>Engine Application</th>
+                <th>Horsepower</th>
+                <th>Mounting Bolts</th>
+                <th>Part Number</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Buy</th>
+              </tr>
+            </thead>
+            <tbody>
+              {placeholderVariants.map((variant, index) => (
+                <tr key={variant}>
+                  <td>{variant}</td>
+                  <td>To be added</td>
+                  <td>To be added</td>
+                  <td>To be added</td>
+                  <td>To be added</td>
+                  <td>Pending</td>
+                  <td>RM {Number(productData.price).toFixed(2)}</td>
+                  <td>
+                    <input
+                      aria-label={`${variant} quantity`}
+                      type="number"
+                      min="1"
+                      value={quantities[index]}
+                      onChange={(event) => {
+                        const quantity = Math.max(1, Number(event.target.value) || 1);
+                        setQuantities((current) => current.map((value, row) => row === index ? quantity : value));
+                      }}
+                    />
+                  </td>
+                  <td>
+                    <button className={styles.tableAction} type="button" onClick={() => handleAddVariantToCart(index)}>
+                      Add to Cart
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className={styles.subtotal}>Subtotal <strong>RM {cartSubtotal.toFixed(2)}</strong></p>
+      </section>
+
+      <nav className={styles.jumpNav} aria-label="Jump to product information">
+        <strong>JUMP TO</strong>
+        <a href="#overview">Overview</a>
+        <a href="#construction">Construction</a>
+        <a href="#specifications">Specifications</a>
+        <a href="#documents">Documents</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#qa">Q&amp;A</a>
+        <a href="#catalog">View in Catalog</a>
+      </nav>
+
+      <div className={styles.productSections}>
+        <section className={styles.contentSection} id="overview">
+          <h2>Overview</h2>
+          <p>{productData.description || "Product overview placeholder. Add the product description here."}</p>
+        </section>
+
+        <section className={styles.contentSection} id="construction">
+          <h2>Construction</h2>
+          <p>Construction and material information placeholder. Add verified product details here.</p>
+        </section>
+
+        <section className={styles.contentSection} id="specifications">
+          <h2>Specifications</h2>
+          {productData.features.length > 0 ? (
+            <ul className={styles.specificationList}>
+              {productData.features.map((feature, index) => <li key={`${feature}-${index}`}>{feature}</li>)}
+            </ul>
+          ) : (
+            <dl className={styles.specificationList}>
+              <div><dt>Engine type</dt><dd>To be added</dd></div>
+              <div><dt>Maximum RPM</dt><dd>To be added</dd></div>
+              <div><dt>Number of blades</dt><dd>To be added</dd></div>
+              <div><dt>System weight</dt><dd>To be added</dd></div>
+              <div><dt>Standard finish</dt><dd>To be added</dd></div>
+            </dl>
+          )}
+        </section>
+
+        <section className={styles.contentSection} id="documents">
+          <h2>Documents</h2>
+          <ul className={styles.documentList}>
+            <li>Spec sheet <span>Coming soon</span></li>
+            <li>Owner&apos;s manual <span>Coming soon</span></li>
+          </ul>
+        </section>
+
+        <section className={styles.contentSection} id="reviews">
+          <h2>Reviews</h2>
+          <div className={styles.reviewPanel}>
+            <div className={styles.reviewStars} aria-label="No reviews yet, zero out of five stars">☆☆☆☆☆</div>
+            <p>No reviews yet</p>
+            <button type="button" disabled>Submit a Review</button>
+          </div>
+        </section>
+
+        <section className={styles.contentSection} id="qa">
+          <h2>Q&amp;A</h2>
+          <p>No questions yet. Product questions will appear here.</p>
+          <div className={styles.questionForm}>
+            <input aria-label="Ask a product question" placeholder="Have a question?" disabled />
+            <button type="button" disabled>Submit</button>
+          </div>
+        </section>
+
+        <section className={styles.contentSection} id="catalog">
+          <h2>View in Catalog</h2>
+          <p>Catalog link placeholder.</p>
+          <button type="button" disabled>Catalog link coming soon</button>
+        </section>
+      </div>
+    </main>
   );
 };
 

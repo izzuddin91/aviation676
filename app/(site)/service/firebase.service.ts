@@ -178,7 +178,13 @@ export const fetchProduct = async (productId: string): Promise<{
     }
 
     const data = docSnap.data();
-    const images = [data.image_1, data.image_2, data.image_3, data.image_4].filter(Boolean);
+    const images = [
+      data.image_1 || data.image1,
+      data.image_2 || data.image2,
+      data.image_3 || data.image3,
+      data.image_4 || data.image4,
+      data.image_5 || data.image5,
+    ].filter((image): image is string => typeof image === "string" && image.trim().length > 0);
 
     return {
       title: data.title,

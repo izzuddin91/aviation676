@@ -59,7 +59,7 @@ const Navbar = () => {
           </li>
           <li>
             <Link href="/merchandises" style={{ padding: "10px" }}>
-              Equipment
+              Products
             </Link>
           </li>
 
