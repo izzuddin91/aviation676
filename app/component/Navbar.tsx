@@ -62,6 +62,11 @@ const Navbar = () => {
               Products
             </Link>
           </li>
+          <li>
+            <Link href="/vfr" style={{ padding: "10px" }}>
+              VFR
+            </Link>
+          </li>
 
           {isAuthenticated ? (
             <li>

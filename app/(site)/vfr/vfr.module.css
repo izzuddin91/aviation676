@@ -1,0 +1,273 @@
+.page {
+  --ink: #172a35;
+  --muted: #64737a;
+  --line: #d7e0df;
+  --accent: #bd4d32;
+  min-height: calc(100vh - 140px);
+  padding: 38px clamp(18px, 5vw, 72px) 64px;
+  color: var(--ink);
+  background-color: #f3f6f3;
+  background-image: linear-gradient(rgba(243, 246, 243, 0.94), rgba(243, 246, 243, 0.94)),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+}
+
+.pageHeader {
+  max-width: 1280px;
+  margin: 0 auto 22px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 600;
+}
+
+.mapSection,
+.locationSection {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.mapFrame {
+  position: relative;
+  height: min(62vh, 590px);
+  min-height: 390px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #dce5df;
+}
+
+.mapLoading {
+  height: min(62vh, 590px);
+  min-height: 390px;
+  border: 1px solid var(--line);
+  background: #dce5df;
+}
+
+.map {
+  display: block;
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+:global(.vfr-landmark-pin) {
+  border: 0;
+  background: transparent;
+}
+
+:global(.vfr-landmark-pin__shape) {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 30px;
+  transform: rotate(-45deg);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  background: #bd4d32;
+  box-shadow: 0 2px 5px rgba(23, 42, 53, 0.4);
+}
+
+:global(.vfr-landmark-pin__shape span) {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.mapControls button:focus-visible,
+.closeButton:focus-visible {
+  outline: 3px solid #176957;
+  outline-offset: 3px;
+}
+
+.mapControls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  display: grid;
+  gap: 6px;
+}
+
+.mapControls button,
+.closeButton {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(23, 42, 53, 0.2);
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(23, 42, 53, 0.14);
+}
+
+.mapControls button:disabled {
+  color: #9aa5a4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.modalBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  background: rgba(15, 32, 39, 0.28);
+  cursor: pointer;
+}
+
+.landmark {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  width: min(480px, calc(100% - 40px));
+  overflow: hidden;
+  border: 1px solid rgba(23, 42, 53, 0.16);
+  background: #fff;
+  box-shadow: 0 8px 26px rgba(23, 42, 53, 0.2);
+}
+
+.closeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+}
+
+.landmarkImage {
+  width: 100%;
+  height: 100%;
+  min-height: 190px;
+  object-fit: cover;
+}
+
+.landmarkDetails {
+  padding: 18px;
+}
+
+.countryTag {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.landmarkDetails h2 {
+  margin: 7px 0;
+  font-size: 1.15rem;
+}
+
+.landmarkDetails p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.landmarkDetails a,
+.locationTable a {
+  color: #176957;
+  font-weight: 700;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.locationSection {
+  margin-top: 30px;
+}
+
+.locationSection h2 {
+  margin: 0 0 14px;
+  font-size: 1.2rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.locationTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.locationTable th,
+.locationTable td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.locationTable th {
+  color: var(--muted);
+  background: #eaf0ec;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.locationTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-top: 26px;
+  }
+
+  .mapFrame {
+    height: 570px;
+    min-height: 0;
+  }
+
+  .landmark {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    grid-template-columns: 1fr;
+    width: auto;
+  }
+
+  .landmarkImage {
+    height: 100px;
+    min-height: 0;
+  }
+
+  .landmarkDetails {
+    padding: 14px;
+  }
+
+  .landmarkDetails p {
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+  }
+
+  .locationTable th,
+  .locationTable td {
+    padding: 12px;
+  }
+}
