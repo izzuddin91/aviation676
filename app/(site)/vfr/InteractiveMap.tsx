@@ -16,6 +16,7 @@ const landmarkIcon = L.divIcon({
 
 export default function InteractiveMap() {
   const mapElementRef = useRef<HTMLDivElement>(null);
+  const mapFrameRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<VfrLocation | null>(null);
   const [playingLocation, setPlayingLocation] = useState<VfrLocation | null>(null);
@@ -29,6 +30,24 @@ export default function InteractiveMap() {
   const selectedThumbnail = selectedVideoId
     ? `https://img.youtube.com/vi/${selectedVideoId}/hqdefault.jpg`
     : null;
+
+  const showLocationOnMap = (location: VfrLocation) => {
+    setSelectedLocation(location);
+    mapFrameRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  const playLocationFromTable = (location: VfrLocation) => {
+    showLocationOnMap(location);
+    setPlayingLocation(location);
+    const map = mapRef.current;
+    if (map) {
+      map.flyTo(
+        [location.latitude, location.longitude],
+        Math.max(map.getZoom(), 12),
+        { duration: 1.2 }
+      );
+    }
+  };
 
   useEffect(() => {
     if (!playingLocation) return;
@@ -102,123 +121,167 @@ export default function InteractiveMap() {
   }, []);
 
   return (
-    <div className={styles.mapFrame}>
-      <div className={styles.map} ref={mapElementRef} aria-label="Interactive map of VFR locations" />
-      {!isLoading && !loadError && locations.length === 0 && (
-        <p className={styles.mapStatus} role="status">No VFR locations found.</p>
-      )}
-      {isLoading && <p className={styles.mapStatus} role="status">Loading VFR locations...</p>}
-      {loadError && <p className={styles.mapStatus} role="alert">{loadError}</p>}
-      <div className={styles.mapControls} aria-label="Map zoom controls">
-        <button
-          type="button"
-          aria-label="Zoom out"
-          onClick={() => mapRef.current?.zoomOut()}
-          disabled={zoom <= 2}
-        >
-          <Minus size={20} aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          aria-label="Zoom in"
-          onClick={() => mapRef.current?.zoomIn()}
-          disabled={zoom >= 18}
-        >
-          <Plus size={20} aria-hidden="true" />
-        </button>
-      </div>
-
-      {selectedLocation && (
-        <>
+    <>
+      <div className={styles.mapFrame} ref={mapFrameRef}>
+        <div className={styles.map} ref={mapElementRef} aria-label="Interactive map of VFR locations" />
+        {!isLoading && !loadError && locations.length === 0 && (
+          <p className={styles.mapStatus} role="status">No VFR locations found.</p>
+        )}
+        {isLoading && <p className={styles.mapStatus} role="status">Loading VFR locations...</p>}
+        {loadError && <p className={styles.mapStatus} role="alert">{loadError}</p>}
+        <div className={styles.mapControls} aria-label="Map zoom controls">
           <button
-            className={styles.modalBackdrop}
             type="button"
-            aria-label="Close location details"
-            onClick={() => setSelectedLocation(null)}
-          />
-          <article
-            className={`${styles.landmark} ${!selectedThumbnail ? styles.landmarkWithoutImage : ""}`}
-            id="landmark-dialog"
-            role="dialog"
-            aria-modal={!playingLocation}
-            aria-labelledby="landmark-title"
+            aria-label="Zoom out"
+            onClick={() => mapRef.current?.zoomOut()}
+            disabled={zoom <= 2}
           >
+            <Minus size={20} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label="Zoom in"
+            onClick={() => mapRef.current?.zoomIn()}
+            disabled={zoom >= 18}
+          >
+            <Plus size={20} aria-hidden="true" />
+          </button>
+        </div>
+
+        {selectedLocation && (
+          <>
             <button
-              className={styles.closeButton}
+              className={styles.modalBackdrop}
               type="button"
               aria-label="Close location details"
               onClick={() => setSelectedLocation(null)}
+            />
+            <article
+              className={`${styles.landmark} ${!selectedThumbnail ? styles.landmarkWithoutImage : ""}`}
+              id="landmark-dialog"
+              role="dialog"
+              aria-modal={!playingLocation}
+              aria-labelledby="landmark-title"
             >
-              <X size={20} aria-hidden="true" />
-            </button>
-            {selectedThumbnail && (
               <button
-                className={styles.videoThumbnail}
+                className={styles.closeButton}
                 type="button"
-                aria-label={`Play video for ${selectedLocation.title}`}
-                onClick={() => setPlayingLocation(selectedLocation)}
+                aria-label="Close location details"
+                onClick={() => setSelectedLocation(null)}
               >
-                <img
-                  className={styles.landmarkImage}
-                  src={selectedThumbnail}
-                  alt=""
-                />
-                <span className={styles.playButton} aria-hidden="true">
-                  <Play size={22} fill="currentColor" />
-                </span>
+                <X size={20} aria-hidden="true" />
               </button>
-            )}
-            <div className={styles.landmarkDetails}>
-              <h2 id="landmark-title">{selectedLocation.title}</h2>
-              <p>{selectedLocation.description}</p>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${selectedLocation.latitude},${selectedLocation.longitude}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open pin in Google Maps
-              </a>
-            </div>
-          </article>
-        </>
-      )}
+              {selectedThumbnail && (
+                <button
+                  className={styles.videoThumbnail}
+                  type="button"
+                  aria-label={`Play video for ${selectedLocation.title}`}
+                  onClick={() => setPlayingLocation(selectedLocation)}
+                >
+                  <img
+                    className={styles.landmarkImage}
+                    src={selectedThumbnail}
+                    alt=""
+                  />
+                  <span className={styles.playButton} aria-hidden="true">
+                    <Play size={22} fill="currentColor" />
+                  </span>
+                </button>
+              )}
+              <div className={styles.landmarkDetails}>
+                <h2 id="landmark-title">{selectedLocation.title}</h2>
+                <p>{selectedLocation.description}</p>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${selectedLocation.latitude},${selectedLocation.longitude}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open pin in Google Maps
+                </a>
+              </div>
+            </article>
+          </>
+        )}
 
-      {playingLocation && (
-        <>
-          <button
-            className={styles.videoBackdrop}
-            type="button"
-            aria-label="Close video"
-            onClick={() => setPlayingLocation(null)}
-          />
-          <div
-            className={styles.videoDialog}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="video-dialog-title"
-          >
-            <h2 className={styles.visuallyHidden} id="video-dialog-title">
-              {playingLocation.title} video
-            </h2>
+        {playingLocation && (
+          <>
             <button
-              className={styles.videoCloseButton}
+              className={styles.videoBackdrop}
               type="button"
               aria-label="Close video"
               onClick={() => setPlayingLocation(null)}
-            >
-              <X size={20} aria-hidden="true" />
-            </button>
-            <iframe
-              src={`https://www.youtube.com/embed/${getYouTubeVideoId(playingLocation.youtubeLink)}?autoplay=1&playsinline=1`}
-              title={playingLocation.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
             />
-          </div>
-        </>
-      )}
-    </div>
+            <div
+              className={styles.videoDialog}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="video-dialog-title"
+            >
+              <h2 className={styles.visuallyHidden} id="video-dialog-title">
+                {playingLocation.title} video
+              </h2>
+              <button
+                className={styles.videoCloseButton}
+                type="button"
+                aria-label="Close video"
+                onClick={() => setPlayingLocation(null)}
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+              <iframe
+                src={`https://www.youtube.com/embed/${getYouTubeVideoId(playingLocation.youtubeLink)}?autoplay=1&playsinline=1`}
+                title={playingLocation.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </>
+        )}
+      </div>
+
+      <section className={styles.locationSection} aria-labelledby="vfr-locations-title">
+        <h2 id="vfr-locations-title">VFR Locations</h2>
+        <div className={styles.locationTableWrap}>
+          <table className={styles.locationTable}>
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">YouTube</th>
+                <th scope="col">Google Maps</th>
+              </tr>
+            </thead>
+            <tbody>
+              {locations.map((location) => (
+                <tr key={location.id}>
+                  <td>{location.title}</td>
+                  <td>{location.description}</td>
+                  <td>
+                    <button
+                      className={styles.tableAction}
+                      type="button"
+                      onClick={() => playLocationFromTable(location)}
+                    >
+                      Watch video
+                    </button>
+                  </td>
+                  <td>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View location
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </>
   );
 }
 
