@@ -31,8 +31,7 @@
   font-weight: 600;
 }
 
-.mapSection,
-.locationSection {
+.mapSection {
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -60,6 +59,19 @@
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+.mapStatus {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 5;
+  max-width: calc(100% - 88px);
+  margin: 0;
+  padding: 10px 14px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(23, 42, 53, 0.14);
 }
 
 :global(.vfr-landmark-pin) {
@@ -148,6 +160,10 @@
   box-shadow: 0 8px 26px rgba(23, 42, 53, 0.2);
 }
 
+.landmarkWithoutImage {
+  grid-template-columns: 1fr;
+}
+
 .closeButton {
   position: absolute;
   top: 8px;
@@ -164,15 +180,42 @@
   object-fit: cover;
 }
 
-.landmarkDetails {
-  padding: 18px;
+.videoThumbnail {
+  position: relative;
+  display: block;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: #172a35;
+  cursor: pointer;
 }
 
-.countryTag {
-  color: var(--accent);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
+.videoThumbnail:focus-visible,
+.videoCloseButton:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -5px;
+}
+
+.playButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 54px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  place-items: center;
+  border-radius: 12px;
+  background: #bd1e1e;
+  color: #fff;
+}
+
+.videoThumbnail:hover .playButton {
+  background: #e62117;
+}
+
+.landmarkDetails {
+  padding: 18px;
 }
 
 .landmarkDetails h2 {
@@ -187,51 +230,69 @@
   line-height: 1.5;
 }
 
-.landmarkDetails a,
-.locationTable a {
+.landmarkDetails a {
   color: #176957;
   font-weight: 700;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
-.locationSection {
-  margin-top: 30px;
+.videoBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  padding: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.78);
 }
 
-.locationSection h2 {
-  margin: 0 0 14px;
-  font-size: 1.2rem;
+.videoDialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 7;
+  width: auto;
+  height: min(640px, calc(100% - 32px));
+  max-width: calc(100% - 32px);
+  aspect-ratio: 9 / 16;
+  transform: translate(-50%, -50%);
+  background: #000;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
-.tableWrap {
-  overflow-x: auto;
-  border: 1px solid var(--line);
-  background: #fff;
-}
-
-.locationTable {
+.videoDialog iframe {
+  display: block;
   width: 100%;
-  border-collapse: collapse;
-  text-align: left;
+  height: 100%;
+  border: 0;
 }
 
-.locationTable th,
-.locationTable td {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--line);
+.videoCloseButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  cursor: pointer;
 }
 
-.locationTable th {
-  color: var(--muted);
-  background: #eaf0ec;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.locationTable tbody tr:last-child td {
-  border-bottom: 0;
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
 }
 
 @media (max-width: 640px) {
@@ -264,10 +325,5 @@
   .landmarkDetails p {
     margin-bottom: 8px;
     font-size: 0.82rem;
-  }
-
-  .locationTable th,
-  .locationTable td {
-    padding: 12px;
   }
 }

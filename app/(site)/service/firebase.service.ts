@@ -23,6 +23,53 @@ import {
 
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+export type VfrLocation = {
+  id: string;
+  title: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  youtubeLink: string;
+};
+
+/**
+ * Get VFR locations from the `vfr` collection.
+ */
+export const getAllVfrLocations = async (): Promise<VfrLocation[]> => {
+  const snapshot = await getDocs(collection(db, "vfr"));
+
+  return snapshot.docs.flatMap((locationDoc) => {
+    const data = locationDoc.data();
+    const latitude = Number(data.latitude);
+    const longitude = Number(data.longitude);
+
+    if (
+      typeof data.title !== "string" ||
+      typeof data.description !== "string" ||
+      typeof data.youtubeLink !== "string" ||
+      !Number.isFinite(latitude) ||
+      !Number.isFinite(longitude) ||
+      latitude < -90 ||
+      latitude > 90 ||
+      longitude < -180 ||
+      longitude > 180
+    ) {
+      console.warn(`Skipping invalid VFR location: ${locationDoc.id}`);
+      return [];
+    }
+
+    return [{
+      id: locationDoc.id,
+      title: data.title,
+      description: data.description,
+      latitude,
+      longitude,
+      youtubeLink: data.youtubeLink,
+    }];
+  });
+};
+
 /**
  * 📰 Get the latest three articles
  */

@@ -2,20 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as L from "leaflet";
-import { Minus, Plus, X } from "lucide-react";
+import { Minus, Play, Plus, X } from "lucide-react";
 import "leaflet/dist/leaflet.css";
+import { getAllVfrLocations, type VfrLocation } from "../service/firebase.service";
 import styles from "./vfr.module.css";
-
-const landmark = {
-  country: "Malaysia",
-  name: "Petronas Twin Towers",
-  latitude: 3.1579,
-  longitude: 101.7116,
-  photoUrl:
-    "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=1200&q=85",
-  description:
-    "A sample VFR landmark pin for Kuala Lumpur, with the Petronas Twin Towers as a visual reference point.",
-};
 
 const landmarkIcon = L.divIcon({
   className: "vfr-landmark-pin",
@@ -27,9 +17,29 @@ const landmarkIcon = L.divIcon({
 export default function InteractiveMap() {
   const mapElementRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const [isLandmarkOpen, setIsLandmarkOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<VfrLocation | null>(null);
+  const [playingLocation, setPlayingLocation] = useState<VfrLocation | null>(null);
+  const [locations, setLocations] = useState<VfrLocation[]>([]);
   const [zoom, setZoom] = useState(4);
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${landmark.latitude},${landmark.longitude}`;
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const selectedVideoId = selectedLocation
+    ? getYouTubeVideoId(selectedLocation.youtubeLink)
+    : null;
+  const selectedThumbnail = selectedVideoId
+    ? `https://img.youtube.com/vi/${selectedVideoId}/hqdefault.jpg`
+    : null;
+
+  useEffect(() => {
+    if (!playingLocation) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPlayingLocation(null);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [playingLocation]);
 
   useEffect(() => {
     const container = mapElementRef.current;
@@ -44,24 +54,47 @@ export default function InteractiveMap() {
       zoomControl: false,
     });
     mapRef.current = map;
+    let isActive = true;
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
     }).addTo(map);
 
-    const marker = L.marker([landmark.latitude, landmark.longitude], {
-      icon: landmarkIcon,
-      title: landmark.name,
-      alt: landmark.name,
-    }).addTo(map);
-    const openLandmark = () => setIsLandmarkOpen((isOpen) => !isOpen);
     const updateZoom = () => setZoom(map.getZoom());
-    marker.on("click", openLandmark);
     map.on("zoomend", updateZoom);
+    map.fitBounds([[-2, 99], [47, 150]], {
+      padding: [36, 36],
+      maxZoom: 4,
+    });
+
+    const loadLocations = async () => {
+      try {
+        const vfrLocations = await getAllVfrLocations();
+        if (!isActive) return;
+
+        setLocations(vfrLocations);
+        vfrLocations.forEach((location) => {
+          L.marker([location.latitude, location.longitude], {
+            icon: landmarkIcon,
+            title: location.title,
+            alt: location.title,
+          })
+            .addTo(map)
+            .on("click", () => setSelectedLocation(location));
+        });
+      } catch (error) {
+        console.error("Error fetching VFR locations:", error);
+        if (isActive) setLoadError("Unable to load VFR locations. Please try again later.");
+      } finally {
+        if (isActive) setIsLoading(false);
+      }
+    };
+
+    void loadLocations();
 
     return () => {
-      marker.off("click", openLandmark);
+      isActive = false;
       map.off("zoomend", updateZoom);
       map.remove();
       mapRef.current = null;
@@ -70,7 +103,12 @@ export default function InteractiveMap() {
 
   return (
     <div className={styles.mapFrame}>
-      <div className={styles.map} ref={mapElementRef} aria-label="Interactive map of Asia" />
+      <div className={styles.map} ref={mapElementRef} aria-label="Interactive map of VFR locations" />
+      {!isLoading && !loadError && locations.length === 0 && (
+        <p className={styles.mapStatus} role="status">No VFR locations found.</p>
+      )}
+      {isLoading && <p className={styles.mapStatus} role="status">Loading VFR locations...</p>}
+      {loadError && <p className={styles.mapStatus} role="alert">{loadError}</p>}
       <div className={styles.mapControls} aria-label="Map zoom controls">
         <button
           type="button"
@@ -90,45 +128,117 @@ export default function InteractiveMap() {
         </button>
       </div>
 
-      {isLandmarkOpen && (
+      {selectedLocation && (
         <>
           <button
             className={styles.modalBackdrop}
             type="button"
-            aria-label="Close landmark details"
-            onClick={() => setIsLandmarkOpen(false)}
+            aria-label="Close location details"
+            onClick={() => setSelectedLocation(null)}
           />
           <article
-            className={styles.landmark}
+            className={`${styles.landmark} ${!selectedThumbnail ? styles.landmarkWithoutImage : ""}`}
             id="landmark-dialog"
             role="dialog"
-            aria-modal="true"
+            aria-modal={!playingLocation}
             aria-labelledby="landmark-title"
           >
             <button
               className={styles.closeButton}
               type="button"
-              aria-label="Close landmark details"
-              onClick={() => setIsLandmarkOpen(false)}
+              aria-label="Close location details"
+              onClick={() => setSelectedLocation(null)}
             >
               <X size={20} aria-hidden="true" />
             </button>
-            <img
-              className={styles.landmarkImage}
-              src={landmark.photoUrl}
-              alt="Sample view of Kuala Lumpur, Malaysia"
-            />
+            {selectedThumbnail && (
+              <button
+                className={styles.videoThumbnail}
+                type="button"
+                aria-label={`Play video for ${selectedLocation.title}`}
+                onClick={() => setPlayingLocation(selectedLocation)}
+              >
+                <img
+                  className={styles.landmarkImage}
+                  src={selectedThumbnail}
+                  alt=""
+                />
+                <span className={styles.playButton} aria-hidden="true">
+                  <Play size={22} fill="currentColor" />
+                </span>
+              </button>
+            )}
             <div className={styles.landmarkDetails}>
-              <span className={styles.countryTag}>{landmark.country}</span>
-              <h2 id="landmark-title">{landmark.name}</h2>
-              <p>{landmark.description}</p>
-              <a href={directionsUrl} target="_blank" rel="noreferrer">
+              <h2 id="landmark-title">{selectedLocation.title}</h2>
+              <p>{selectedLocation.description}</p>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${selectedLocation.latitude},${selectedLocation.longitude}`}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Open pin in Google Maps
               </a>
             </div>
           </article>
         </>
       )}
+
+      {playingLocation && (
+        <>
+          <button
+            className={styles.videoBackdrop}
+            type="button"
+            aria-label="Close video"
+            onClick={() => setPlayingLocation(null)}
+          />
+          <div
+            className={styles.videoDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="video-dialog-title"
+          >
+            <h2 className={styles.visuallyHidden} id="video-dialog-title">
+              {playingLocation.title} video
+            </h2>
+            <button
+              className={styles.videoCloseButton}
+              type="button"
+              aria-label="Close video"
+              onClick={() => setPlayingLocation(null)}
+            >
+              <X size={20} aria-hidden="true" />
+            </button>
+            <iframe
+              src={`https://www.youtube.com/embed/${getYouTubeVideoId(playingLocation.youtubeLink)}?autoplay=1&playsinline=1`}
+              title={playingLocation.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          </div>
+        </>
+      )}
     </div>
   );
+}
+
+function getYouTubeVideoId(youtubeLink: string): string | null {
+  try {
+    const url = new URL(youtubeLink);
+    const host = url.hostname.replace(/^www\./, "");
+    let videoId: string | null = null;
+
+    if (host === "youtu.be") {
+      videoId = url.pathname.split("/").filter(Boolean)[0] ?? null;
+    } else if (host === "youtube.com" || host === "m.youtube.com") {
+      videoId =
+        url.searchParams.get("v") ??
+        url.pathname.match(/^\/(?:shorts|embed|live)\/([^/]+)/)?.[1] ??
+        null;
+    }
+
+    return videoId && /^[\w-]{11}$/.test(videoId) ? videoId : null;
+  } catch {
+    return null;
+  }
 }
