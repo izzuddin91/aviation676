@@ -27,6 +27,7 @@
 
 .navList {
   display: flex;
+  align-items: center;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -48,6 +49,58 @@
     rgba(255, 255, 255, 0.05)
   );
   border-radius: 6px;
+}
+
+.languageToggleItem {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.languageToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.languageOption {
+  display: grid;
+  width: 34px;
+  height: 30px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.flagIcon {
+  display: block;
+  width: 24px;
+  height: 16px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.languageOption:hover {
+  transform: scale(1.08);
+}
+
+.languageOption:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+.languageActive {
+  background: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 .hamburger {
@@ -118,6 +171,7 @@
   /* Start hidden but still rendered */
   .navList {
     flex-direction: column;
+    align-items: stretch;
     position: absolute;
     top: 100%;
     left: 0;
@@ -137,6 +191,10 @@
     border-radius: 0 0 12px 12px;
     max-height: 500px; /* Adjust to fit your menu length */
     opacity: 1;
+  }
+
+  .languageToggleItem {
+    padding: 8px 10px;
   }
 }
 

@@ -6,8 +6,13 @@ import VideoBackground from "@/app/component/VideoBackground";
 import { getAllProducts, getLatestThreeArticle } from "../service/firebase.service";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/app/context/LanguageContext";
+import englishHomePage from "@/public/locales/en/homePage.json";
+import thaiHomePage from "@/public/locales/th/homePage.json";
 
 export default function Articles() {
+  const { language } = useLanguage();
+  const copy = language === "th" ? thaiHomePage : englishHomePage;
   const router = useRouter();
   const [articles, updateArticles] = useState<Array<Record<string, any>>>([]);
   const [products, setProducts] = useState<Array<Record<string, any>>>([]);
@@ -53,14 +58,18 @@ export default function Articles() {
 
   return (
     <div className="bg-white text-black">
-      <VideoBackground />
+      <VideoBackground
+        heroTitle={copy.hero.title}
+        whatsappAlt={copy.whatsapp.imageAlt}
+        whatsappMessage={copy.whatsapp.message}
+      />
 
       <div className="px-5 md:px-10">
         <h1 className="text-2xl md:text-3xl text-center font-semibold mt-6 mb-2">
-          Do you love general aviation ?
+          {copy.intro.title}
         </h1>
         <p className="text-center text-gray-600 text-base md:text-lg mb-5">
-          For those who fancy being a pilot and likes anything aviation related!
+          {copy.intro.description}
         </p>
       </div>
 
@@ -70,14 +79,14 @@ export default function Articles() {
       <div className="flex flex-col md:flex-row justify-center gap-6 px-4">
         <iframe
           src="https://www.youtube.com/embed/pWb7E6IXB4Q"
-          title="YouTube Video 1"
+          title={copy.videos.firstTitle}
           className="w-full md:w-[560px] h-[220px] md:h-[315px] rounded-lg border-none"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
         <iframe
           src="https://www.youtube.com/embed/xBKFt3Uja6A"
-          title="YouTube Video 2"
+          title={copy.videos.secondTitle}
           className="w-full md:w-[560px] h-[220px] md:h-[315px] rounded-lg border-none"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
@@ -91,61 +100,66 @@ export default function Articles() {
         <div className="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition">
           <Image
             src="https://firebasestorage.googleapis.com/v0/b/aviation676-939b4.firebasestorage.app/o/johor_flight.webp?alt=media&token=0a73c9c9-d8e0-4e87-9fc4-7e9c1c13a2fe"
-            alt="Johor Flight"
+            alt={copy.featuredStories[0].imageAlt}
             width={400}
             height={250}
             className="w-full h-48 object-cover"
           />
-          <h2 className="text-lg font-semibold mt-3">Johor Flight</h2>
+          <h2 className="text-lg font-semibold mt-3">
+            {copy.featuredStories[0].title}
+          </h2>
           <p className="text-sm text-gray-600 px-3 mb-2">
-            How I execute touch and go at Senai Airport.
+            {copy.featuredStories[0].description}
           </p>
           <Link
             href="/articles/CR0BafXyabvNYdO15AKH"
             className="text-blue-600 font-bold mb-3 inline-block"
           >
-            Read More
+            {copy.readMore}
           </Link>
         </div>
 
         <div className="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition">
           <Image
             src="https://firebasestorage.googleapis.com/v0/b/housecarmaintenance.appspot.com/o/uploads%2Faviation676podcast.JPG?alt=media&token=c7655d41-1260-4599-8e42-33024da58ce3"
-            alt="Podcast"
+            alt={copy.featuredStories[1].imageAlt}
             width={400}
             height={250}
             className="w-full h-48 object-cover"
           />
-          <h2 className="text-lg font-semibold mt-3">First Podcast!</h2>
+          <h2 className="text-lg font-semibold mt-3">
+            {copy.featuredStories[1].title}
+          </h2>
           <p className="text-sm text-gray-600 px-3 mb-2">
-            Watch our first ever podcast on general aviation.
+            {copy.featuredStories[1].description}
           </p>
           <Link
             href="/articles/OHekw7WGGLXsAm3Pqa2P"
             className="text-blue-600 font-bold mb-3 inline-block"
           >
-            Read More
+            {copy.readMore}
           </Link>
         </div>
 
         <div className="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition">
           <Image
             src="https://thisisflight.net/wp-content/uploads/2021/03/MG_0441-scaled.jpg"
-            alt="Lima Airshow"
+            alt={copy.featuredStories[2].imageAlt}
             width={400}
             height={250}
             className="w-full h-48 object-cover"
           />
-          <h2 className="text-lg font-semibold mt-3">Lima Airshow</h2>
+          <h2 className="text-lg font-semibold mt-3">
+            {copy.featuredStories[2].title}
+          </h2>
           <p className="text-sm text-gray-600 px-3 mb-2">
-            This time around we will show you the inside of the airshow in
-            Langkawi.
+            {copy.featuredStories[2].description}
           </p>
           <Link
             href="/articles"
             className="text-blue-600 font-bold mb-3 inline-block"
           >
-            Read More
+            {copy.readMore}
           </Link>
         </div>
       </div>
@@ -159,7 +173,7 @@ export default function Articles() {
         {/* New Products Section */}
         <div className="flex-1 order-2 lg:order-1 flex flex-col items-center text-center">
           <div className="w-full bg-white rounded-xl p-6 md:p-8">
-            <h3 className="text-3xl font-bold mb-5">New Products</h3>
+            <h3 className="text-3xl font-bold mb-5">{copy.products.title}</h3>
             <div className="grid grid-cols-4 gap-5 md:gap-6">
               {products.map((product) => (
                 <Link
@@ -170,15 +184,20 @@ export default function Articles() {
                   <div className="relative h-52 w-full bg-gray-100">
                     <Image
                       src={product.imageUrl || product.image_1 || product.image1 || "/images/placeholder.png"}
-                      alt={product.title || "Product"}
+                      alt={product.title || copy.products.imageAltFallback}
                       fill
                       sizes="(max-width: 768px) 25vw, 220px"
                       className="object-contain p-4"
                     />
                   </div>
                   <div className="p-4">
-                    <h4 className="text-base md:text-lg font-semibold truncate">{product.title || "Untitled"}</h4>
-                    <p className="text-base text-gray-600 mt-1">RM{product.price || 0}</p>
+                    <h4 className="text-base md:text-lg font-semibold truncate">
+                      {product.title || copy.products.untitledFallback}
+                    </h4>
+                    <p className="text-base text-gray-600 mt-1">
+                      {copy.products.currencyPrefix}
+                      {product.price || 0}
+                    </p>
                   </div>
                 </Link>
               ))}

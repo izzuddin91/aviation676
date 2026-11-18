@@ -1,0 +1,15 @@
+{
+  "pageTitle": "เรื่องราว",
+  "filters": {
+    "all": "ทั้งหมด",
+    "podcast": "พอดแคสต์"
+  },
+  "storyPhotoAlt": "รูปภาพเรื่องราว",
+  "previousPhoto": "รูปก่อนหน้า",
+  "nextPhoto": "รูปถัดไป",
+  "untitledStory": "เรื่องราวไม่มีชื่อ",
+  "seeMore": "ดูเพิ่มเติม",
+  "emptyState": "ไม่พบเรื่องราว...",
+  "previousPage": "ก่อนหน้า",
+  "nextPage": "ถัดไป"
+}

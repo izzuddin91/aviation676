@@ -5,8 +5,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { getAllArticles } from "../service/firebase.service";
+import { useLanguage } from "@/app/context/LanguageContext";
+import englishStories from "@/public/locales/en/stories.json";
+import thaiStories from "@/public/locales/th/stories.json";
 
-interface StoryCardProps {
+interface Story {
   id: string;
   photos: string[];
   title: string;
@@ -14,7 +17,18 @@ interface StoryCardProps {
   description: string;
 }
 
-const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, description }) => {
+interface StoryCardProps extends Story {
+  copy: typeof englishStories;
+}
+
+const StoryCard: React.FC<StoryCardProps> = ({
+  id,
+  photos,
+  title,
+  tags,
+  description,
+  copy,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
 
@@ -42,19 +56,21 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
       <div className="relative w-full h-56 bg-gray-100">
         <img
           src={photos[currentIndex]}
-          alt="Story Photo"
+          alt={copy.storyPhotoAlt}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
         {photos.length > 1 && (
           <>
             <button
               onClick={prevPhoto}
+              aria-label={copy.previousPhoto}
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow-md"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={nextPhoto}
+              aria-label={copy.nextPhoto}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow-md"
             >
               <ChevronRight size={18} />
@@ -66,7 +82,9 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
       {/* Text Section */}
       <div className="p-5 flex flex-col justify-between flex-grow">
         <div>
-          <h2 className="font-bold text-lg mb-2 line-clamp-2">{title}</h2>
+          <h2 className="font-bold text-lg mb-2 line-clamp-2">
+            {title || copy.untitledStory}
+          </h2>
           <div className="flex flex-wrap gap-2 mb-3">
             {tags.map((tag, i) => (
               <span
@@ -86,7 +104,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
             onClick={handleSeeMore}
             className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-4 py-2 rounded-full shadow-md hover:opacity-90 transition"
           >
-            See More
+            {copy.seeMore}
           </button>
         </div>
       </div>
@@ -97,8 +115,10 @@ const StoryCard: React.FC<StoryCardProps> = ({ id, photos, title, tags, descript
 const STORIES_PER_PAGE = 6;
 
 const StoriesPage = () => {
-  const [stories, setStories] = useState<StoryCardProps[]>([]);
-  const [filteredStories, setFilteredStories] = useState<StoryCardProps[]>([]);
+  const { language } = useLanguage();
+  const copy = language === "th" ? thaiStories : englishStories;
+  const [stories, setStories] = useState<Story[]>([]);
+  const [filteredStories, setFilteredStories] = useState<Story[]>([]);
   const [selectedSegment, setSelectedSegment] = useState<"all" | "podcast">("all");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -114,7 +134,7 @@ const StoriesPage = () => {
         return {
           id: article.id,
           photos: [article.mainImageLink, article.secondImageLink].filter(Boolean),
-          title: article.title || "Untitled Story",
+          title: article.title || "",
           tags: tagsArray,
           description: descriptionWords,
         };
@@ -147,33 +167,40 @@ const StoriesPage = () => {
     <div className="max-w-6xl mx-auto p-6">
       {/* Page Title */}
       <h1 className="text-4xl font-extrabold mb-6 text-center bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
-        Stories
+      {copy.pageTitle}
       </h1>
 
       {/* Segment Selector */}
       <div className="flex justify-center mb-10 gap-3">
-        {["all", "podcast"].map((segment) => (
+        {[
+          { key: "all", label: copy.filters.all },
+          { key: "podcast", label: copy.filters.podcast },
+        ].map((segment) => (
           <button
-            key={segment}
-            onClick={() => setSelectedSegment(segment as "all" | "podcast")}
+            key={segment.key}
+            onClick={() =>
+              setSelectedSegment(segment.key as "all" | "podcast")
+            }
             className={`px-5 py-2 rounded-full text-sm font-semibold border transition-all ${
-              selectedSegment === segment
+              selectedSegment === segment.key
                 ? "bg-gradient-to-r from-indigo-500 to-pink-500 text-white border-transparent shadow-md"
                 : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
             }`}
           >
-            {segment.charAt(0).toUpperCase() + segment.slice(1)}
+            {segment.label}
           </button>
         ))}
       </div>
 
       {/* Stories Grid */}
       {paginatedStories.length === 0 ? (
-        <div className="text-gray-500 text-center animate-pulse">No stories found...</div>
+        <div className="text-gray-500 text-center animate-pulse">
+          {copy.emptyState}
+        </div>
       ) : (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {paginatedStories.map((story) => (
-            <StoryCard key={story.id} {...story} />
+            <StoryCard key={story.id} {...story} copy={copy} />
           ))}
         </div>
       )}
@@ -186,7 +213,7 @@ const StoriesPage = () => {
             onClick={() => setCurrentPage((prev) => prev - 1)}
             className="px-4 py-2 rounded-full border text-sm disabled:opacity-40"
           >
-            Prev
+            {copy.previousPage}
           </button>
 
           {[...Array(totalPages)].map((_, i) => (
@@ -208,7 +235,7 @@ const StoriesPage = () => {
             onClick={() => setCurrentPage((prev) => prev + 1)}
             className="px-4 py-2 rounded-full border text-sm disabled:opacity-40"
           >
-            Next
+            {copy.nextPage}
           </button>
         </div>
       )}

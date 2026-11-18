@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"; // Import useRouter
 import BottomBar from "./component/bottomBar";
 import { useEffect } from "react";
 import { trackSessionStart } from "@/app/(site)/service/analytics.service";
+import { LanguageProvider } from "@/app/context/LanguageContext";
 
 const lato = Lato({
   weight: ["400", "100", "300", "700", "900"],
@@ -39,14 +40,16 @@ export default function RootLayout({
         <meta name="theme-color" content="#000" />
       </head>
       <body>
-        <AuthProvider>
-          <Navbar />
-          <div style={{ marginTop: "60px", paddingBottom: "80px" }}>
-            {children}
-          </div>
-          <BottomBar onClick={() => router.push("/contact")} />{" "}
-          {/* Use router */}
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <Navbar />
+            <div style={{ marginTop: "60px", paddingBottom: "80px" }}>
+              {children}
+            </div>
+            <BottomBar onClick={() => router.push("/contact")} />{" "}
+            {/* Use router */}
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

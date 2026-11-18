@@ -1,0 +1,26 @@
+{
+  "eyebrow": "AVIATION676 CATALOG",
+  "pageTitle": "Products",
+  "description": "Aircraft equipment, accessories, and essentials.",
+  "loading": "Loading products...",
+  "untitledProduct": "Untitled",
+  "resultCount": "{{count}} products",
+  "sortBy": "Sort by",
+  "sortOptions": {
+    "featured": "Featured",
+    "priceLowToHigh": "Price: Low to High",
+    "priceHighToLow": "Price: High to Low",
+    "titleAToZ": "Title: A-Z",
+    "titleZToA": "Title: Z-A"
+  },
+  "productLayout": "Product layout",
+  "gridView": "Grid view",
+  "listView": "List view",
+  "imageUnavailable": "Image unavailable",
+  "ratingOutOfFive": "{{rating}} out of 5 stars",
+  "noReviewsYet": "No reviews yet",
+  "noReviews": "No reviews",
+  "currencyCode": "RM",
+  "detailsLink": "View product details",
+  "emptyState": "No products are available right now."
+}

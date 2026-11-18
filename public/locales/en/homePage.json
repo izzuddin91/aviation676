@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "title": "Welcome to Aviation 676"
+  },
+  "intro": {
+    "title": "Do you love general aviation?",
+    "description": "For those who dream of becoming a pilot and love everything aviation-related!"
+  },
+  "videos": {
+    "firstTitle": "YouTube Video 1",
+    "secondTitle": "YouTube Video 2"
+  },
+  "featuredStories": [
+    {
+      "imageAlt": "Johor Flight",
+      "title": "Johor Flight",
+      "description": "How I perform a touch-and-go at Senai Airport."
+    },
+    {
+      "imageAlt": "Podcast",
+      "title": "First Podcast!",
+      "description": "Watch our first-ever podcast about general aviation."
+    },
+    {
+      "imageAlt": "Lima Airshow",
+      "title": "Lima Airshow",
+      "description": "This time, we’ll show you what it’s like inside the airshow in Langkawi."
+    }
+  ],
+  "readMore": "Read More",
+  "products": {
+    "title": "New Products",
+    "imageAltFallback": "Product",
+    "untitledFallback": "Untitled",
+    "currencyPrefix": "RM"
+  },
+  "whatsapp": {
+    "imageAlt": "WhatsApp",
+    "message": "I would like to know more about Aviation 676"
+  }
+}

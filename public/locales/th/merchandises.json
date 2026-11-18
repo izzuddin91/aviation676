@@ -1,0 +1,26 @@
+{
+  "eyebrow": "แคตตาล็อก AVIATION676",
+  "pageTitle": "สินค้า",
+  "description": "อุปกรณ์การบิน อุปกรณ์เสริม และของจำเป็น",
+  "loading": "กำลังโหลดสินค้า...",
+  "untitledProduct": "ไม่มีชื่อ",
+  "resultCount": "{{count}} รายการสินค้า",
+  "sortBy": "เรียงตาม",
+  "sortOptions": {
+    "featured": "สินค้าแนะนำ",
+    "priceLowToHigh": "ราคา: จากน้อยไปมาก",
+    "priceHighToLow": "ราคา: จากมากไปน้อย",
+    "titleAToZ": "ชื่อ: A ถึง Z",
+    "titleZToA": "ชื่อ: Z ถึง A"
+  },
+  "productLayout": "รูปแบบการแสดงสินค้า",
+  "gridView": "มุมมองตาราง",
+  "listView": "มุมมองรายการ",
+  "imageUnavailable": "ไม่มีรูปภาพ",
+  "ratingOutOfFive": "{{rating}} จาก 5 ดาว",
+  "noReviewsYet": "ยังไม่มีรีวิว",
+  "noReviews": "ไม่มีรีวิว",
+  "currencyCode": "RM",
+  "detailsLink": "ดูรายละเอียดสินค้า",
+  "emptyState": "ขณะนี้ไม่มีสินค้าที่พร้อมจำหน่าย"
+}

@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import "@/app/VideoBackground.css";
 
-export default function ImageCarouselBackground() {
+export default function ImageCarouselBackground({
+  heroTitle,
+  whatsappAlt,
+  whatsappMessage,
+}) {
   const images = [
     "/images/plane1.jpg",
     "/images/plane2.jpg",
@@ -28,7 +32,7 @@ export default function ImageCarouselBackground() {
         <img
           key={index}
           src={src}
-          alt={`slide-${index}`}
+          alt=""
           style={{
             ...styles.image,
             opacity: current === index ? 1 : 0,
@@ -39,19 +43,19 @@ export default function ImageCarouselBackground() {
 
       {/* ✅ Overlay Content */}
       <div style={styles.overlay}>
-        <h1 style={styles.title}>Welcome to Aviation 676</h1>
+        <h1 style={styles.title}>{heroTitle}</h1>
       </div>
 
       {/* ✅ Floating WhatsApp Button */}
       <a
-        href="https://wa.me/+60132711668?text=I would like to know more about Aviation 676"
+        href={`https://wa.me/+60132711668?text=${encodeURIComponent(whatsappMessage)}`}
         target="_blank"
         rel="noopener noreferrer"
         style={styles.whatsappButton}
       >
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-          alt="WhatsApp"
+          alt={whatsappAlt}
           style={styles.whatsappIcon}
         />
       </a>

@@ -1,0 +1,15 @@
+{
+  "pageTitle": "Stories",
+  "filters": {
+    "all": "All",
+    "podcast": "Podcast"
+  },
+  "storyPhotoAlt": "Story photo",
+  "previousPhoto": "Previous photo",
+  "nextPhoto": "Next photo",
+  "untitledStory": "Untitled Story",
+  "seeMore": "See More",
+  "emptyState": "No stories found...",
+  "previousPage": "Prev",
+  "nextPage": "Next"
+}
